@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Recommendation: place status listeners towards the the top of the configuration file -->
+    <!-- 屏蔽 logback 的启动信息 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    
+    <!-- 配置参数 -->
+    <property name="LOG_HOME" value="C:/webapps/mylogs"></property>
+    <property name="LOG_NAME" value="pdc_proj_log"></property>
+    
+    <!--配置规则类的位置-->
+    <conversionRule conversionWord="ip" converterClass="net.mickarea.tools.logback.converters.IPConverterConfig" />
+    <conversionRule conversionWord="hostname" converterClass="net.mickarea.tools.logback.converters.HostNameConverterConfig" />
+    <conversionRule conversionWord="jvm" converterClass="net.mickarea.tools.logback.converters.JvmNameConverterConfig" />
+    
+    <!-- 标准输出流的输出，面向控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- <pattern>%d [%ip] [%jvm] [%hostname] [%thread] %-5level %logger{36} [%file : %line] - %msg%n</pattern> -->
+            <pattern>%d [%ip] [%jvm] [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${LOG_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <!-- <pattern>%d [%ip] [%jvm] [%hostname] [%thread] %-5level %logger{36} [%file : %line] - %msg%n</pattern> -->
+            <pattern>%d [%ip] [%jvm] [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 日志等级： TRACE 、 DEBUG 、 INFO 、 WARNING 、ERROR 、FATAL -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+    
+</configuration>

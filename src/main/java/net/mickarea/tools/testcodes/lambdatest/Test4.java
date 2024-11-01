@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> Stream API 测试
+ * Stream API 测试
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月17日

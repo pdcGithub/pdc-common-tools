@@ -16,7 +16,7 @@ import net.mickarea.tools.utils.RandomUtil;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> flatmap 测试 
+ * flatmap 测试 
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月18日-2023年4月19日

@@ -69,7 +69,7 @@ public final class StrUtil {
 	 * &gt;&gt;&nbsp;根据输入的英文字符串，返回一个驼峰表示的字符串
 	 * @param input 输入的字符串
 	 * @param splitString 字符串中的分割符号
-	 * @return
+	 * @return 一个驼峰表示的字符串
 	 */
 	public static String makeHumpString(String input, String splitString) {
 		String output = "";
@@ -121,7 +121,7 @@ public final class StrUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;Sql语句参数注入转换，用于防范sql注入。
-	 * @param dbType 要转义的数据库类型。<br/>参考：DBSQLInjectionUtil 类中的 <strong>DBTYPE</strong>常量
+	 * @param dbType 要转义的数据库类型。参考：DBSQLInjectionUtil 类中的 <strong>DBTYPE</strong>常量
 	 * @param sqlParam sql语句的参数
 	 * @return 转换完毕的字符
 	 */

@@ -23,7 +23,7 @@ import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
 /**
- * >> 关于删除的实体操作测试1
+ * 关于删除的实体操作测试1
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年7月1日-2024年4月3日

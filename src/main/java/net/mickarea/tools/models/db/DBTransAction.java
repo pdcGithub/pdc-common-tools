@@ -28,7 +28,7 @@ public abstract class DBTransAction implements DBTrans {
 	
 	/**
 	 * &gt;&gt;&nbsp;设置 DBOperator 对象
-	 * @param opt
+	 * @param opt 数据库操作对象
 	 */
 	public void setOpt(DBOperator opt) {
 		this.opt = opt;

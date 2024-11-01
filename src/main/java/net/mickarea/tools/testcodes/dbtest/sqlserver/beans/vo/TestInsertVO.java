@@ -41,7 +41,7 @@ public class TestInsertVO {
     private String tel;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public TestInsertVO() {
         // TODO Auto-generated constructor stub

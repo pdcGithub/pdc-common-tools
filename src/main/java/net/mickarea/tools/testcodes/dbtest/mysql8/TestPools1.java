@@ -22,7 +22,7 @@ import net.mickarea.tools.utils.database.DBStaticUtil;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 测试连接池方式访问数据库，程序是否正常
+ * 测试连接池方式访问数据库，程序是否正常
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年5月11日-2024年4月3日

@@ -15,17 +15,13 @@ import java.util.Arrays;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> lambda 表达式 测试
+ * lambda 表达式 测试
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月13日
  */
 public class test1 {
-
-	/**
-	 * >> 主函数
-	 * @param args
-	 */
+	
 	public static void main(String[] args) {
 		
 		String[] names = {"tom", "jack", "lucy", "marry", "wac", "tim", "jo"};

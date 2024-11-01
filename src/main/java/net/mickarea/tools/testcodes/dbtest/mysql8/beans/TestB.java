@@ -21,7 +21,7 @@ import net.mickarea.tools.annotation.MyTableOrView;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 一个普通的 java bean 类
+ * 一个普通的 java bean 类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月2日-2024年4月5日
@@ -53,7 +53,7 @@ public class TestB {
 	private LocalDateTime updateTime;
 	
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public TestB() {
 		// TODO Auto-generated constructor stub

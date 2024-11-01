@@ -16,7 +16,7 @@ import net.mickarea.tools.models.DatabasePoolManager;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 测试数据库连接池管理对象
+ * 测试数据库连接池管理对象
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年5月12日-2023年5月16日

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * >> 一个用于测试的类
+ * 一个用于测试的类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月17日
@@ -26,7 +26,7 @@ public class Person {
 	String gender;
 	int age;
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public Person() {
 	}

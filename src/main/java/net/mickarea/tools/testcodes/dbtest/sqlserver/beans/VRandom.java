@@ -28,7 +28,7 @@ public class VRandom {
     private Double rvalue;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public VRandom() {
         // TODO Auto-generated constructor stub

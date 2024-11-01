@@ -151,13 +151,10 @@ public class OrderParam {
 				this.alias, this.paramName, this.orderOpt, this.className);
 	}
 	
-	/**
-	 * &gt;&gt;&nbsp;测试函数
-	 * @param args
-	 */
+	/*
 	public static void main(String[] args) {
 		
-		/*Stdout.pl(new OrderParam());
+		Stdout.pl(new OrderParam());
 		Stdout.pl(new OrderParam().toSqlString());
 		Stdout.pl(new OrderParam("testAId"));
 		Stdout.pl(new OrderParam("testAId").toSqlString());
@@ -168,7 +165,8 @@ public class OrderParam {
 		Stdout.pl(new OrderParam("testAId", OPT_DESC, "b", TestB.class));
 		Stdout.pl(new OrderParam("testAId", OPT_DESC, "b", TestB.class).toSqlString());
 		
-		Stdout.pl(new OrderParam().setParamName("examScore").setClassName(TestB.class).toSqlString());*/
+		Stdout.pl(new OrderParam().setParamName("examScore").setClassName(TestB.class).toSqlString());
 	}
+	*/
 	
 }

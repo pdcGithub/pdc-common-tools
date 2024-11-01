@@ -22,7 +22,7 @@ import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
 /**
- * >> 数据库信息更新操作，以sql形式，测试1
+ * 数据库信息更新操作，以sql形式，测试1
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2024年6月21日

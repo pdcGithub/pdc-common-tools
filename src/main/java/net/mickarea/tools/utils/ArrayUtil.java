@@ -64,7 +64,7 @@ public final class ArrayUtil {
 	 * @param data1 字节数组
 	 * @param start 开始位置
 	 * @param end   结束位置 +1
-	 * @return 
+	 * @return 一个 字节 数组。
 	 */
 	public static byte[] subBytes(byte[] data1, int start, int end) {
 		byte[] result = null;
@@ -79,6 +79,7 @@ public final class ArrayUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;将对应类型的数组转换为对应类型的列表
+	 * @param <T> 数组元素的类型 相同
 	 * @param arrays 待转化的数组
 	 * @return 转化的结果列表；如果成功则返回一个有内容的列表；否则，返回null
 	 */

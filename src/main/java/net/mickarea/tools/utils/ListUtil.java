@@ -47,8 +47,9 @@ public final class ListUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;把一个枚举对象转化为一个列表对象（由于某些对象直接转String会报错，所以只转换载体，不转换类型）
+	 * @param <T> 枚举类中 对应的 元素类型
 	 * @param input 枚举对象
-	 * @return 列表
+	 * @return 列表对象
 	 */
 	public static <T> List<T> makeEnumerationObjectToListObject(Enumeration<T> input) {
 		List<T> output = null;

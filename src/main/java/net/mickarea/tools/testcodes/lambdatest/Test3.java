@@ -17,7 +17,7 @@ import java.util.Optional;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> Optional API 测试
+ * Optional API 测试
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月16日

@@ -71,8 +71,8 @@ public final class Stdout {
 	
 	/**
 	 * &gt;&gt;&nbsp;获取格式化后的文本内容
-	 * @param formatStr
-	 * @param objects
+	 * @param formatStr 格式化字符串
+	 * @param objects 输出对象参数
 	 * @return 返回一个字符串
 	 */
 	public static String fplToAnyWhere(String formatStr, Object...objects ) {
@@ -111,7 +111,7 @@ public final class Stdout {
 	
 	/**
 	 * &gt;&gt;&nbsp;打印字节数组
-	 * @param arr
+	 * @param arr 一个字节数组
 	 */
 	public static void plArray(byte[] arr) {
 		StringBuffer buffer = new StringBuffer();
@@ -161,7 +161,7 @@ public final class Stdout {
 	
 	/**
 	 * &gt;&gt;&nbsp;打印字符数组，根据参数可控制是否直接打印空白字符（比如\n , \t 之类的）。
-	 * @param arr
+	 * @param arr 一个字符数组
 	 * @param printBlankChar 当为true时，直接输出空白字符；当为false时，以' '代替空白字符输出
 	 */
 	public static void plArray(char[] arr, boolean printBlankChar) {

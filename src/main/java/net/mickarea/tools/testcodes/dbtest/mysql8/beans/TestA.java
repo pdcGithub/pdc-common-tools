@@ -18,7 +18,7 @@ import net.mickarea.tools.annotation.MyTableOrView;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 一个普通的 java bean 类
+ * 一个普通的 java bean 类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年5月6日-2023年7月1日
@@ -48,7 +48,7 @@ public class TestA {
 	private String testColumn;
 	
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public TestA() {
 	}

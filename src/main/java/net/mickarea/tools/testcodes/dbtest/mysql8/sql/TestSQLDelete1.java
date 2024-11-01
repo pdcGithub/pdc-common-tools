@@ -19,7 +19,7 @@ import net.mickarea.tools.utils.database.DBOperator;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 数据库信息删除操作，以sql形式，测试1
+ * 数据库信息删除操作，以sql形式，测试1
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月20日-2024年4月3日

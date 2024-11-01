@@ -88,13 +88,11 @@ public class PageInfo {
 				this.totalPage);
 	}
 	
-	/**
-	 * &gt;&gt;&nbsp;测试函数
-	 */
+	/*
 	public static void main(String[] args) {
 		Stdout.pl(new PageInfo());
 		Stdout.pl(new PageInfo(2, 15));
 		Stdout.pl(new PageInfo(1, 30, 55, 1650));
 	}
-	
+	*/
 }

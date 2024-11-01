@@ -133,7 +133,7 @@ public class VDataTypes {
     private String col36;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public VDataTypes() {
         // TODO Auto-generated constructor stub

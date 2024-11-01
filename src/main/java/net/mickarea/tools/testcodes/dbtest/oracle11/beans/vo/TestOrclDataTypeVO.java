@@ -96,7 +96,7 @@ public class TestOrclDataTypeVO {
     private Double myFloat2;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public TestOrclDataTypeVO() {
         // TODO Auto-generated constructor stub

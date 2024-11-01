@@ -11,7 +11,7 @@ Copyright (c) 2023 Michael Pang.
 package net.mickarea.tools.testcodes.lambdatest;
 
 /**
- * >> 一个测试用的组织类
+ * 一个测试用的组织类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月18日-2023年4月19日
@@ -24,7 +24,7 @@ public class Company {
 	private Address address;
 	
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public Company() {
 	}
@@ -72,7 +72,7 @@ class Address {
 	private String town = "";
 	private String others = "";
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public Address() {
 	}

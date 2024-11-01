@@ -21,7 +21,7 @@ import net.mickarea.tools.utils.database.DBOperator;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 函数调用第二阶段测试
+ * 函数调用第二阶段测试
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月12日-2024年4月3日

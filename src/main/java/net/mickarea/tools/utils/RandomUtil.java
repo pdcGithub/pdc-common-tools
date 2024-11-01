@@ -67,6 +67,7 @@ public final class RandomUtil {
 	 * &gt;&gt;&nbsp;生成一个指定长度的数字字符串（这个函数生成的数字字符串可能为0开头的）
 	 * @param length 数字的长度
 	 * @return 一个数字
+	 * @throws Exception 如果执行出错，就会抛出异常。
 	 */
 	public static String genNumberString(int length) throws Exception {
 		
@@ -95,8 +96,8 @@ public final class RandomUtil {
 	/**
 	 * &gt;&gt;&nbsp;<p>生成一个指定长度的数字字符串（这个函数生成的数字字符串可能为0开头的）</p>
 	 * <p>这个函数不报异常，如果执行出错就返回 ERROR00001</p>
-	 * @param length
-	 * @return
+	 * @param length 要生成的随机字符串的长度
+	 * @return 一个指定长度的随机字符串
 	 */
 	public static String genNumberStringWitoutException(int length) {
 		String result = ERROR_CODE;
@@ -112,6 +113,7 @@ public final class RandomUtil {
 	 * &gt;&gt;&nbsp;生成一个指定长度的英文字母字符串
 	 * @param length 字符串的长度
 	 * @return 字母字符串
+	 * @throws Exception 如果执行出错，就会抛出异常。
 	 */
 	public static String genLetterString(int length) throws Exception {
 		String result = "";
@@ -135,8 +137,8 @@ public final class RandomUtil {
 	/**
 	 * &gt;&gt;&nbsp;<p>生成一个指定长度的英文字母字符串</p>
 	 * <p>这个函数不报异常，如果执行出错就返回 ERROR00001</p>
-	 * @param length
-	 * @return
+	 * @param length 字符串的长度
+	 * @return 字母字符串 
 	 */
 	public static String genLetterStringWitoutException(int length) {
 		String result = ERROR_CODE;
@@ -152,6 +154,7 @@ public final class RandomUtil {
 	 * &gt;&gt;&nbsp;生成一个英文字母和数字混合的字符串
 	 * @param length 字符串的长度
 	 * @return 一个字符串
+	 * @throws Exception 如果执行出错，就会抛出异常。
 	 */
 	public static String genNumAndLetterMixedString(int length) throws Exception {
 		String result = "";
@@ -179,8 +182,8 @@ public final class RandomUtil {
 	/**
 	 * &gt;&gt;&nbsp;<p>生成一个英文字母和数字混合的字符串</p>
 	 * <p>这个函数不报异常，如果执行出错就返回 ERROR00001</p>
-	 * @param length
-	 * @return
+	 * @param length 字符串长度
+	 * @return 随机字符串
 	 */
 	public static String genNumAndLetterMixedStringWitoutException(int length) {
 		String result = ERROR_CODE;
@@ -192,11 +195,7 @@ public final class RandomUtil {
 		return result;
 	}
 
-	/**
-	 * &gt;&gt;&nbsp;用于测试的函数
-	 * @param args
-	 * @throws Exception
-	 */
+	/*
 	public static void main(String[] args) throws Exception {
 		
 		String o = "0123456789"; //48-57
@@ -227,5 +226,5 @@ public final class RandomUtil {
 		Stdout.pl(genNumAndLetterMixedStringWitoutException(-1));
 		
 	}
-	
+	*/
 }

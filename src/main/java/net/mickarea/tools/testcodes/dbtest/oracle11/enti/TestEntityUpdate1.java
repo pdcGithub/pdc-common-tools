@@ -29,7 +29,7 @@ import net.mickarea.tools.utils.database.DBOperator;
 import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
 
 /**
- * >> 关于更新的实体操作测试1
+ * 关于更新的实体操作测试1
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2024年7月2日

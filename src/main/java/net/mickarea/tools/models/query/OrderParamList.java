@@ -61,6 +61,7 @@ public class OrderParamList {
 	/**
 	 * &gt;&gt;&nbsp;添加排序信息
 	 * @param order 排序对象
+	 * @return 返回一个排序参数列表对象
 	 */
 	public OrderParamList addParam(OrderParam order) {
 		if(order!=null && !StrUtil.isEmptyString(order.getParamName())) {

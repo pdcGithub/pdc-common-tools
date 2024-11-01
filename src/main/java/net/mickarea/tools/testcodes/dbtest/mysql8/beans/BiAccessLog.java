@@ -54,7 +54,7 @@ public class BiAccessLog {
     private java.sql.Timestamp accessTimestamp;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public BiAccessLog() {
         // TODO Auto-generated constructor stub

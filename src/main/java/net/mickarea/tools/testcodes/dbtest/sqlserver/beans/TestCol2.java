@@ -32,7 +32,7 @@ public class TestCol2 {
     private String address;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public TestCol2() {
         // TODO Auto-generated constructor stub

@@ -13,7 +13,7 @@ package net.mickarea.tools.testcodes.lambdatest;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 正则测试类
+ * 正则测试类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月18日

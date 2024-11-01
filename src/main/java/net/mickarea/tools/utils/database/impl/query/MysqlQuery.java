@@ -34,6 +34,7 @@ public class MysqlQuery {
 
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 类型相同
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param condiList 查询条件列表对象

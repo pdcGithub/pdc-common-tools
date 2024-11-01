@@ -18,7 +18,7 @@ import net.mickarea.tools.utils.PatternUtil;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 不知道要测试些什么
+ * 不知道要测试些什么
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月24日

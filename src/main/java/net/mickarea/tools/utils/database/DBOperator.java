@@ -100,6 +100,7 @@ public class DBOperator {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param execMsg 执行的结果信息。如果执行成功返回 空 ，否则返回执行异常的结果信息
 	 * @return 查询后返回的数据对象列表（如果查询失败或者无数据返回，则为null或者空列表对象）
@@ -110,6 +111,7 @@ public class DBOperator {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param condiList 查询条件列表对象
 	 * @param execMsg 执行的结果信息。如果执行成功返回 空 ，否则返回执行异常的结果信息
@@ -121,6 +123,7 @@ public class DBOperator {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param condiList 查询条件列表对象
 	 * @param orderList 排序条件列表对象
@@ -133,6 +136,7 @@ public class DBOperator {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param condiList 查询条件列表对象
 	 * @param orderList 排序条件列表对象
@@ -322,6 +326,7 @@ public class DBOperator {
 	
 	/**
 	 * &gt;&gt;&nbsp;这里用于处理一些临时性的非实体查询
+	 * @param <T> 与 传入的 virtualEntityClass 同类型
 	 * @param virtualEntityClass 虚拟的实体对象，必须有 MyVirtualEntity 注解
 	 * @param preSql 用预处理格式的sql语句，参数位置用 ? 代替
 	 * @param params 参数不单单对应查询条件，也对应查询内容。

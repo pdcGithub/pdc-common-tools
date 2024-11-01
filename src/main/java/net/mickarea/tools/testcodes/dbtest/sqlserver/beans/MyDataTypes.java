@@ -138,7 +138,7 @@ public class MyDataTypes {
     private String col36;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public MyDataTypes() {
         // TODO Auto-generated constructor stub

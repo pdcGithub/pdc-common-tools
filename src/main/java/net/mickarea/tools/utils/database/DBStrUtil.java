@@ -19,10 +19,6 @@ import net.mickarea.tools.annotation.MyColumnIgnore;
 import net.mickarea.tools.annotation.MyTableOrView;
 import net.mickarea.tools.annotation.MyVirtualEntity;
 import net.mickarea.tools.annotation.scanner.MyAnnotationScanner;
-import net.mickarea.tools.testcodes.dbtest.sqlserver.beans.TestCol2;
-import net.mickarea.tools.testcodes.dbtest.sqlserver.beans.TestCol3;
-import net.mickarea.tools.testcodes.dbtest.sqlserver.beans.TestCol4;
-import net.mickarea.tools.testcodes.dbtest.sqlserver.beans.TestInsert;
 import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
@@ -290,7 +286,7 @@ public final class DBStrUtil {
 	 * &gt;&gt;&nbsp;根据 数据库映射类的 getter方法名，获取它的数据库字段名
 	 * @param clsName 数据库映射的对象类名称
 	 * @param getterName getter方法名称
-	 * @return 
+	 * @return 数据库字段名
 	 */
 	public static String parseGetterNameToColumnName(String clsName, String getterName) {
 		String result = "";
@@ -368,9 +364,7 @@ public final class DBStrUtil {
 		return result;
 	}
 	
-	/**
-	 * &gt;&gt;&nbsp;测试
-	 */
+	/*
 	public static void main(String[] args) {
 		// 测试非实体映射类
 		Stdout.pl(DBStrUtil.getFirstColumnFromBeanClass(Object.class));
@@ -388,5 +382,5 @@ public final class DBStrUtil {
 		Stdout.pl(DBStrUtil.getFirstColumnFromBeanClass(TestCol4.class));
 		Stdout.pl("---------------------------------------------------");
 	}
-	
+	*/
 }

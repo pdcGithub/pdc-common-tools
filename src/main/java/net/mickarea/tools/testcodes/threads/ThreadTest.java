@@ -14,7 +14,7 @@ import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.TimeUtil;
 
 /**
- * >> 多线程测试类
+ * 多线程测试类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月2日

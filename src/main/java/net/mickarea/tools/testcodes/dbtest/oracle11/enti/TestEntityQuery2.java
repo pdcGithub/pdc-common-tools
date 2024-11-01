@@ -29,7 +29,7 @@ import net.mickarea.tools.utils.database.DBOperator;
 import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
 
 /**
- * >> 实体对象查询功能测试，第一阶段（使用sql语句模板查询）
+ * 实体对象查询功能测试，第一阶段（使用sql语句模板查询）
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2024年7月2日

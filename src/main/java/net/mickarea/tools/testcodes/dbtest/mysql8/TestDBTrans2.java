@@ -24,7 +24,7 @@ import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
 /**
- * >> 数据库事务同步测试2
+ * 数据库事务同步测试2
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年7月16日-2024年4月3日

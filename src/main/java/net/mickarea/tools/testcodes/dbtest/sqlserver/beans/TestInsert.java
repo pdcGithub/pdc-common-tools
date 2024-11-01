@@ -47,7 +47,7 @@ public class TestInsert {
     private String tel;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public TestInsert() {
         // TODO Auto-generated constructor stub

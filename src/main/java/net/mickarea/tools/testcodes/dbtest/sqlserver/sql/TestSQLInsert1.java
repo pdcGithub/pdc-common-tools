@@ -30,7 +30,7 @@ import net.mickarea.tools.utils.database.DBOperator;
 import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
 
 /**
- * >> 数据库信息插入操作，以sql形式，测试1
+ * 数据库信息插入操作，以sql形式，测试1
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2024年10月28日

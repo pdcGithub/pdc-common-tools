@@ -33,7 +33,7 @@ import net.mickarea.tools.utils.database.DBOperator;
 import net.mickarea.tools.utils.database.DBStaticUtil;
 
 /**
- * >> 数据库事务同步测试
+ * 数据库事务同步测试
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年7月13日-2024年7月2日
@@ -67,7 +67,7 @@ public class TestDBTrans1 {
 }
 
 /**
- * >> 实现抽象类 DBTransAction 中的 doTrans 方法，以保证事务同步
+ * 实现抽象类 DBTransAction 中的 doTrans 方法，以保证事务同步
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年7月13日

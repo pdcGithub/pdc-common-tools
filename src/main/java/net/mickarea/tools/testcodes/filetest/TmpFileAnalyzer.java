@@ -14,7 +14,7 @@ import net.mickarea.tools.models.TmpDataGramAnalyzer;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 解析request报文临时文件
+ * 解析request报文临时文件
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月25日-2023年4月27日

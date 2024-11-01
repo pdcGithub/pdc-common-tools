@@ -19,7 +19,7 @@ import net.mickarea.tools.annotation.MyTableOrView;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> view_a_b 视图 的实体类
+ * view_a_b 视图 的实体类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月13日-2023年7月1日
@@ -149,11 +149,9 @@ public class ViewAB {
 				this.id, this.name, this.gender, this.address, this.tel, this.score, this.descrption, this.examScore, this.finals, this.updateTime);
 	}
 	
-	/**
-	 * >> 测试
-	 */
+	/*
 	public static void main(String[] args) {
 		Stdout.pl(new ViewAB());
 	}
-	
+	*/
 }

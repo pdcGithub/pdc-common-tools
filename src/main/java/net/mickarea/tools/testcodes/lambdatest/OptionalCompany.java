@@ -15,7 +15,7 @@ import java.util.Optional;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 一个测试用的组织类 传回 Optional 类型的结果
+ * 一个测试用的组织类 传回 Optional 类型的结果
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年4月18日-2023年4月19日
@@ -28,7 +28,7 @@ public class OptionalCompany {
 	private OptionalAddress address;
 	
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public OptionalCompany() {
 	}
@@ -80,7 +80,7 @@ class OptionalAddress {
 	private String town;
 	private String others;
 	/**
-	 * >> 构造函数
+	 * 构造函数
 	 */
 	public OptionalAddress() {
 	}

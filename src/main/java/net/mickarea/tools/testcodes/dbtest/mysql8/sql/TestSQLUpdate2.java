@@ -21,7 +21,7 @@ import net.mickarea.tools.utils.database.DBStaticUtil;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 数据库信息更新操作，以sql形式，测试2
+ * 数据库信息更新操作，以sql形式，测试2
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月22日-2024年4月3日

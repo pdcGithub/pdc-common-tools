@@ -19,7 +19,7 @@ import net.mickarea.tools.annotation.MyVirtualEntity;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> test_a 这个表的临时sql查询结果对象
+ * test_a 这个表的临时sql查询结果对象
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月18日

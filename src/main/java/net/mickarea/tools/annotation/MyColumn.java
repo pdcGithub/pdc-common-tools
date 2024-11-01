@@ -42,7 +42,7 @@ public @interface MyColumn {
 	
 	/**
 	 * &gt;&gt;&nbsp;这个方法用于标记此属性的扩展内容。比如：数值的翻译处理关键字
-	 * @return 
+	 * @return 一些关于字段的扩展信息，比如 字段的注释
 	 */
 	String extProperty() default "";
 }

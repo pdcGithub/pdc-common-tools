@@ -23,7 +23,7 @@ import net.mickarea.tools.utils.RandomUtil;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 数据库信息插入操作，以sql形式，测试2
+ * 数据库信息插入操作，以sql形式，测试2
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月21日-2024年4月3日

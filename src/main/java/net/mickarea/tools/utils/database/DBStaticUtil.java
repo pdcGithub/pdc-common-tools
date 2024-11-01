@@ -93,6 +93,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param dbType 数据库类型（由于不同的数据库，查询处理可能不同，所以要传递一个数据库类型）
@@ -105,6 +106,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param dbType 数据库类型（由于不同的数据库，查询处理可能不同，所以要传递一个数据库类型）
@@ -118,6 +120,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param dbType 数据库类型（由于不同的数据库，查询处理可能不同，所以要传递一个数据库类型）
@@ -132,6 +135,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
 	 * @param dbType 数据库类型（由于不同的数据库，查询处理可能不同，所以要传递一个数据库类型）
@@ -261,6 +265,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;这里用于处理一些临时性的非实体查询（这个函数在事务同步中使用）
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param virtualEntityClass 虚拟的实体对象，必须有 MyVirtualEntity 注解
 	 * @param preSql 用预处理格式的sql语句，参数位置用 ? 代替
@@ -326,6 +331,7 @@ public final class DBStaticUtil {
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param preSql 数据库 insert 语句。语句必须带参数，参数以 '?' 替换符匹配
 	 * @param params 要插入的数据内容。以二维列表( List&lt;List&lt;Object&gt;&gt; )的形式传入。
+	 * @throws Exception 如果执行出错，就会抛出异常。
 	 */
 	public static void insertSQL(Connection conn, String preSql, List<? super Object> params) throws Exception {
 		executeSQL(conn, preSql, params, SQL_TYPE_INSERT);
@@ -333,6 +339,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * &gt;&gt;&nbsp;将查询到的 SimpleDBData 对象，转换为 对应的 数据库表或者视图的映射实体对象列表
+	 * @param <T> 与传入的 cls 相同的类型
 	 * @param cls 数据库表或者视图映射实体对象
 	 * @param sdb 一个数据结果集的简易对象
 	 * @return 实体对象列表，可能为 null 或者 一个 大小为 0 的列表
@@ -411,6 +418,7 @@ public final class DBStaticUtil {
 	 * &gt;&gt;&nbsp;将 查找到的 结果集 封装到 SimpleDBData 对象中去
 	 * @param sdb 一个 SimpleDBData 对象。作为容器使用
 	 * @param rs 数据库操作执行后，返回的结果集
+	 * @throws Exception 如果执行出错，就会抛出异常。
 	 */
 	public static void loadSimpleDBData(SimpleDBData sdb, ResultSet rs) throws Exception {
 		

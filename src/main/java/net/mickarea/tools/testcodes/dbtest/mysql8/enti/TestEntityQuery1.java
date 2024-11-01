@@ -26,7 +26,7 @@ import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
 /**
- * >> 实体对象查询功能测试，第一阶段
+ * 实体对象查询功能测试，第一阶段
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年6月13日-2024年4月3日

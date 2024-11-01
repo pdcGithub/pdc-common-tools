@@ -20,7 +20,7 @@ import net.mickarea.tools.utils.database.DBStaticUtil;
 import net.mickarea.tools.utils.Stdout;
 
 /**
- * >> 测试存储过程调用，特殊的存储过程（带返回的结果集）
+ * 测试存储过程调用，特殊的存储过程（带返回的结果集）
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
  * @since 2023年5月20日-2024年4月3日

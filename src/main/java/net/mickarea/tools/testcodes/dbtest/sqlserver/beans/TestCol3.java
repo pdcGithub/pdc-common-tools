@@ -35,7 +35,7 @@ public class TestCol3 {
     private String testName;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public TestCol3() {
         // TODO Auto-generated constructor stub

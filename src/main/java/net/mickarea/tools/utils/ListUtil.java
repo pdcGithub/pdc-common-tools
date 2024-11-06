@@ -70,7 +70,7 @@ public final class ListUtil {
 	public static boolean isEmptyList(List<?> list) {
 		return (list==null||list.size()<=0)?true:false;
 	}
-	
+	/*
 	public static void main(String[] args) {
 		
 		Stdout.pl(ListUtil.isEmptyList(null));
@@ -82,5 +82,5 @@ public final class ListUtil {
 		Stdout.pl(ListUtil.isEmptyList(params));
 		
 	}
-	
+	*/
 }

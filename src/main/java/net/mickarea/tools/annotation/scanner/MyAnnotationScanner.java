@@ -39,10 +39,7 @@ public class MyAnnotationScanner {
 		return result;
 	}
 	
-	/**
-	 * &gt;&gt;&nbsp;测试函数
-	 * @param args 参数
-	 */
+	/*
 	public static void main(String[] args) {
 		
 		Set<Class<?>> clses = MyAnnotationScanner.getClassesByPackageNameAndAnnotaionName("net.mickarea.tools.dbtest.beans", MyTableOrView.class);
@@ -55,5 +52,5 @@ public class MyAnnotationScanner {
 		}
 		
 	}
-	
+	*/
 }

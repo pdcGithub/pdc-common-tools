@@ -180,6 +180,7 @@ public final class PatternUtil {
 	}
 	
 	//测试函数
+	/*
 	public static void main(String[] args) {
 		Stdout.pl(isEmailAddress("674256821@qq.com"));
 		Stdout.pl(isEmailAddress("sdlfis.d6f87d.s5-sdfd-s5_asdfs@163.com"));
@@ -187,5 +188,5 @@ public final class PatternUtil {
 		Stdout.pl(isEmailAddress("mick123.com.123.com@...sd5fsd4f5dsf"));
 		Stdout.pl(isEmailAddress("mick123.com.123.com@dfsfdf@...sd5fsd4f5dsf"));
 	}
-	
+	*/
 }

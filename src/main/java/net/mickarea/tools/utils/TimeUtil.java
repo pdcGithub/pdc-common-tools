@@ -170,7 +170,7 @@ public final class TimeUtil {
 	public static Timestamp getTimestampByLocalDateTime(LocalDateTime time) {
 		return new Timestamp(time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 	}
-	
+	/*
 	public static void main(String[] args) {
 		
 		Stdout.pl(TimeUtil.getCustomValue(null, null, null));
@@ -181,5 +181,5 @@ public final class TimeUtil {
 		
 		Stdout.pl(TimeUtil.getCustomValue(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss.SSS", "默认值3"));
 	}
-	
+	*/
 }

@@ -93,7 +93,7 @@ public final class ArrayUtil {
 		}
 		return re;
 	}
-	
+	/*
 	public static void main(String[] args) {
 		
 		byte[] a = {10, 20, 30, 40, 50, 60};
@@ -106,5 +106,5 @@ public final class ArrayUtil {
 		Stdout.plArray(ArrayUtil.subBytes(a, 0, a.length));
 		
 	}
-
+	*/
 }

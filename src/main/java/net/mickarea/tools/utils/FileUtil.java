@@ -345,6 +345,7 @@ public final class FileUtil {
 	}
 	
 	//测试函数
+	/*
 	public static void main(String[] args) {
 		
 		//获取桌面路径
@@ -394,5 +395,6 @@ public final class FileUtil {
 		}
 		
 	}
+	*/
 	
 }

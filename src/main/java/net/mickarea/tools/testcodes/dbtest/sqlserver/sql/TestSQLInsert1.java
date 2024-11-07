@@ -69,13 +69,13 @@ public class TestSQLInsert1 {
 		List<Object> line1 = new ArrayList<Object>();
 		
 		//col_1 bigint
-		line1.add(Integer.parseInt(RandomUtil.genNumberStringWitoutException(5)));
+		line1.add(Integer.parseInt(RandomUtil.genNumberStringWithoutException(5)));
 		//col_2 binary(50)
 		line1.add("abcdefgh".getBytes());
 		//col_3 bit
 		line1.add(new Boolean(true));
 		//col_4 char(10)
-		line1.add(RandomUtil.genLetterStringWitoutException(10));
+		line1.add(RandomUtil.genLetterStringWithoutException(10));
 		//col_5 date
 		line1.add(new Date(TimeUtil.getTimestampByLocalDateTime(now).getTime()));
 		//col_6 datetime
@@ -101,15 +101,15 @@ public class TestSQLInsert1 {
 		//col_16 money
 		line1.add(new BigDecimal("250.12"));
 		//col_17 nchar(10)
-		line1.add(RandomUtil.genLetterStringWitoutException(10));
+		line1.add(RandomUtil.genLetterStringWithoutException(10));
 		//col_18 ntext
-		line1.add(RandomUtil.genLetterStringWitoutException(20));
+		line1.add(RandomUtil.genLetterStringWithoutException(20));
 		//col_19 numeric(18, 0)
 		line1.add(new BigDecimal("125555"));
 		//col_20 nvarchar(50)
-		line1.add(RandomUtil.genLetterStringWitoutException(5));
+		line1.add(RandomUtil.genLetterStringWithoutException(5));
 		//col_21 nvarchar(MAX)
-		line1.add(RandomUtil.genLetterStringWitoutException(5));
+		line1.add(RandomUtil.genLetterStringWithoutException(5));
 		//col_22 real
 		line1.add(234.12f);
 		//col_23 smalldatetime
@@ -121,7 +121,7 @@ public class TestSQLInsert1 {
 		//col_26 sql_variant
 		line1.add("a:b");
 		//col_27 text
-		line1.add(RandomUtil.genLetterStringWitoutException(5));
+		line1.add(RandomUtil.genLetterStringWithoutException(5));
 		//col_28 time(7)
 		line1.add(new Time(TimeUtil.getTimestampByLocalDateTime(now).getTime()));
 		//col_29 timestamp
@@ -135,9 +135,9 @@ public class TestSQLInsert1 {
 		//col_33 varbinary(MAX)
 		line1.add("32e32feewffds".getBytes());
 		//col_34 varchar(50)
-		line1.add(RandomUtil.genLetterStringWitoutException(5));
+		line1.add(RandomUtil.genLetterStringWithoutException(5));
 		//col_35 varchar(MAX)
-		line1.add(RandomUtil.genLetterStringWitoutException(5));
+		line1.add(RandomUtil.genLetterStringWithoutException(5));
 		//col_36 xml
 		line1.add("<name>Tom</name>");
 		

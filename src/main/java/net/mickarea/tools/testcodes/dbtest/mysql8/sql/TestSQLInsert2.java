@@ -43,13 +43,13 @@ public class TestSQLInsert2 {
 		
 		//第一行数据
 		List<Object> line1 = new ArrayList<Object>();
-		line1.add(RandomUtil.genLetterStringWitoutException(20));
+		line1.add(RandomUtil.genLetterStringWithoutException(20));
 		line1.add(nowTime);
 		params.add(line1);
 		
 		//第二行数据
 		List<Object> line2 = new ArrayList<Object>();
-		line2.add(RandomUtil.genLetterStringWitoutException(20));
+		line2.add(RandomUtil.genLetterStringWithoutException(20));
 		line2.add(nowTime);
 		params.add(line2);
 		

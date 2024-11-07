@@ -99,7 +99,7 @@ public final class RandomUtil {
 	 * @param length 要生成的随机字符串的长度
 	 * @return 一个指定长度的随机字符串
 	 */
-	public static String genNumberStringWitoutException(int length) {
+	public static String genNumberStringWithoutException(int length) {
 		String result = ERROR_CODE;
 		try {
 			result = genNumberString(length);
@@ -140,7 +140,7 @@ public final class RandomUtil {
 	 * @param length 字符串的长度
 	 * @return 字母字符串 
 	 */
-	public static String genLetterStringWitoutException(int length) {
+	public static String genLetterStringWithoutException(int length) {
 		String result = ERROR_CODE;
 		try {
 			result = genLetterString(length);
@@ -185,7 +185,7 @@ public final class RandomUtil {
 	 * @param length 字符串长度
 	 * @return 随机字符串
 	 */
-	public static String genNumAndLetterMixedStringWitoutException(int length) {
+	public static String genNumAndLetterMixedStringWithoutException(int length) {
 		String result = ERROR_CODE;
 		try {
 			result = genNumAndLetterMixedString(length);

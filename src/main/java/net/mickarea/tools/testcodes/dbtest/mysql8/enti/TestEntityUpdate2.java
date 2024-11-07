@@ -56,7 +56,7 @@ public class TestEntityUpdate2 {
 			
 			//遍历并且设置一个新值
 			for(TestA a: testAList) {
-				a.setName(RandomUtil.genLetterStringWitoutException(12));
+				a.setName(RandomUtil.genLetterStringWithoutException(12));
 				a.setAddress("阳江市");
 			}
 			

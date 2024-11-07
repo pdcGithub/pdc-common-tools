@@ -71,7 +71,7 @@ public class TestSQLInsert1 {
 		line1.add(Timestamp.valueOf(now));
 		line1.add(Timestamp.valueOf(now));
 		line1.add("测试内容呢？");
-		line1.add(new oracle.sql.ROWID(RandomUtil.genNumAndLetterMixedStringWitoutException(10).getBytes()));
+		line1.add(new oracle.sql.ROWID(RandomUtil.genNumAndLetterMixedStringWithoutException(10).getBytes()));
 		
 		line1.add("CLOB:测试内容");
 		line1.add("NCLOB:测试内容2");

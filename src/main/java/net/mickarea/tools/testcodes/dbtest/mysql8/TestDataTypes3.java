@@ -45,7 +45,7 @@ public class TestDataTypes3 {
 		DBOperator db = new DBOperator(ds);
 		//开始插入数据
 		List<TestB> insertParams = new ArrayList<TestB>();
-		insertParams.add(new TestB(new BigInteger("0"), 78, 91L, "测试数据"+RandomUtil.genLetterStringWitoutException(4), 
+		insertParams.add(new TestB(new BigInteger("0"), 78, 91L, "测试数据"+RandomUtil.genLetterStringWithoutException(4), 
 				         new BigDecimal("98.2"), new BigDecimal("98.225")));
 		String insertExecMsg = db.insertEntity(insertParams);
 		if(StrUtil.isEmptyString(insertExecMsg)) {

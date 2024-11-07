@@ -96,7 +96,7 @@ class TestDBTransDemo1 extends DBTransAction {
 			//根据test_a 表的信息，构造 test_b 表的数据
 			List<TestB> bList = new ArrayList<TestB>();
 			for(TestA a: aList) {
-				TestB b = new TestB(new BigInteger("0"), a.getId(), new Long(RandomUtil.genNumberStringWitoutException(2)), null, null, null);
+				TestB b = new TestB(new BigInteger("0"), a.getId(), new Long(RandomUtil.genNumberStringWithoutException(2)), null, null, null);
 				bList.add(b);
 			}
 			DBStaticUtil.insertEntity(conn, bList); //把构造好的数据插入 test_b 表
@@ -108,7 +108,7 @@ class TestDBTransDemo1 extends DBTransAction {
 				
 				//读取刚插入的数据，并修改数值，进行更新
 				for(TestB b: newBList) {
-					b.setExamScore(new BigDecimal(RandomUtil.genNumberStringWitoutException(2)+""));
+					b.setExamScore(new BigDecimal(RandomUtil.genNumberStringWithoutException(2)+""));
 					b.setFinals(new BigDecimal("100"));
 					b.setUpdateTime(LocalDateTime.now());
 				}

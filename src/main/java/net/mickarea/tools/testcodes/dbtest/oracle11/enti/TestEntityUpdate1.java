@@ -61,7 +61,7 @@ public class TestEntityUpdate1 {
 					data.setAppDate(new Date());
 					data.setAppDatetime1(LocalDateTime.now());
 					data.setVYear(LocalDate.now());
-					data.setVClob(RandomUtil.genLetterStringWitoutException(20));
+					data.setVClob(RandomUtil.genLetterStringWithoutException(20));
 					data.setMyFloat(1123.4567879);
 				});
 				//写入数据库

@@ -15,9 +15,6 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
-import net.mickarea.tools.annotation.MyTableOrView;
-import net.mickarea.tools.utils.Stdout;
-
 /**
  * &gt;&gt;&nbsp;一个自定义的注解扫描器，用于扫描已经被注解的对象
  * @author Michael Pang (Dongcan Pang)

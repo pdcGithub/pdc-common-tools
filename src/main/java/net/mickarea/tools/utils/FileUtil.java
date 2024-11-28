@@ -12,6 +12,7 @@ package net.mickarea.tools.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,13 +20,14 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.ByteBuffer;
 import java.util.regex.Pattern;
 
 /**
  * &gt;&gt;&nbsp;文件读写操作工具类（默认的文件读写字符集为 UTF-8）
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年9月27日-2023年10月15日
+ * @since 2023年9月27日-2024年11月28日
  */
 public final class FileUtil {
 	
@@ -344,55 +346,116 @@ public final class FileUtil {
 		return StrUtil.isEmptyString(result)?"":result;
 	}
 	
+	/**
+	 * 将给定地址的文件，以字节数组的方式返回。
+	 * @param filePath 文件地址
+	 * @return 字节数组形式的文件对象。如果文件异常（比如：文件不存在、无法读取、流处理报错等），则返回 null
+	 */
+	public static byte[] loadByteArrayFromFile(String filePath) {
+		//
+		byte[] re = null;
+		//
+		if(filePath==null) {
+			Stdout.pl("读取文件异常，文件路径为 null：");
+			return re;
+		}
+		//创建文件对象，判断文件是否存在
+		File targetFile = new File(filePath);
+		if(!targetFile.exists()) {
+			Stdout.fpl("读取文件异常，文件[%s]不存在：", filePath);
+			return re;
+		}
+		//判断文件是否可读
+		if(!targetFile.canRead()) {
+			Stdout.fpl("读取文件异常，文件[%s]无法读取：", filePath);
+			return re;
+		}
+		// 开始处理
+		FileInputStream fis = null;
+		ByteArrayOutputStream baos = null;
+		try {
+			//将文件识别为 文件流
+			fis = new FileInputStream(filePath);
+			//初始化 输出用的字节流
+			baos = new ByteArrayOutputStream();
+			//设置缓冲区
+			int buffSize = 1024*8;
+			int len = 0;
+			byte[] buffer = new byte[buffSize];
+			//开始读写
+			while((len=fis.read(buffer))!=-1) {
+				baos.write(buffer, 0 , len);
+			}
+			//结果转化
+			re = baos.toByteArray();
+		} catch (Exception e) {
+			Stdout.fpl("读取文件[%s]为 ByteBuffer 时发生异常。", filePath);
+			Stdout.pl(e);
+		} finally {
+			if(baos!=null) {
+				try {baos.close(); } catch (Exception e1) { }
+				baos=null;
+			}
+			if(fis!=null) {
+				try {fis.close(); } catch (Exception e2) { }
+				fis=null;
+			}
+		}
+		
+		//
+		return re;
+	}
+	
+	/**
+	 * 将给定地址的文件，以 ByteBuffer 的方式返回。
+	 * @param filePath 文件地址
+	 * @return ByteBuffer 对象。如果文件异常（比如：文件不存在、无法读取、流处理报错等），则返回 null
+	 */
+	public static ByteBuffer loadByteBufferFromFile(String filePath) {
+		ByteBuffer re = null;
+		byte[] byteArray = loadByteArrayFromFile(filePath);
+		if(byteArray!=null) {
+			//初始化一个同样大小的缓冲区
+			ByteBuffer buffer = ByteBuffer.allocate(byteArray.length);
+			// 放入缓冲区
+			buffer.put(byteArray);
+			// 充值缓冲区
+			buffer.flip();
+			//
+			re = buffer;
+		}
+		return re;
+	}
+	
 	//测试函数
 	/*
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
-		//获取桌面路径
-		String desktop = FileUtil.findUserDesktopDir();
-		//要写入的内容
-		//String str = "這是一個神奇的世界，到處充滿了危機。天吶！！！";
-		String str = "這是一個神奇的世界，到處充滿了危機。天吶！！！        this is a test string. please dont't delete it.";
+		String filePath1 = "D:\\软件\\exe\\Clash.Verge_x64-setup.exe";
+		String filePath2 = "xxxx";
+		String filePath3 = null;
+		String filePath4 = "";
 		
-		Stdout.fpl("待测字符串字符长度(%s), 字节长度(%s)", str.length(), str.getBytes().length);
+		byte[] re4 = loadByteArrayFromFile(filePath4);
+		Stdout.pl("re4 字节数为："+(re4==null?"异常":re4.length));
 		
-		//读写测试
-		if(!saveToLocalpath(str, desktop, "test_1.txt", "BIG5")) {
-			Stdout.pl("test_1.txt 写入失败");
-		}else {
-			String s1 = loadStringFromFile(desktop, "test_1.txt", "BIG5");
-			if(s1!=null) {
-				Stdout.pl(s1);
-			}else {
-				Stdout.pl("文件读取异常,test_1.txt");
-			}
-		}
-		//只读测试（保留换行符）
-		String s2 = loadStringFromFile(desktop, "test_2.txt", true, "BIG5");
-		if(s2!=null) {
-			Stdout.pl(s2);
-		}else {
-			Stdout.pl("文件读取异常,test_2.txt");
-		}
-		//只读测试（一行返回）
-		String s3 = loadStringFromFile(desktop, "test_2.txt", "BIG5");
-		if(s3!=null) {
-			Stdout.pl(s3);
-		}else {
-			Stdout.pl("文件读取异常,test_2.txt");
-		}
+		byte[] re3 = loadByteArrayFromFile(filePath3);
+		Stdout.pl("re3 字节数为："+(re3==null?"异常":re3.length));
 		
-		//测试默认处理
-		if(!saveToLocalpath("我是一个神奇的人类，but they were shit.", desktop, "test_3.txt")) {
-			Stdout.pl("test_3.txt 写入失败");
-		}else {
-			String s4 = loadStringFromFile(desktop, "test_3.txt");
-			if(s4!=null) {
-				Stdout.pl(s4);
-			}else {
-				Stdout.pl("文件读取异常,test_3.txt");
-			}
-		}
+		byte[] re2 = loadByteArrayFromFile(filePath2);
+		Stdout.pl("re2 字节数为："+(re2==null?"异常":re2.length));
+		
+		byte[] re1 = loadByteArrayFromFile(filePath1);
+		Stdout.pl("re1 字节数为："+(re1==null?"异常":re1.length));
+		
+		ByteBuffer b4=loadByteBufferFromFile(filePath4);
+		Stdout.pl("b4 字节数为"+(b4==null?"异常":b4.limit()-b4.position()));
+		ByteBuffer b3=loadByteBufferFromFile(filePath3);
+		Stdout.pl("b3 字节数为"+(b3==null?"异常":b3.limit()-b3.position()));
+		ByteBuffer b2=loadByteBufferFromFile(filePath2);
+		Stdout.pl("b2 字节数为"+(b2==null?"异常":b2.limit()-b2.position()));
+		ByteBuffer b1=loadByteBufferFromFile(filePath1);
+		Stdout.pl("b1 字节数为"+(b1==null?"异常":b1.limit()-b1.position()));
 		
 	}
 	*/

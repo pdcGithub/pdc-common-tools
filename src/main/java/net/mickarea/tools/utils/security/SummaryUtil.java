@@ -10,18 +10,20 @@ Copyright (c) 2023 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.utils.security;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import net.mickarea.tools.utils.FileUtil;
 import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
 /**
- * &gt;&gt;&nbsp;一个数字摘要处理的工具类（可以执行MD5、SHA-1、SHA-224、SHA-256、SHA-384、SHA-512 数字摘要算法）
+ * 一个数字摘要处理的工具类（可以执行MD5、SHA-1、SHA-224、SHA-256、SHA-384、SHA-512 数字摘要算法）
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年12月4日
+ * @since 2023年12月4日-2024年11月28日
  */
 public final class SummaryUtil {
 	
@@ -41,61 +43,109 @@ public final class SummaryUtil {
 	public static final String SHA_512 = "SHA-512";
 	
 	/**
-	 * &gt;&gt;&nbsp;按照 MD5 算法，获取摘要信息
+	 * 按照 MD5 算法，获取摘要信息
 	 * @param preStr 待处理的字符串
 	 * @return 摘要信息
 	 */
 	public static String getMD5Info(String preStr) {
 		return work(preStr, MD5);
 	}
+	/**
+	 * 按照 MD5 算法，获取摘要信息
+	 * @param filePath 待处理的文件路径
+	 * @return 摘要信息
+	 */
+	public static String getMD5InfoFromFile(String filePath) {
+		return workForFile(filePath, MD5);
+	}
 	
 	/**
-	 * &gt;&gt;&nbsp;按照 SHA_1 算法，获取摘要信息
+	 * 按照 SHA_1 算法，获取摘要信息
 	 * @param preStr 待处理的字符串
 	 * @return 摘要信息
 	 */
 	public static String getSHA_1_Info(String preStr) {
 		return work(preStr, SHA_1);
 	}
+	/**
+	 * 按照 SHA_1 算法，获取摘要信息
+	 * @param filePath 待处理的文件路径
+	 * @return 摘要信息
+	 */
+	public static String getSHA_1_InfoFromFile(String filePath) {
+		return workForFile(filePath, SHA_1);
+	}
 	
 	/**
-	 * &gt;&gt;&nbsp;按照 SHA_224 算法，获取摘要信息
+	 * 按照 SHA_224 算法，获取摘要信息
 	 * @param preStr 待处理的字符串
 	 * @return 摘要信息
 	 */
 	public static String getSHA_224_Info(String preStr) {
 		return work(preStr, SHA_224);
 	}
+	/**
+	 * 按照 SHA_224 算法，获取摘要信息
+	 * @param filePath 待处理的文件路径
+	 * @return 摘要信息
+	 */
+	public static String getSHA_224_InfoFromFile(String filePath) {
+		return workForFile(filePath, SHA_224);
+	}
 	
 	/**
-	 * &gt;&gt;&nbsp;按照 SHA_256 算法，获取摘要信息
+	 * 按照 SHA_256 算法，获取摘要信息
 	 * @param preStr 待处理的字符串
 	 * @return 摘要信息
 	 */
 	public static String getSHA_256_Info(String preStr) {
 		return work(preStr, SHA_256);
 	}
+	/**
+	 * 按照 SHA_256 算法，获取摘要信息
+	 * @param filePath 待处理的文件路径
+	 * @return 摘要信息
+	 */
+	public static String getSHA_256_InfoFromFile(String filePath) {
+		return workForFile(filePath, SHA_256);
+	}
 	
 	/**
-	 * &gt;&gt;&nbsp;按照 SHA_384 算法，获取摘要信息
+	 * 按照 SHA_384 算法，获取摘要信息
 	 * @param preStr 待处理的字符串
 	 * @return 摘要信息
 	 */
 	public static String getSHA_384_Info(String preStr) {
 		return work(preStr, SHA_384);
 	}
+	/**
+	 * 按照 SHA_384 算法，获取摘要信息
+	 * @param filePath 待处理的文件路径
+	 * @return 摘要信息
+	 */
+	public static String getSHA_384_InfoFromFile(String filePath) {
+		return workForFile(filePath, SHA_384);
+	}
 	
 	/**
-	 * &gt;&gt;&nbsp;按照 SHA_512 算法，获取摘要信息
+	 * 按照 SHA_512 算法，获取摘要信息
 	 * @param preStr 待处理的字符串
 	 * @return 摘要信息
 	 */
 	public static String getSHA_512_Info(String preStr) {
 		return work(preStr, SHA_512);
 	}
+	/**
+	 * 按照 SHA_512 算法，获取摘要信息
+	 * @param filePath 待处理的文件路径
+	 * @return 摘要信息
+	 */
+	public static String getSHA_512_InfoFromFile(String filePath) {
+		return workForFile(filePath, SHA_512);
+	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行字符串的数字摘要提取工作，提取成功返回一个字符串信息（16进制的字符串信息）
+	 * 执行字符串的数字摘要提取工作，提取成功返回一个字符串信息（16进制的字符串信息）
 	 * <p>字符串在处理时，按照 UTF-8解码</p>
 	 * @param preStr 待处理的字符串
 	 * @param algorithm 数字摘要的算法名
@@ -124,7 +174,46 @@ public final class SummaryUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将字节数组转换成16进制的字符串
+	 * 执行文件的数字摘要提取工作，提取成功返回一个字符串信息（16进制的字符串信息）
+	 * @param filePath 文件路径
+	 * @param algorithm 加密算法名称
+	 * @return 一个字符串信息（16进制的字符串信息）
+	 */
+	private static String workForFile(String filePath, String algorithm) {
+		String re = null;
+		
+		//文件路径不能为空；算法名不能为空
+		if(StrUtil.isEmptyString(filePath) || StrUtil.isEmptyString(algorithm)) {
+			return re;
+		}
+		
+		try {
+			//按照算法名，获取处理实例
+			MessageDigest digest = MessageDigest.getInstance(algorithm);
+			// 更新摘要信息，并提取
+			// 将文件以 字节 的方式处理
+			ByteBuffer buffer = FileUtil.loadByteBufferFromFile(filePath);
+			if(buffer!=null) {
+				digest.update(buffer);
+			}else {
+				throw new Exception("文件["+filePath+"] 转为字节数据异常，获取到的结果为："+buffer);
+			}
+			//
+			byte[] byteRe = digest.digest();
+			//将获取的摘要字节数组转化为16进制的字符串信息
+			re = byteToHexString(byteRe);
+		} catch (NoSuchAlgorithmException e) {
+			Stdout.pl("数字摘要提取处理，传入的算法名错误，算法名："+algorithm+"，文件路径："+filePath);
+		} catch (Exception e1) {
+			Stdout.pl("数字摘要提取处理，发生其它异常："+e1.getMessage());
+			Stdout.pl(e1);
+		}
+		
+		return re;
+	}
+	
+	/**
+	 * 将字节数组转换成16进制的字符串
 	 * @param bytes 待转换的字节数组
 	 * @return 16进制的字符串
 	 */
@@ -144,5 +233,45 @@ public final class SummaryUtil {
 		}
 		return buffer.toString();
 	}
+	
+	//测试函数
+	/*
+	public static void main(String[] args) {
+		String file1 = null;
+		String file2 = "";
+		String file3 = "xxx";
+		String file4 = "D:\\软件\\exe\\Clash.Verge_x64-setup.exe";
+		Stdout.pl("============== md5 ====================");
+		Stdout.pl("file1:"+getMD5InfoFromFile(file1));
+		Stdout.pl("file2:"+getMD5InfoFromFile(file2));
+		Stdout.pl("file3:"+getMD5InfoFromFile(file3));
+		Stdout.pl("file4:"+getMD5InfoFromFile(file4));
+		Stdout.pl("============== sha 1 ====================");
+		Stdout.pl("file1:"+getSHA_1_InfoFromFile(file1));
+		Stdout.pl("file2:"+getSHA_1_InfoFromFile(file2));
+		Stdout.pl("file3:"+getSHA_1_InfoFromFile(file3));
+		Stdout.pl("file4:"+getSHA_1_InfoFromFile(file4));
+		Stdout.pl("============== sha 224 ====================");
+		Stdout.pl("file1:"+getSHA_224_InfoFromFile(file1));
+		Stdout.pl("file2:"+getSHA_224_InfoFromFile(file2));
+		Stdout.pl("file3:"+getSHA_224_InfoFromFile(file3));
+		Stdout.pl("file4:"+getSHA_224_InfoFromFile(file4));
+		Stdout.pl("============== sha 256 ====================");
+		Stdout.pl("file1:"+getSHA_256_InfoFromFile(file1));
+		Stdout.pl("file2:"+getSHA_256_InfoFromFile(file2));
+		Stdout.pl("file3:"+getSHA_256_InfoFromFile(file3));
+		Stdout.pl("file4:"+getSHA_256_InfoFromFile(file4));
+		Stdout.pl("============== sha 384 ====================");
+		Stdout.pl("file1:"+getSHA_384_InfoFromFile(file1));
+		Stdout.pl("file2:"+getSHA_384_InfoFromFile(file2));
+		Stdout.pl("file3:"+getSHA_384_InfoFromFile(file3));
+		Stdout.pl("file4:"+getSHA_384_InfoFromFile(file4));
+		Stdout.pl("============== sha 512 ====================");
+		Stdout.pl("file1:"+getSHA_512_InfoFromFile(file1));
+		Stdout.pl("file2:"+getSHA_512_InfoFromFile(file2));
+		Stdout.pl("file3:"+getSHA_512_InfoFromFile(file3));
+		Stdout.pl("file4:"+getSHA_512_InfoFromFile(file4));
+	}
+	*/
 	
 }

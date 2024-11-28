@@ -47,7 +47,7 @@ import net.mickarea.tools.utils.database.impl.query.SqlserverQuery;
  * &gt;&gt;&nbsp;数据库操作的静态工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年7月14日-2024年10月31日
+ * @since 2023年7月14日-2024年11月28日
  */
 public final class DBStaticUtil {
 
@@ -596,9 +596,6 @@ public final class DBStaticUtil {
 		
 		String preSql = genFunctionSql(functionName, params, virtualTable); //构造调用函数的预处理语句
 		
-		//根据条件来判断，是否显示执行细节
-		Stdout.plExecutedSqlInfo(preSql, params);
-		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -856,9 +853,10 @@ public final class DBStaticUtil {
 				for(Field f: fs) {
 					if(f.isAnnotationPresent(MyColumn.class) 
 							&& !f.isAnnotationPresent(MyIdGroup.class)
+							&& !f.isAnnotationPresent(MyAutoIncrement.class)
 							&& !f.isAnnotationPresent(MyColumnIgnore.class)
 							&& !f.isAnnotationPresent(MyColumnReadOnly.class)) {
-						//只能 更新（update） 一些普通的列；排除 唯一索引（主键），排除 非数据库列，排除 只读列
+						//只能 更新（update） 一些普通的列；排除 唯一索引（主键），排除自增列，排除 非数据库列，排除 只读列
 						
 						//如果有指定要更新的字段，则只需要获取这些字段的值，其它值不需要处理
 						if(!ListUtil.isEmptyList(propertyNames) && !propertyNames.contains(f.getName())) {
@@ -1160,15 +1158,24 @@ public final class DBStaticUtil {
 		}
 		//对于 oracle 的 OracleClob 类型，一律转换为 String 类型
 		if(result instanceof oracle.jdbc.OracleClob) {
-			result = ((oracle.sql.CLOB)result).stringValue();
+			oracle.jdbc.OracleClob tempClob = (oracle.jdbc.OracleClob)result;
+			if(tempClob!=null) {
+				result = tempClob.getSubString(1, (int)tempClob.length());
+			}
 		}
 		//对于 oracle 的 OracleNClob 类型，一律转换为 String 类型
 		if(result instanceof oracle.jdbc.OracleNClob) {
-			result = ((oracle.sql.NCLOB)result).stringValue();
+			oracle.jdbc.OracleNClob tempNClob = (oracle.jdbc.OracleNClob)result;
+			if(tempNClob!=null) {
+				result = tempNClob.getSubString(1, (int)tempNClob.length());
+			}
 		}
 		//对于 oracle 的 OracleBlob 类型，一律转换为 byte[] 类型
 		if(result instanceof oracle.jdbc.OracleBlob) {
-			result = ((oracle.sql.BLOB)result).getBytes();
+			oracle.jdbc.OracleBlob blob = (oracle.jdbc.OracleBlob)result;
+			if(blob!=null) {
+				result = blob.getBytes(1, (int)blob.length());
+			}
 		}
 		
 		//处理完毕，放入临时变量

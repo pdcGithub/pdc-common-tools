@@ -32,7 +32,7 @@ import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
  * 关于更新的实体操作测试1
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2024年10月31日
+ * @since 2024年10月31日-2024年11月28日
  */
 public class TestEntityUpdate1 {
 
@@ -59,7 +59,7 @@ public class TestEntityUpdate1 {
 		StringBuffer execMsg = new StringBuffer();
 		List<MyDataTypes> targetList = db.queryEntity(MyDataTypes.class, condiList, execMsg);
 		if(StrUtil.isEmptyString(execMsg.toString())) {
-			Stdout.pl("执行查询成功（记录数有："+targetList.size()+"），信息如下：");
+			Stdout.pl("执行查询成功（记录数有："+(targetList==null?0:targetList.size())+"），信息如下：");
 			if(!ListUtil.isEmptyList(targetList)) {
 				//打印找到的数据
 				Stdout.pl();

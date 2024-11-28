@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import net.mickarea.tools.annotation.MyColumn;
+import net.mickarea.tools.annotation.MyColumnReadOnly;
 import net.mickarea.tools.annotation.MyIdGroup;
 import net.mickarea.tools.annotation.MyTableOrView;
 import net.mickarea.tools.utils.Stdout;
@@ -23,7 +24,7 @@ import net.mickarea.tools.utils.Stdout;
  * 一个普通的 java bean 类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2024年6月21日-2024年7月2日
+ * @since 2024年6月21日-2024年11月28日
  */
 @MyTableOrView(name="TEST_ORCL_DATA_TYPE")
 public class TestOrclDataType {
@@ -56,6 +57,7 @@ public class TestOrclDataType {
     @MyColumn(name="content", displayName="测试内容1", extProperty="")
     private String content;
 
+    @MyColumnReadOnly
     @MyColumn(name="v_row2", displayName="rowid信息", extProperty="")
     private String vRow2;
 

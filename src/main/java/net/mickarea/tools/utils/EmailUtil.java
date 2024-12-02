@@ -36,7 +36,7 @@ import net.mickarea.tools.utils.security.RSAUtil;
  * 关于电子邮件的收发处理
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年9月27日-2024年11月29日
+ * @since 2023年9月27日-2024年12月2日
  */
 public final class EmailUtil {
 	
@@ -173,12 +173,13 @@ public final class EmailUtil {
 	}
 	
 	/**
-	 * 邮件一对一发送方法（邮件内容字符集 默认 GBK）
+	 * 邮件一对一发送方法（邮件内容字符集 默认 GBK）。此函数已经不建议使用，因为邮件发送最好指定字符编码
 	 * @param subject 邮件主题信息
 	 * @param htmlString 要发送的内容，html 格式
 	 * @param toEmailAddr 目标邮件地址
 	 * @return 如果发送成功，返回 true ；如果发送失败，返回 false 。
 	 */
+	@Deprecated
 	public static boolean sendEmail(String subject, String htmlString, String toEmailAddr) {
 		return sendEmail(subject, htmlString, toEmailAddr, "GBK");
 	}

@@ -11,6 +11,8 @@ Copyright (c) 2022 Michael Pang.
 package net.mickarea.tools.utils;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +22,7 @@ import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
  * &gt;&gt;&nbsp;个人的一个字符工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.1
- * @since 2022年6月26日-2023年12月24日
+ * @since 2022年6月26日-2024年12月2日
  */
 public final class StrUtil {
 	
@@ -152,12 +154,19 @@ public final class StrUtil {
 	public static String injectionTranslateForHtmlEditor(String htmlParam) {
 		String result = "";
 		if(!StrUtil.isEmptyString(htmlParam)) {
-			//替换script标签
-			result = htmlParam.replaceAll("<([sS][cC][rR][iI][pP][tT]\\s+.*?|[sS][cC][rR][iI][pP][tT])>.*?</([sS][cC][rR][iI][pP][tT])>", "");
-			//替换on属性
-			result = result.replaceAll("\\s+[oO][nN][a-zA-Z]+=", " forbidden=");
+			
+			List<String> tagNameForDelete = Arrays.asList("script", "form", "iframe", "object", "embed");
+			result = htmlParam;
+			//替换 html 标签（完全删除）
+			for(String tagName : tagNameForDelete) {
+				result = result.replaceAll(PatternUtil.genRegStrForHtmlTagReplace(tagName), "");
+			}
+			//替换 on 属性
+			result =  result.replaceAll("\\s+[oO][nN][a-zA-Z]+=", " forbidden=");
 			//替换有 javascript 的 href 属性
-			result = result.replaceAll("\\s+[hH][rR][eE][fF]=['\"]\\s*[jJ][aA][vV][aA][sS][cC][rR][iI][pP][tT]:", " href='");
+			result = result.replaceAll("\\s+[Hh][Rr][Ee][Ff]=['\"]\\s*[Jj][Aa][Vv][Aa][Ss][Cc][Rr][Ii][Pp][Tt]:", " href=\"");
+			// 存在一些字符串过滤 绕过的问题，比如：<a href="java&#x0073;cript:alert(6)">点击6下</a> 这是可执行的。要对 &# 内容替换 
+			result = result.replaceAll("\\s+[Hh][Rr][Ee][Ff]=['\"][\\s]*.*?\\&\\#.*?", " href=\"");
 		}
 		return result;
 	}
@@ -226,39 +235,14 @@ public final class StrUtil {
 	
 	/*
 	public static void main(String[] args) {
-		
-		Stdout.pl(removeAllBlankStrings(null));
-		Stdout.pl(removeAllBlankStrings(""));
-		Stdout.pl(removeAllBlankStrings("      a  		b    "));
-		Stdout.pl(removeAllBlankStrings("   \r\n   c  	\r\n	d    "));
-		
-		
-		Stdout.pl(StrUtil.countString("select count(?) as a, find(?,?) from dual; ", "al"));
-		
-		String s = "<script>alert('Attack');</script>";
-		String sqlParam = "男' or 1=1 or ''=' or id like '%aaa%'";
-		
-		Stdout.pl(Pattern.matches(".*[;'<>]+.*", s));
-		
-		Stdout.pl(injectionTranslate(s));
-		Stdout.pl(injectionTranslate(null));
-		
-		Stdout.pl(injectionTranslateForHtml(s));
-		Stdout.pl(injectionTranslateForHtml(null));
-		
-		
-		Stdout.pl(injectionTranslateForSQL(sqlParam));
-		Stdout.pl(injectionTranslateForSQL(null));
-		
-		Stdout.pl(injectionTranslateForSQL(new OracleCodec(), sqlParam));
-		Stdout.pl(injectionTranslateForSQL(null));
-		
-		Stdout.pl(injectionTranslateForSQL(new DB2Codec(), sqlParam));
-		Stdout.pl(injectionTranslateForSQL(null));
-		
-		Stdout.pl(StrUtil.isJavaKeyWords("public"));
-		
+		String ori = FileUtil.loadStringFromFile("C:\\Users\\Michael\\Desktop", "injection_test.html", true);
+		Stdout.pl(ori);
+		Stdout.pl("============================================");
+		String newStr = injectionTranslateForHtmlEditor(ori);
+		Stdout.pl(newStr);
+		Stdout.pl("===================== 写入到文件 ===================");
+		boolean isOk = FileUtil.saveToLocalpath(newStr, "C:\\Users\\Michael\\Desktop", "ok_test.html", "UTF-8");
+		Stdout.pl("文件写入 "+(isOk?"成功":"失败"));
 	}
 	*/
-	
 }

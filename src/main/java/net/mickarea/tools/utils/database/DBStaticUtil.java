@@ -44,35 +44,35 @@ import net.mickarea.tools.utils.database.impl.query.OracleQuery;
 import net.mickarea.tools.utils.database.impl.query.SqlserverQuery;
 
 /**
- * &gt;&gt;&nbsp;数据库操作的静态工具类
+ * 数据库操作的静态工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年7月14日-2024年11月28日
+ * @since 2023年7月14日-2024年12月3日
  */
 public final class DBStaticUtil {
 
 	/**
-	 * &gt;&gt;&nbsp;sql执行的状态参数
+	 * sql执行的状态参数
 	 */
 	public static String OK = "ok";
 	/**
-	 * &gt;&gt;&nbsp;sql执行的状态参数
+	 * sql执行的状态参数
 	 */
 	public static String ERR = "error";
 	/**
-	 * &gt;&gt;&nbsp;sql语句类型
+	 * sql语句类型
 	 */
 	public static String SQL_TYPE_INSERT = "insert";
 	/**
-	 * &gt;&gt;&nbsp;sql语句类型
+	 * sql语句类型
 	 */
 	public static String SQL_TYPE_SELECT = "select";
 	/**
-	 * &gt;&gt;&nbsp;sql语句类型
+	 * sql语句类型
 	 */
 	public static String SQL_TYPE_DELETE = "delete";
 	/**
-	 * &gt;&gt;&nbsp;sql语句类型
+	 * sql语句类型
 	 */
 	public static String SQL_TYPE_UPDATE = "update";
 	/**
@@ -85,14 +85,14 @@ public final class DBStaticUtil {
 	public static String OBJ_TYPE_PROC = "proc";
 	
 	/**
-	 * &gt;&gt;&nbsp;构造函数，私有
+	 * 构造函数，私有
 	 */
 	private DBStaticUtil() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * 执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
 	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
@@ -105,7 +105,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * 执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
 	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
@@ -119,7 +119,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * 执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
 	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
@@ -134,7 +134,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
+	 * 执行数据库映射类的实体数据查询（默认是分页查询，查询的分页默认值，可查看 PageInfo 类）
 	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param cls 数据库表或者视图的实体映射类
@@ -179,7 +179,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;数据库映射的实体对象的更新操作
+	 * 数据库映射的实体对象的更新操作
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param objectList 数据库映射的实体对象列表
 	 * @param updatePropertyNames 更新操作，所涉及的属性名，以逗号分隔
@@ -190,7 +190,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;数据库映射的实体对象的删除操作
+	 * 数据库映射的实体对象的删除操作
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param objectList 数据库映射的实体对象列表
 	 * @throws Exception 如果执行出错，就会抛出异常。
@@ -200,7 +200,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;数据库映射的实体对象的插入操作
+	 * 数据库映射的实体对象的插入操作
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param objectList 数据库映射的实体对象列表
 	 * @throws Exception 如果执行出错，就会抛出异常。
@@ -210,7 +210,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行查询语句，并将查询结果写入 SimpleDBData 这个容器中（这个函数在事务同步中使用）
+	 * 执行查询语句，并将查询结果写入 SimpleDBData 这个容器中（这个函数在事务同步中使用）
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param preSql 用预处理格式的sql语句，参数位置用 ? 代替
 	 * @param params 参数不单单对应查询条件，也对应查询内容。
@@ -264,7 +264,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;这里用于处理一些临时性的非实体查询（这个函数在事务同步中使用）
+	 * 这里用于处理一些临时性的非实体查询（这个函数在事务同步中使用）
 	 * @param <T> 与传入的 cls 相同的类型
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param virtualEntityClass 虚拟的实体对象，必须有 MyVirtualEntity 注解
@@ -305,7 +305,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;以 SQL 语句的方式更新数据。这个方法是用于在多个操作下，保持事务一致性的。
+	 * 以 SQL 语句的方式更新数据。这个方法是用于在多个操作下，保持事务一致性的。
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param preSql 数据库 update 语句。语句必须带参数，参数以 '?' 替换符匹配
 	 * @param params 数据库 update 语句中的 参数（包括 set 以及 where 条件）
@@ -316,7 +316,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;以 SQL 语句的方式删除数据。这个方法是用于在多个操作下，保持事务一致性的。
+	 * 以 SQL 语句的方式删除数据。这个方法是用于在多个操作下，保持事务一致性的。
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param preSql 数据库 delete 语句。语句必须带参数，参数以 '?' 替换符匹配
 	 * @param params 数据库 delete 语句中的 where 条件参数
@@ -327,7 +327,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;以 SQL 语句的方式插入数据。这个方法是用于在多个操作下，保持事务一致性的。
+	 * 以 SQL 语句的方式插入数据。这个方法是用于在多个操作下，保持事务一致性的。
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param preSql 数据库 insert 语句。语句必须带参数，参数以 '?' 替换符匹配
 	 * @param params 要插入的数据内容。以二维列表( List&lt;List&lt;Object&gt;&gt; )的形式传入。
@@ -338,7 +338,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将查询到的 SimpleDBData 对象，转换为 对应的 数据库表或者视图的映射实体对象列表
+	 * 将查询到的 SimpleDBData 对象，转换为 对应的 数据库表或者视图的映射实体对象列表
 	 * @param <T> 与传入的 cls 相同的类型
 	 * @param cls 数据库表或者视图映射实体对象
 	 * @param sdb 一个数据结果集的简易对象
@@ -365,19 +365,38 @@ public final class DBStaticUtil {
 						}
 						//根据映射类获取 该字段对应的属性名
 						String fieldName = DBStrUtil.genNameFromColumn(sdb.getColumnName().get(j), cls);
+						
+						// 映射对象的属性 类型
+						Class<?> targetType = cls.getDeclaredField(fieldName).getType();
+						
 						//方法获取需要匹配，如果数据类型不匹配，需要修改映射类
 						//2024-4-4 原本是从sdb读取jdbc自动映射的java类型。
 						//        但是考虑到可能存在修改映射类属性类型的需要， 
 						//        这里修改为根据映射类的属性所指定的类型，来设置数据类型。
-						Method m = cls.getMethod(setterName, cls.getDeclaredField(fieldName).getType());
+						Method m = cls.getMethod(setterName, targetType);
 						
 						// 对象类型转换（数字、时间）
 						Object targetObj = sdb.getData()[i][j];
-						if(targetObj!=null && targetObj instanceof Number) {
-							targetObj = translateNumberObj(targetObj, cls.getDeclaredField(fieldName).getType());
-						}
-						if(targetObj!=null && targetObj instanceof Timestamp) {
-							targetObj = translateTimeObj(targetObj, cls.getDeclaredField(fieldName).getType());
+						
+						//不为 null 才执行 类型转换
+						if(targetObj!=null) {
+							
+							if(targetObj instanceof Number) {
+								// 如果 映射类的属性 为 数字类型，则转换
+								// 在获取 sdb 时，数字对象已经转为 BigDecimal 了，参考 translateDictInfoType 方法）
+								targetObj = translateNumberObj(targetObj, targetType);
+								
+							}else if(targetObj instanceof Timestamp) {
+								// 如果 数据库 为 java.sql.Timestamp ，但是映射类是 LocalDateTime 之类要转换
+								targetObj = translateTimeObj(targetObj, targetType);
+								
+							}else if(targetObj instanceof LocalDateTime
+									&& targetType.getName().equalsIgnoreCase("java.sql.Timestamp")) {
+								//如果数据库返回的是 LocalDateTime 但是 目标类型是 java.sql.Timestamp
+								//这种情况比较少有，不过还是转换一下 （因为 jdk 1.8 之后 推荐用 java.time.* 下面的时间类型。
+								// 一般不会用到这代码，除非有特殊需要。目前就 MySQL 8+ 会返回 LocalDateTime ）
+								targetObj = Timestamp.valueOf((LocalDateTime)targetObj);
+							}
 						}
 						
 						// 调用 setter 方法，设置 数值
@@ -390,7 +409,7 @@ public final class DBStaticUtil {
 									e2.getMessage(), 
 									cls, 
 									fieldName, 
-									cls.getDeclaredField(fieldName).getType(), 
+									targetType, 
 									setterName, 
 									sdb.getData()[i][j].getClass());
 							Stdout.pl(new Exception(s));
@@ -415,7 +434,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将 查找到的 结果集 封装到 SimpleDBData 对象中去
+	 * 将 查找到的 结果集 封装到 SimpleDBData 对象中去
 	 * @param sdb 一个 SimpleDBData 对象。作为容器使用
 	 * @param rs 数据库操作执行后，返回的结果集
 	 * @throws Exception 如果执行出错，就会抛出异常。
@@ -473,7 +492,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;这个方法用于执行 update、delete、insert 三种类型 的操作
+	 * 这个方法用于执行 update、delete、insert 三种类型 的操作
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param preSql 数据库 update 语句。语句必须带参数，参数以 '?' 替换符匹配
 	 * @param params 数据库 update 语句中的 参数（包括 set 以及 where 条件）
@@ -533,7 +552,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;这个方法用于执行 update、delete、insert 三种类型 实体的操作
+	 * 这个方法用于执行 update、delete、insert 三种类型 实体的操作
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param objectList 将要执行操作的实体对象列表
 	 * @param type 实体操作类型，比如  insert 、 delete 、 update 三大类。参考：DBOperator 的 SQL_TYPE 常量
@@ -573,7 +592,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库的函数
+	 * 执行数据库的函数
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param functionName 数据库函数名
 	 * @param params 数据库函数的执行参数列表
@@ -632,7 +651,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库的函数，并将执行结果以 Java 对象的形式返回。
+	 * 执行数据库的函数，并将执行结果以 Java 对象的形式返回。
 	 * @param <T> 一个类型与 targetClass 指定的类型一样的对象
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param targetClass 返回的数据所对应的数据类型，比如：String, Boolean, Integer 等等
@@ -672,7 +691,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;执行数据库的存储过程
+	 * 执行数据库的存储过程
 	 * @param dbType 数据库类型。参考 DBSQLInjectionUtil 的 DBTYPE
 	 * @param conn 数据库连接对象，由外部传入，用于保持事务一致性。（在方法内，这个连接不回收，由外部调用程序回收）
 	 * @param procedureName 存储过程的名称
@@ -762,7 +781,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;构造delete操作的sql语句 以及 返回一个参数列表
+	 * 构造delete操作的sql语句 以及 返回一个参数列表
 	 * @param entityList 需要删除的实体对象列表
 	 * @param sqlBuffer 用于返回sql语句的载体
 	 * @return 关于这个delete sql 语句所需要的参数列表
@@ -813,7 +832,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;构造update操作的sql语句 以及 返回一个参数列表
+	 * 构造update操作的sql语句 以及 返回一个参数列表
 	 * @param entityList 需要更新的实体对象列表
 	 * @param sqlBuffer 用于返回sql语句的载体
 	 * @param updatePropertyNames 更新操作，所涉及的属性名，以逗号分隔
@@ -910,7 +929,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;构造insert操作的sql语句 以及 返回一个参数列表
+	 * 构造insert操作的sql语句 以及 返回一个参数列表
 	 * @param entityList 需要插入的实体对象列表
 	 * @param sqlBuffer 用于返回sql语句的载体
 	 * @return 关于这个insert sql 语句所需要的参数列表
@@ -975,7 +994,7 @@ public final class DBStaticUtil {
 	
 	/**
 	 * 
-	 * &gt;&gt;&nbsp;根据传入的函数名称和函数参数列表，构造一个函数的调用语句
+	 * 根据传入的函数名称和函数参数列表，构造一个函数的调用语句
 	 * @param funcName 函数名
 	 * @param params 参数列表；可以为null值，或者空列表
 	 * @param virtualTable 对应数据库的虚表。比如：Oracle 的 dual 。
@@ -1004,7 +1023,7 @@ public final class DBStaticUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;根据传入的存储过程名称和存储过程参数列表，构造一个存储过程的调用语句
+	 * 根据传入的存储过程名称和存储过程参数列表，构造一个存储过程的调用语句
 	 * @param dbType 数据库类型。参考 DBSQLInjectionUtil 的 DBTYPE
 	 * @param procName 存储过程的名称
 	 * @param params 存储过程的参数

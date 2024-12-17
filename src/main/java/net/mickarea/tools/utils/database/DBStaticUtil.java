@@ -47,7 +47,7 @@ import net.mickarea.tools.utils.database.impl.query.SqlserverQuery;
  * 数据库操作的静态工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年7月14日-2024年12月3日
+ * @since 2023年7月14日-2024年12月17日
  */
 public final class DBStaticUtil {
 
@@ -386,8 +386,10 @@ public final class DBStaticUtil {
 								// 在获取 sdb 时，数字对象已经转为 BigDecimal 了，参考 translateDictInfoType 方法）
 								targetObj = translateNumberObj(targetObj, targetType);
 								
-							}else if(targetObj instanceof Timestamp) {
+							}else if(targetObj instanceof Timestamp
+									|| targetObj instanceof java.sql.Date) {
 								// 如果 数据库 为 java.sql.Timestamp ，但是映射类是 LocalDateTime 之类要转换
+								// 如果 数据库 为 java.sql.Date，但是映射类是 LocalDate 之类的要转换
 								targetObj = translateTimeObj(targetObj, targetType);
 								
 							}else if(targetObj instanceof LocalDateTime
@@ -1125,6 +1127,7 @@ public final class DBStaticUtil {
 	private static Object translateTimeObj(Object oriObj, Class<?> targetType) {
 		//结果对象
 		Object result = oriObj;
+		
 		//转换的前提条件，oriObj是 Timestamp 类型，targetType 是 时间 类型，比如：Date 之类的
 		if(oriObj!=null && targetType!=null && oriObj instanceof Timestamp) {
 			//开始转换
@@ -1143,6 +1146,25 @@ public final class DBStaticUtil {
 				break;
 			}
 		}
+		
+		// 关于 java.sql.Date 转 LocalDate 和 java.util.Date 的处理
+		if(oriObj!=null && targetType!=null && oriObj instanceof java.sql.Date) {
+			String targetTypeName = targetType.getName();
+			switch(targetTypeName) {
+			case "java.util.Date":
+				// java.sql.Date 是 java.util.Date 的子类，直接转类型即可
+				result = (java.util.Date)oriObj;
+				break;
+			case "java.time.LocalDate":
+				// 对于 java.sql.Date 的输出，就是一个日期字符串，比如：2024-12-17
+				// 因此转字符串，然后将字符串转换为 LocalDate 即可
+				result = LocalDate.parse(oriObj.toString());
+				break;
+			default:
+				break;
+			}
+		}
+		
 		return result;
 	}
 	

@@ -46,7 +46,7 @@ public class Student {
     private LocalDateTime uTime;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public Student() {
         // TODO Auto-generated constructor stub

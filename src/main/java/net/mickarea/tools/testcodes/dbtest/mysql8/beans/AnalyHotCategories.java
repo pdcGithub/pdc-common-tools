@@ -39,7 +39,7 @@ public class AnalyHotCategories {
     private Integer tagCount;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public AnalyHotCategories() {
         // TODO Auto-generated constructor stub

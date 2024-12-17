@@ -50,7 +50,7 @@ public class AnalyBusyHours {
     private Integer col20;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public AnalyBusyHours() {
         // TODO Auto-generated constructor stub

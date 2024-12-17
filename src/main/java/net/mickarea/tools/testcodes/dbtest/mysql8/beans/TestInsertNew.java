@@ -40,7 +40,7 @@ public class TestInsertNew {
     private Timestamp ctime;
 
     /**
-     * >> 构造函数
+     * 构造函数
      */
     public TestInsertNew() {
         // TODO Auto-generated constructor stub

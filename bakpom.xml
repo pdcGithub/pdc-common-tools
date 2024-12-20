@@ -1,227 +1,231 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.github.pdcgithub</groupId>
-	<artifactId>pdc-common-tool</artifactId>
-	<packaging>jar</packaging>
-	<version>1.0.1-jre8-RC</version>
-	<name>pdc-common-tool</name>
-	<description>This is a common toolkit of myself</description>
-	<url>https://github.com/pdcGithub/pdc-common-tools</url>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.pdcgithub</groupId>
+    <artifactId>pdc-common-tool</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.1-jre8-RC</version>
+    <name>pdc-common-tool</name>
+    <description>This is a common toolkit of myself</description>
+    <url>https://github.com/pdcGithub/pdc-common-tools</url>
 
-	<licenses>
-		<license>
-			<name>MIT License</name>
-			<url>https://mit-license.org/</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://mit-license.org/</url>
+        </license>
+    </licenses>
 
-	<developers>
-		<developer>
-			<id>mynameid</id>
-			<name>Michael Pang ( Dongcan Pang )</name>
-			<email>pangdongcan@live.com</email>
-			<roles>
-				<role>Project Manager</role>
-				<role>Architect</role>
-			</roles>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>mynameid</id>
+            <name>Michael Pang ( Dongcan Pang )</name>
+            <email>pangdongcan@live.com</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+            </roles>
+        </developer>
+    </developers>
 
-	<scm>
-		<connection>https://github.com/pdcGithub/pdc-common-tools.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:pdcGithub/pdc-common-tools.git</developerConnection>
-		<url>https://github.com/pdcGithub/pdc-common-tools</url>
-	</scm>
+    <scm>
+        <connection>https://github.com/pdcGithub/pdc-common-tools.git</connection>
+        <developerConnection>
+            scm:git:ssh://git@github.com:pdcGithub/pdc-common-tools.git</developerConnection>
+        <url>https://github.com/pdcGithub/pdc-common-tools</url>
+    </scm>
 
-	<!-- 设置软件版本等参数 -->
-	<properties>
-		<jdk.version>1.8</jdk.version>
-		<encoding>utf-8</encoding>
-	</properties>
+    <!-- 设置软件版本等参数 -->
+    <properties>
+        <jdk.version>1.8</jdk.version>
+        <encoding>utf-8</encoding>
+    </properties>
 
-	<build>
-		<plugins>
+    <build>
+        <plugins>
 
-			<!-- central 发布插件 -->
-			<plugin>
-				<groupId>org.sonatype.central</groupId>
-				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.4.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<publishingServerId>myrepo</publishingServerId>
-					<tokenAuth>true</tokenAuth>
-				</configuration>
-			</plugin>
+            <!-- central 发布插件 -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>myrepo</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
+                </configuration>
+            </plugin>
 
-			<!-- 设置jdk版本 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-					<encoding>${encoding}</encoding>
-					<excludes>
-						<!-- 编译时，排除测试文件 -->
-						<!-- <exclude>**/dbtest/**</exclude> <exclude>**/filetest/**</exclude> 
-							<exclude>**/lambdatest/**</exclude> <exclude>**/threads/**</exclude> -->
-					</excludes>
-				</configuration>
-			</plugin>
-			<!-- jar插件 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<excludes>
-						<!-- 打包时，排除测试文件 -->
-						<exclude>**/testcodes/**</exclude>
-					</excludes>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<!-- source -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- java doc 插件 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.3.2</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- gpg 验证插件 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
-				<configuration>
-					<executable>C:\Program Files (x86)\GnuPG\bin\gpg.exe</executable>
-					<keyname>MichaelPang</keyname>
-				</configuration>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<!--包含文件夹以及子文件夹下所有资源 -->
-					<include>**/*.*</include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
+            <!-- 设置jdk版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <encoding>${encoding}</encoding>
+                    <excludes>
+                        <!-- 编译时，排除测试文件 -->
+                        <!-- <exclude>**/dbtest/**</exclude>
+                        <exclude>**/filetest/**</exclude> 
+                            <exclude>**/lambdatest/**</exclude> <exclude>**/threads/**</exclude> -->
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- jar插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <!-- 打包时，排除测试文件 -->
+                        <exclude>**/testcodes/**</exclude>
+                    </excludes>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- source -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- java doc 插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- gpg 验证插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <executable>C:\Program Files (x86)\GnuPG\bin\gpg.exe</executable>
+                    <keyname>pangdongcan</keyname>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <!--包含文件夹以及子文件夹下所有资源 -->
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
-	<dependencies>
+    <dependencies>
 
-		<!-- 数据库连接池 HikariCP java8 版用 4.0 版本 -->
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-			<version>4.0.3</version>
-		</dependency>
+        <!-- 数据库连接池 HikariCP java8 版用 4.0 版本 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+        </dependency>
 
-		<!--添加mysql的jdbc工具包，8.0.31 和 老版本的路径不同 -->
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<version>8.4.0</version>
-		</dependency>
+        <!--添加mysql的jdbc工具包，8.0.31 和 老版本的路径不同 -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.4.0</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 -->
-		<!--添加 Oracle 的jdbc工具包 用于oracle11g -->
-		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc8</artifactId>
-			<version>23.2.0.0</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 -->
+        <!--添加 Oracle 的jdbc工具包 用于oracle11g -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>23.2.0.0</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-		<!-- 添加 MS SQL Server jdbc 包。 -->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>12.8.1.jre8</version>
-		</dependency>
+        <!--
+        https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+        <!-- 添加 MS SQL Server jdbc 包。 -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.8.1.jre8</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.owasp.esapi/esapi -->
-		<!-- 移除 ESAPI <dependency> <groupId>org.owasp.esapi</groupId> <artifactId>esapi</artifactId> 
-			<version>2.5.2.0</version> </dependency> -->
+        <!-- https://mvnrepository.com/artifact/org.owasp.esapi/esapi -->
+        <!-- 移除 ESAPI <dependency> <groupId>org.owasp.esapi</groupId>
+        <artifactId>esapi</artifactId> 
+            <version>2.5.2.0</version> </dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.10.2</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
 
-		<!-- 添加 java mail 工具包 -->
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
-		</dependency>
+        <!-- 添加 java mail 工具包 -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.ansj/ansj_seg -->
-		<!-- 分词器 -->
-		<dependency>
-			<groupId>org.ansj</groupId>
-			<artifactId>ansj_seg</artifactId>
-			<version>5.1.6</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.ansj/ansj_seg -->
+        <!-- 分词器 -->
+        <dependency>
+            <groupId>org.ansj</groupId>
+            <artifactId>ansj_seg</artifactId>
+            <version>5.1.6</version>
+        </dependency>
 
-		<!-- 日志记录 -->
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>2.0.7</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.3.14</version>
-		</dependency>
+        <!-- 日志记录 -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.3.14</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 </project>

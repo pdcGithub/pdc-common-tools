@@ -10,19 +10,29 @@ Copyright (c) 2022 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.utils;
 
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
+import static java.time.temporal.ChronoField.NANO_OF_SECOND;
+import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.format.SignStyle;
+import java.time.temporal.ChronoField;
 import java.util.Date;
 
 /**
  * 时间相关处理的工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2022年12月6日-2024年11月29日
+ * @since 2022年12月6日-2025年1月9日
  */
 public final class TimeUtil {
 	
@@ -42,6 +52,69 @@ public final class TimeUtil {
 	 * 固定的时间格式化，4位年份-2位月份-2位日期 24小时:2位分钟:2位秒.3位毫秒 这样的格式
 	 */
 	public static final SimpleDateFormat DEFAULT_WITH_MILISECOND = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	
+	/**
+	 * 一个固定日期格式的转换对象。它所能处理的字符串格式如下：2020-1-1、2021-12-31、2021/1/1、2021/12/31
+	 */
+	public static final DateTimeFormatter FMT_DATE_NORMAL ;
+    static {
+    	FMT_DATE_NORMAL = new DateTimeFormatterBuilder()
+    			   .optionalStart()
+				   .append(DateTimeFormatter.ofPattern("yyyy-M-d"))
+				   .optionalEnd()
+				   .optionalStart()
+				   .append(DateTimeFormatter.ofPattern("yyyy/M/d"))
+				   .optionalEnd()
+				   .toFormatter();
+    }
+    
+    /**
+     * 一个固定日期格式的转换对象。它所能处理的字符串格式如下：2021、202101、20210131
+     */
+    public static final DateTimeFormatter FMT_DATE_WTSPLIT ;
+    static {
+    	FMT_DATE_WTSPLIT = new DateTimeFormatterBuilder()
+    			 .appendPattern("[yyyy][yyyyMM][yyyyMMdd]")
+				 .optionalStart()
+                 .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                 .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                 .optionalEnd()
+                 .toFormatter();
+    }
+    
+    /**
+     * 这是一个我自己定义的 时分秒 信息转换器。用于兼容 1位 时分秒的情况：比如：8时2分3秒 这种情况
+     */
+    public static final DateTimeFormatter FMT_MY_TIME ;
+    static {
+    	FMT_MY_TIME = new DateTimeFormatterBuilder()
+    			.appendValue(HOUR_OF_DAY, 1, 2, SignStyle.NEVER)
+                .appendLiteral(':')
+                .appendValue(MINUTE_OF_HOUR, 1, 2, SignStyle.NEVER)
+                .optionalStart()
+                .appendLiteral(':')
+                .appendValue(SECOND_OF_MINUTE, 1, 2, SignStyle.NEVER)
+                .optionalStart()
+                .appendFraction(NANO_OF_SECOND, 0, 9, true)
+                .toFormatter();
+    }
+    
+    /**
+     * 一个固定时间时间格式的转换对象。它能处理的字符串格式为：年、月、日 拼接 时、分、秒。中间的间隔， 可以为' '空格，也可以为'T'字符，也可以没有
+     */
+    public static final DateTimeFormatter FMT_DATETIME_NORMAL ;
+    static {
+    	FMT_DATETIME_NORMAL = new DateTimeFormatterBuilder()
+    			.append(FMT_DATE_NORMAL)
+    			.optionalStart()
+    			.appendLiteral('T')
+    			.optionalEnd()
+    			.optionalStart()
+    			.appendLiteral(' ')
+				.optionalEnd()
+				.append(FMT_MY_TIME)
+				.toFormatter();
+    }
 	
 	/**
 	 * 按照默认格式的时间字符串(4位年份-2位月份-2位日期 24小时:2位分钟:2位秒)，格式化当前时间
@@ -171,17 +244,60 @@ public final class TimeUtil {
 		return Timestamp.valueOf(time);
 	}
 	
+	/**
+	 * 将指定格式的字符串，转换为 LocalDate 对象。如果转换失败，会抛出异常。
+	 * @param dateString 指定格式的日期字符串
+	 * @param formatter 转换器对象，TimeUtil 工具类，有提供默认的 FMT 对象
+	 * @return LocalDate 对象
+	 * @throws DateTimeParseException 如果转换失败，会抛出异常。
+	 */
+	public static LocalDate parseLocaDate(String dateString, DateTimeFormatter formatter) throws DateTimeParseException {
+		return LocalDate.parse(dateString, formatter);
+	}
+	
+	/**
+	 * 将指定格式的字符串，转换为 LocalDateTime 对象。如果转换失败，会抛出异常。
+	 * @param dateTimeString 指定格式的日期时间字符串
+	 * @param formatter 转换器对象，TimeUtil 工具类，有提供默认的 FMT 对象
+	 * @return LocalDateTime 对象
+	 * @throws DateTimeParseException 如果转换失败，会抛出异常。
+	 */
+	public static LocalDateTime parseLocalDateTime(String dateTimeString, DateTimeFormatter formatter) throws DateTimeParseException {
+		return LocalDateTime.parse(dateTimeString, formatter);
+	}
+	
 	/*
 	public static void main(String[] args) {
-		
-		LocalDateTime local = LocalDateTime.now();
-		
-		Instant now = Instant.now();
-		
-		Stdout.pl(local);
-		Stdout.pl(now);
-		Stdout.pl(System.currentTimeMillis());
-		Stdout.pl(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+		//无分隔符
+		Stdout.pl("===========  日期转换，无分隔符  =============");
+		Stdout.pl(TimeUtil.parseLocaDate("2020", FMT_DATE_WTSPLIT));
+		Stdout.pl(TimeUtil.parseLocaDate("202011", FMT_DATE_WTSPLIT));
+		Stdout.pl(TimeUtil.parseLocaDate("20201205", FMT_DATE_WTSPLIT));
+		//有分隔符
+		Stdout.pl("===========  日期转换，有分隔符  =============");
+		Stdout.pl(TimeUtil.parseLocaDate("2020-1-1", FMT_DATE_NORMAL));
+		Stdout.pl(TimeUtil.parseLocaDate("2020-8-1", FMT_DATE_NORMAL));
+		Stdout.pl(TimeUtil.parseLocaDate("2020-8-21", FMT_DATE_NORMAL));
+		Stdout.pl(TimeUtil.parseLocaDate("2020/1/1", FMT_DATE_NORMAL));
+		Stdout.pl(TimeUtil.parseLocaDate("2020/8/1", FMT_DATE_NORMAL));
+		Stdout.pl(TimeUtil.parseLocaDate("2020/8/21", FMT_DATE_NORMAL));
+		//时间转换
+		Stdout.pl("===========  时间转换，1  =============");
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020-1-1 02:03:04", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020-12-13 02:03", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020-12-13 02:03:04", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020-1-1T02:03:04", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020-12-13T02:03", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020-12-13T02:03:04", FMT_DATETIME_NORMAL));
+		//
+		Stdout.pl("===========  时间转换，2 时分秒为一个数字的情况 =============");
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020/1/1 2:3:4", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020/12/13 2:3", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020/12/13 2:3:4", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020/1/1T2:3:4", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020/12/13T2:3", FMT_DATETIME_NORMAL));
+		Stdout.pl(TimeUtil.parseLocalDateTime("2020/12/13T2:3:4", FMT_DATETIME_NORMAL));
 	}
 	*/
+	
 }

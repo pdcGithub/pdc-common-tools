@@ -32,7 +32,7 @@ import java.util.Date;
  * 时间相关处理的工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2022年12月6日-2025年1月9日
+ * @since 2022年12月6日-2025年1月11日
  */
 public final class TimeUtil {
 	
@@ -252,7 +252,23 @@ public final class TimeUtil {
 	 * @throws DateTimeParseException 如果转换失败，会抛出异常。
 	 */
 	public static LocalDate parseLocaDate(String dateString, DateTimeFormatter formatter) throws DateTimeParseException {
-		return LocalDate.parse(dateString, formatter);
+		try {
+			return LocalDate.parse(dateString, formatter);
+		} catch(NullPointerException npe) {
+			// 因为我们需要的是 转换异常，而不是 NullPointerException ，所以转换异常的类型
+			String exMsg = npe.getMessage();
+			if("formatter".equalsIgnoreCase(exMsg)) {
+				throw new DateTimeParseException("formatter is null", "", 0);
+			}else if("text".equalsIgnoreCase(exMsg)){
+				throw new DateTimeParseException("dateString is null", "", 0);
+			}else {
+				throw new DateTimeParseException("unkown param is null", "", 0);
+			}
+		} catch (DateTimeParseException dtpe) {
+			throw dtpe;
+		} catch (Exception e) {
+			throw new DateTimeParseException("unkown exception", "", 0);
+		}
 	}
 	
 	/**
@@ -263,7 +279,23 @@ public final class TimeUtil {
 	 * @throws DateTimeParseException 如果转换失败，会抛出异常。
 	 */
 	public static LocalDateTime parseLocalDateTime(String dateTimeString, DateTimeFormatter formatter) throws DateTimeParseException {
-		return LocalDateTime.parse(dateTimeString, formatter);
+		try {
+			return LocalDateTime.parse(dateTimeString, formatter);
+		} catch(NullPointerException npe) {
+			// 因为我们需要的是 转换异常，而不是 NullPointerException ，所以转换异常的类型
+			String exMsg = npe.getMessage();
+			if("formatter".equalsIgnoreCase(exMsg)) {
+				throw new DateTimeParseException("formatter is null", "", 0);
+			}else if("text".equalsIgnoreCase(exMsg)){
+				throw new DateTimeParseException("dateTimeString is null", "", 0);
+			}else {
+				throw new DateTimeParseException("unkown param is null", "", 0);
+			}
+		} catch (DateTimeParseException dtpe) {
+			throw dtpe;
+		} catch (Exception e) {
+			throw new DateTimeParseException("unkown exception", "", 0);
+		}
 	}
 	
 	/*
@@ -297,6 +329,20 @@ public final class TimeUtil {
 		Stdout.pl(TimeUtil.parseLocalDateTime("2020/1/1T2:3:4", FMT_DATETIME_NORMAL));
 		Stdout.pl(TimeUtil.parseLocalDateTime("2020/12/13T2:3", FMT_DATETIME_NORMAL));
 		Stdout.pl(TimeUtil.parseLocalDateTime("2020/12/13T2:3:4", FMT_DATETIME_NORMAL));
+		//为 null 、'null' 、 空字符串的情况
+		//Stdout.pl(TimeUtil.parseLocaDate(null, FMT_DATE_NORMAL));   // java.lang.NullPointerException: text
+		//Stdout.pl(TimeUtil.parseLocaDate("null", FMT_DATE_NORMAL)); // java.time.format.DateTimeParseException
+		//Stdout.pl(TimeUtil.parseLocaDate("", FMT_DATE_NORMAL));     // java.time.format.DateTimeParseException
+		//Stdout.pl(TimeUtil.parseLocaDate(null, null));              // java.lang.NullPointerException: formatter
+		//Stdout.pl(TimeUtil.parseLocaDate("null", null));            // java.lang.NullPointerException: formatter
+		//Stdout.pl(TimeUtil.parseLocaDate("", null));                // java.lang.NullPointerException: formatter
+		//
+		//Stdout.pl(TimeUtil.parseLocalDateTime(null, FMT_DATETIME_NORMAL));   // java.lang.NullPointerException: text
+		//Stdout.pl(TimeUtil.parseLocalDateTime("null", FMT_DATETIME_NORMAL)); // java.time.format.DateTimeParseException
+		//Stdout.pl(TimeUtil.parseLocalDateTime("", FMT_DATETIME_NORMAL));     // java.time.format.DateTimeParseException
+		//Stdout.pl(TimeUtil.parseLocalDateTime(null, null));              // java.lang.NullPointerException: formatter
+		//Stdout.pl(TimeUtil.parseLocalDateTime("null", null));            // java.lang.NullPointerException: formatter
+		//Stdout.pl(TimeUtil.parseLocalDateTime("", null));                // java.lang.NullPointerException: formatter
 	}
 	*/
 	

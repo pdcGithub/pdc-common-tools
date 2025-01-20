@@ -20,7 +20,7 @@ import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
  * 将 java 对象转换为 MySQL 数据库可以识别的 sql 语句字符串
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2024年6月30日
+ * @since 2024年6月30日-2025年1月20日
  */
 public class MySQLValueToString extends ADBValueToString {
 
@@ -29,6 +29,13 @@ public class MySQLValueToString extends ADBValueToString {
 	 */
 	public MySQLValueToString() {
 		super(DBSQLInjectionUtil.DBTYPE_MYSQL);
+	}
+	/**
+	 * 构造函数，这个转换对象是 关于 MySQL 数据库的。但是，它的数据类型字符串是传递过来的
+	 * @param dbType
+	 */
+	public MySQLValueToString(String dbType) {
+		super(dbType);
 	}
 	
 	/* (non-Javadoc)

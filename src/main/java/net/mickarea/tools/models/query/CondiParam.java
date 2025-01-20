@@ -28,7 +28,7 @@ import net.mickarea.tools.utils.database.DBStrUtil;
  * <p>如果按照实体类的属性名查询，需要指定 className 属性，即实体类的class值</p>
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年5月21日-2024年10月31日
+ * @since 2023年5月21日-2025年1月20日
  */
 public class CondiParam {
 
@@ -284,6 +284,9 @@ public class CondiParam {
 		switch(dbType) {
 		case DBSQLInjectionUtil.DBTYPE_MYSQL:
 			result = new MySQLValueToString().valueToString(value);
+			break;
+		case DBSQLInjectionUtil.DBTYPE_MYSQL_ANSI:
+			result = new MySQLValueToString(dbType).valueToString(value);
 			break;
 		case DBSQLInjectionUtil.DBTYPE_ORACLE:
 			result = new OracleValueToString().valueToString(value);

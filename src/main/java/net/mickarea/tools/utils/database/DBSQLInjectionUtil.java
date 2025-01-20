@@ -18,7 +18,7 @@ import net.mickarea.tools.utils.StrUtil;
  * 数据库Sql语句防注入处理工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2024年5月24日-2024年5月25日
+ * @since 2024年5月24日-2025年1月20日
  */
 public final class DBSQLInjectionUtil {
 	
@@ -30,6 +30,10 @@ public final class DBSQLInjectionUtil {
 	 * 数据库类型：MySQL
 	 */
 	public static final String DBTYPE_MYSQL = "mysql";
+	/**
+	 * 数据库类型：MySQL，但是 处理方式与 DBTYPE_MYSQL 不同，它只处理单引号。
+	 */
+	public static final String DBTYPE_MYSQL_ANSI = "mysql_ansi";
 	/**
 	 * 数据库类型：Oracle
 	 */

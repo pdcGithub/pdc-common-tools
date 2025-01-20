@@ -47,7 +47,7 @@ import net.mickarea.tools.utils.database.impl.query.SqlserverQuery;
  * 数据库操作的静态工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年7月14日-2024年12月17日
+ * @since 2023年7月14日--2025年1月20日
  */
 public final class DBStaticUtil {
 
@@ -162,6 +162,7 @@ public final class DBStaticUtil {
 		//根据数据库类型，来处理
 		switch(dbType) {
 		case DBSQLInjectionUtil.DBTYPE_MYSQL:
+		case DBSQLInjectionUtil.DBTYPE_MYSQL_ANSI:
 			result = MysqlQuery.queryEntity(conn, cls, condiList, orderList, pageInfo);
 			break;
 		case DBSQLInjectionUtil.DBTYPE_ORACLE:

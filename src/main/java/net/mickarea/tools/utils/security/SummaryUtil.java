@@ -10,6 +10,8 @@ Copyright (c) 2023 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.utils.security;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -23,7 +25,7 @@ import net.mickarea.tools.utils.StrUtil;
  * 一个数字摘要处理的工具类（可以执行MD5、SHA-1、SHA-224、SHA-256、SHA-384、SHA-512 数字摘要算法）
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年12月4日-2024年11月28日
+ * @since 2023年12月4日-2025年10月17日
  */
 public final class SummaryUtil {
 	
@@ -149,7 +151,7 @@ public final class SummaryUtil {
 	 * <p>字符串在处理时，按照 UTF-8解码</p>
 	 * @param preStr 待处理的字符串
 	 * @param algorithm 数字摘要的算法名
-	 * @return 一个字符串信息（16进制的字符串信息）
+	 * @return 一个字符串信息（16进制的字符串信息）。如果发生异常情况，会返回一个 null 值，并将异常写入日志文件。
 	 */
 	private static String work(String preStr, String algorithm){
 		String re = null;
@@ -174,29 +176,54 @@ public final class SummaryUtil {
 	}
 	
 	/**
-	 * 执行文件的数字摘要提取工作，提取成功返回一个字符串信息（16进制的字符串信息）
+	 * <p>执行文件的数字摘要提取工作，提取成功返回一个字符串信息（16进制的字符串信息）</p>
+	 * <p>注意：这里改进了原有的处理。如果文件大于500MB，则不能直接加载全部到内存，需要分片计算数字哈希值</p>
 	 * @param filePath 文件路径
 	 * @param algorithm 加密算法名称
-	 * @return 一个字符串信息（16进制的字符串信息）
+	 * @return 一个字符串信息（16进制的字符串信息）。如果发生异常情况，会返回一个 null 值，并将异常写入日志文件。
 	 */
 	private static String workForFile(String filePath, String algorithm) {
+		
 		String re = null;
 		
 		//文件路径不能为空；算法名不能为空
 		if(StrUtil.isEmptyString(filePath) || StrUtil.isEmptyString(algorithm)) {
+			Stdout.fpl("文件路径(filepath=%s)或者算法名(algorithm=%s)为空。", filePath, algorithm);
 			return re;
 		}
 		
+		//判断文件是否存在
+		File tmpFile = new File(filePath);
+		if(!tmpFile.exists() || !tmpFile.isFile()) {
+			Stdout.fpl("文件路径(filepath=%s)异常，它可能不存在，也可能不是文件。", filePath);
+			return re;
+		}
+		
+		FileInputStream fis = null;
+		long fileLength = tmpFile.length(); // 文件的字节大小
 		try {
 			//按照算法名，获取处理实例
 			MessageDigest digest = MessageDigest.getInstance(algorithm);
 			// 更新摘要信息，并提取
-			// 将文件以 字节 的方式处理
-			ByteBuffer buffer = FileUtil.loadByteBufferFromFile(filePath);
-			if(buffer!=null) {
-				digest.update(buffer);
+			// 将文件以 字节 的方式处理（文件如果大于 500MB，分片提取；否则，直接加载内存，然后一次性提取）
+			if(fileLength>500*1024*1024) {
+				int buffSize = 1024*8; // 设置缓冲区大小，8KB
+				int readLength = 0;    // 这是读取的字节大小
+				byte[] buffer = new byte[buffSize]; //创建缓冲区
+				// 创建文件流
+				fis = new FileInputStream(filePath);
+				// 循环分片读取并计算哈希值
+				while((readLength=fis.read(buffer))>0) {
+					digest.update(buffer, 0, readLength);
+				}
 			}else {
-				throw new Exception("文件["+filePath+"] 转为字节数据异常，获取到的结果为："+buffer);
+				// 这里是将文件一次性加载到内存中
+				ByteBuffer buffer = FileUtil.loadByteBufferFromFile(filePath);
+				if(buffer!=null) {
+					digest.update(buffer);
+				}else {
+					throw new Exception("文件["+filePath+"] 转为字节数据异常，获取到的结果为："+buffer);
+				}
 			}
 			//
 			byte[] byteRe = digest.digest();
@@ -207,6 +234,12 @@ public final class SummaryUtil {
 		} catch (Exception e1) {
 			Stdout.pl("数字摘要提取处理，发生其它异常："+e1.getMessage());
 			Stdout.pl(e1);
+		} finally {
+			// 文件流资源释放
+			if(fis!=null) {
+				try {fis.close(); } catch (Exception e2) { }
+				fis=null;
+			}
 		}
 		
 		return re;
@@ -217,7 +250,7 @@ public final class SummaryUtil {
 	 * @param bytes 待转换的字节数组
 	 * @return 16进制的字符串
 	 */
-	private static String byteToHexString(byte[] bytes) {
+	public static String byteToHexString(byte[] bytes) {
 		StringBuffer buffer = new StringBuffer();
 		if(bytes!=null) {
 			for(byte b : bytes) {
@@ -239,7 +272,7 @@ public final class SummaryUtil {
 	public static void main(String[] args) {
 		String file1 = null;
 		String file2 = "";
-		String file3 = "xxx";
+		String file3 = "D:\\软件\\iso\\rhel-8.10-x86_64-dvd.iso";
 		String file4 = "D:\\软件\\exe\\Clash.Verge_x64-setup.exe";
 		Stdout.pl("============== md5 ====================");
 		Stdout.pl("file1:"+getMD5InfoFromFile(file1));
@@ -273,5 +306,4 @@ public final class SummaryUtil {
 		Stdout.pl("file4:"+getSHA_512_InfoFromFile(file4));
 	}
 	*/
-	
 }

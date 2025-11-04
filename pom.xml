@@ -6,7 +6,7 @@
     <groupId>net.mickarea</groupId>
     <artifactId>pdc-common-tool</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.0.12-SNAPSHOT</version>
     <name>pdc-common-tool</name>
     <url>http://maven.apache.org</url>
 
@@ -14,6 +14,8 @@
     <properties>
         <jdk.version>1.8</jdk.version>
         <encoding>utf-8</encoding>
+        <!-- 指定项目编码，防止 eclipse 出现 has no explicit encoding set -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
@@ -109,7 +111,7 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>12.8.1.jre8</version>
+            <version>13.2.0.jre8</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.owasp.esapi/esapi -->

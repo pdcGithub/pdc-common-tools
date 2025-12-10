@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
 
@@ -24,7 +25,7 @@ import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
  * 个人的一个字符工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.1
- * @since 2022年6月26日-2024年12月20日
+ * @since 2022年6月26日-2025年12月10日
  */
 public final class StrUtil {
 	
@@ -70,25 +71,45 @@ public final class StrUtil {
 	}
 	
 	/**
-	 * 根据输入的英文字符串，返回一个驼峰表示的字符串
-	 * @param input 输入的字符串
-	 * @param splitString 字符串中的分割符号
+	 * 根据输入的英文字符串，返回一个驼峰表示的字符串。（如果 input 和 split 都不为空，才处理。否则，返回空字符串）
+	 * @param input 输入的待处理字符串
+	 * @param splitString 字符串中的分割符号正则表达式。它与 split 函数的参数一致。
+	 * @param joinString 字符串拼接时，使用的一个拼接字符。比如 net.mickarea 中的 点号 “.”。默认是空字符串。
+	 * @param toLowerCase 是否需要预处理。如果为 true，对所有字符统一转小写。
 	 * @return 一个驼峰表示的字符串
 	 */
-	public static String makeHumpString(String input, String splitString) {
+	public static String makeHumpString(String input, String splitString, String joinString, boolean toLowerCase) {
+		// 定义一个返回结果
 		String output = "";
+		// 定义一个拼接字符串。默认是空字符串（这里为了保证分隔符号的通用，不做trim处理。因为有时候，就是需要空格之类的分隔符）
+		String tmpJoinStr = joinString==null ? "":joinString;
+		// 如果 input 和 split 都不为空，才处理
 		if(!isEmptyString(input) && !isEmptyString(splitString)) {
-			//统一转小写字母，然后再处理
-			String[] s = input.toLowerCase().split(splitString);
-			for(int i=0;i<s.length;i++) {
-				s[i] = makeFirstCharUpperCase(s[i]);
-			}
-			output = String.join("", s);
+			// 这里使用了 JDK8 开始有的 流式处理
+			output = Arrays.stream(input.split(splitString))
+					.map(str->{
+						// 对切割后的字符串数组，内部单个字符串进行 转换处理（如果需要先转为小写，则转换，否则不转换）
+						String tmp = toLowerCase ? str.toLowerCase() : str;
+						// 首字母转为大写
+						return makeFirstCharUpperCase(tmp.trim());
+					})
+					.filter(path->!StrUtil.isEmptyString(path)) // 去掉List中的空字符串
+					.collect(Collectors.joining(tmpJoinStr));  // 将List转为 字符串。
 		}
+		// 返回结果
 		return output ;
 	}
 	
-	
+	/**
+	 * 根据输入的英文字符串，返回一个驼峰表示的字符串。（如果 input 和 split 都不为空，才处理。否则，返回空字符串）
+	 * @param input 输入的待处理字符串
+	 * @param splitString 字符串中的分割符号正则表达式。它与 split 函数的参数一致。
+	 * @return 一个驼峰表示的字符串（joinString 为空字符串，toLowerCase 为 true）
+	 */
+	public static String makeHumpString(String input, String splitString) {
+		// 这里修改为调用通用的 makeHumpString
+		return makeHumpString(input, splitString, "", true);
+	}
 	
 	/**
 	 * 判断字符串参数是否为空，当字符内容为null也判断为空。

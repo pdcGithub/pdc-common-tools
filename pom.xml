@@ -6,7 +6,7 @@
     <groupId>net.mickarea</groupId>
     <artifactId>pdc-common-tool</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.12-SNAPSHOT</version>
+    <version>1.0.13-SNAPSHOT</version>
     <name>pdc-common-tool</name>
     <url>http://maven.apache.org</url>
 
@@ -82,6 +82,15 @@
     </build>
 
     <dependencies>
+        
+        <!-- 这里是 单元测试 使用的一个工具包，一般没啥用。它的作用域是测试，并非最终打包 -->
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.13.4</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- 数据库连接池 HikariCP java8 版用 4.0 版本 -->
         <dependency>

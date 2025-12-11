@@ -23,10 +23,10 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 
 /**
- * &gt;&gt;&nbsp;RSA 算法的加密工具包
+ * RSA 算法的加密工具包
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年9月27日-2024年08月12日
+ * @since 2023年9月27日-2025年12月11日
  */
 public final class RSAUtil {
 	
@@ -43,18 +43,30 @@ public final class RSAUtil {
 	public static int KEY_LENGTH = 2048;
 	
 	/**
-	 * &gt;&gt;&nbsp;生成密钥对信息
+	 * 生成密钥对信息
 	 * @return 一个简单的密钥对对象，包含公钥 和 私钥
 	 * @throws Exception 执行过程可能发生异常导致报错
 	 */
 	public static KeyPair genKeys() throws Exception {
+		// 使用简便处理
+		return genKeys(KEY_LENGTH, "RSA");
+	}
+	
+	/**
+	 * 生成密钥对信息
+	 * @param keyLength 密钥长度 一般是 1024 的整数倍，且大于 1024
+	 * @param algorithm 加密算法名称 比如：RSA
+	 * @return 一个简单的密钥对对象，包含公钥 和 私钥
+	 * @throws Exception 执行过程可能发生异常导致报错
+	 */
+	public static KeyPair genKeys(int keyLength, String algorithm) throws Exception {
 		//密钥对生成器：生成类型为 RSA 算法所需密钥对
-		KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
+		KeyPairGenerator gen = KeyPairGenerator.getInstance(algorithm);
 		//随机种子处理
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 		random.setSeed(System.nanoTime());
 		//生成器初始化
-		gen.initialize(KEY_LENGTH, random);
+		gen.initialize(keyLength, random);
 		//生成
 		KeyPair keyPair = gen.genKeyPair();
 		//返回结果
@@ -62,7 +74,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;获取密钥对中的公钥信息字符串（以base64编码方式输出）
+	 * 获取密钥对中的公钥信息字符串（以base64编码方式输出）
 	 * @param keypair 密钥对
 	 * @return 公钥信息字符串
 	 * @throws Exception 执行过程可能发生异常导致报错
@@ -72,7 +84,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;获取密钥对中的私钥信息字符串（以base64编码方式输出）
+	 * 获取密钥对中的私钥信息字符串（以base64编码方式输出）
 	 * @param keypair 密钥对
 	 * @return 私钥信息字符串
 	 * @throws Exception 执行过程可能发生异常导致报错
@@ -82,7 +94,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将公钥信息字符串（base64编码），转换为公钥信息对象
+	 * 将公钥信息字符串（base64编码），转换为公钥信息对象
 	 * @param publicBase64String 公钥信息字符串
 	 * @return 公钥信息对象
 	 * @throws Exception 执行过程可能发生异常导致报错
@@ -95,7 +107,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将私钥信息字符串（base64编码），转换为私钥信息对象
+	 * 将私钥信息字符串（base64编码），转换为私钥信息对象
 	 * @param privateBase64String 私钥信息字符串
 	 * @return 私钥信息对象
 	 * @throws Exception 执行过程可能发生异常导致报错
@@ -108,7 +120,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将字节数组，转换为base64编码的字符串输出。
+	 * 将字节数组，转换为base64编码的字符串输出。
 	 * @param input 字节数组
 	 * @return base64编码的字符串
 	 * @throws Exception 执行过程可能发生异常导致报错
@@ -118,7 +130,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将base64编码的字符串，转换为字节数组输出。
+	 * 将base64编码的字符串，转换为字节数组输出。
 	 * @param base64 base64编码的字符串
 	 * @return 字节数组
 	 * @throws Exception 执行过程可能发生异常导致报错
@@ -128,7 +140,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;使用公钥，对传入的字节数组信息进行加密，返回一个加密后的字节数组
+	 * 使用公钥，对传入的字节数组信息进行加密，返回一个加密后的字节数组
 	 * @param input 待加密的字节数组
 	 * @param publicKey 公钥信息对象
 	 * @return 加密后的字节数组
@@ -141,7 +153,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;使用私钥，对传入的字节数组信息进行解密，返回一个解密后的字节数组
+	 * 使用私钥，对传入的字节数组信息进行解密，返回一个解密后的字节数组
 	 * @param input 待解密的字节数组
 	 * @param privateKey 私钥信息对象
 	 * @return 解密后的字节数组
@@ -154,7 +166,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;使用公钥对象，对传入的字符串进行加密
+	 * 使用公钥对象，对传入的字符串进行加密
 	 * @param plaintext 待加密字符串
 	 * @param publicKey 公钥信息对象
 	 * @return 加密后的字符串
@@ -166,7 +178,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;使用公钥字符串信息，对传入的字符串进行加密
+	 * 使用公钥字符串信息，对传入的字符串进行加密
 	 * @param plaintext 待加密字符串
 	 * @param publicBase64String 公钥字符串信息（base64编码）
 	 * @return 加密后的字符串
@@ -177,7 +189,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;使用私钥对象，对传入的字符串进行解密
+	 * 使用私钥对象，对传入的字符串进行解密
 	 * @param ciphertext 待解密字符串
 	 * @param privateKey 私钥信息对象
 	 * @return 解密后的字符串
@@ -189,7 +201,7 @@ public final class RSAUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;使用私钥字符串信息，对传入的字符串进行解密
+	 * 使用私钥字符串信息，对传入的字符串进行解密
 	 * @param ciphertext 待解密字符串
 	 * @param privateBase64String 私钥字符串信息（base64编码）
 	 * @return 解密后的字符串
@@ -199,35 +211,4 @@ public final class RSAUtil {
 		return decode(ciphertext, stringToPrivateKey(privateBase64String));
 	}
 	
-	/**
-	 * &gt;&gt;&nbsp;测试函数
-	 */
-	/*
-	public static void main(String[] args) throws Exception {
-		
-		Stdout.pl("构造一对密钥=========================");
-		long start = System.currentTimeMillis();
-		KeyPair keyPairs = RSAUtil.genKeys();
-		Stdout.pl("密钥生成耗时:"+(System.currentTimeMillis()-start)+"毫秒");
-		
-		String publickeyStr = RSAUtil.getPublicKey(keyPairs);
-		String privatekeyStr = RSAUtil.getPrivateKey(keyPairs);
-		String input = "今天天气真好，I'm Iron Man. 122939404934029348";
-		
-		long  start1 = System.currentTimeMillis();
-		String output = RSAUtil.encode(input, publickeyStr);
-		Stdout.pl("加密耗时:"+(System.currentTimeMillis()-start1)+"毫秒");
-		
-		long  start2 = System.currentTimeMillis();
-		String output2 = RSAUtil.decode(output, privatekeyStr);
-		Stdout.pl("解密耗时:"+(System.currentTimeMillis()-start2)+"毫秒");
-		
-		Stdout.pl("公钥（长度:"+publickeyStr.length()+"）:"+publickeyStr);
-		Stdout.pl("私钥（长度:"+privatekeyStr.length()+"）:"+privatekeyStr);
-		Stdout.pl("待加密字符串:("+input+")");
-		Stdout.pl("加密后字符串（长度:"+output.length()+"）:("+output+")");
-		Stdout.pl("解密后字符串:("+output2+")");
-		Stdout.pl("====================================");
-	}
-	*/
 }

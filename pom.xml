@@ -3,38 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.github.pdcgithub</groupId>
+    <groupId>net.mickarea</groupId>
     <artifactId>pdc-common-tool</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.0-jre8-RC</version>
+    <version>1.0.13-SNAPSHOT</version>
     <name>pdc-common-tool</name>
-    <description>This is a common toolkit of myself</description>
-    <url>https://github.com/pdcGithub/pdc-common-tools</url>
-
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://mit-license.org/</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <id>mynameid</id>
-            <name>Michael Pang ( Dongcan Pang )</name>
-            <email>pangdongcan@live.com</email>
-            <roles>
-                <role>Project Manager</role>
-                <role>Architect</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>https://github.com/pdcGithub/pdc-common-tools.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:pdcGithub/pdc-common-tools.git</developerConnection>
-        <url>https://github.com/pdcGithub/pdc-common-tools</url>
-    </scm>
+    <url>http://maven.apache.org</url>
 
     <!-- 设置软件版本等参数 -->
     <properties>
@@ -48,19 +22,6 @@
 
     <build>
         <plugins>
-
-            <!-- central 发布插件 -->
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.4.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>myrepo</publishingServerId>
-                    <tokenAuth>true</tokenAuth>
-                </configuration>
-            </plugin>
-
             <!-- 设置jdk版本 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -110,39 +71,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- java doc 插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- gpg 验证插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <executable>C:\Program Files (x86)\GnuPG\bin\gpg.exe</executable>
-                    <keyname>pangdongcan</keyname>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- junit 5 测试插件。用于 mvn test 执行 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -171,7 +99,7 @@
     </build>
 
     <dependencies>
-
+        
         <!-- 这里是 单元测试 使用的一个工具包，一般没啥用。它的作用域是测试，并非最终打包 -->
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <!-- JUnit 5 API - 用于编写测试 -->

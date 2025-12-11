@@ -5,14 +5,19 @@ In my license, all codes can be shared free of charge.
 However, if it is used for commercial purposes, I need to be notified.
 Here is my email "pangdongcan@live.com"
 
-Copyright (c) 2022 Michael Pang.
+Copyright (c) 2022 - 2025 Michael Pang.
 
 *******************************************************************************************************/
 package net.mickarea.tools.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,7 +30,7 @@ import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
  * 个人的一个字符工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.1
- * @since 2022年6月26日-2025年12月10日
+ * @since 2022年6月26日-2025年12月11日
  */
 public final class StrUtil {
 	
@@ -350,14 +355,68 @@ public final class StrUtil {
 		return sb.toString();
 	}
 	
-	/*
-	public static void main(String[] args) {
-		TestA a1 = null;
-		TestA a2 = new TestA();
-		TestA a3 = new TestA(11, "tom", "男", "地址", "150174373");
-		Stdout.pl(getJavaBeanFieldsInfo(a1));
-		Stdout.pl(getJavaBeanFieldsInfo(a2));
-		Stdout.pl(getJavaBeanFieldsInfo(a3));
+	/**
+	 * 这是这个转换器默认提供的数据转换方法。它可以把字符串，按照需要自动转换为目标类型数据。使用方法，请参考 StrUtilTester2 里面的单元测试
+	 * @param <T> 对应类型的泛型。
+	 * @param oriValue 待转换的字符串。
+	 * @param targetType 要转换为的目标类型。比如：String.class, int.class, Integer.class 等等
+	 * @param defaultFmtStr 这是日期和时间的转换字符串，可以不提供。设置为 null 或者 空字符。
+	 * @return 一个目标对象
+	 * @throws IllegalArgumentException 方法的参数校验不通过，则抛出此异常
+	 * @throws NoSuchMethodException 没有匹配的方法时，抛出此异常。需要检查待处理类型是否有映射到位。
+	 * @throws NumberFormatException 数字转换出错时，抛出的异常
+	 * @throws DateTimeParseException 时间转换出错时，抛出的异常
+	 * @throws Exception 其它异常
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T autoConvert(String oriValue, Class<T> targetType, String defaultFmtStr)
+			throws IllegalArgumentException, NoSuchMethodException, NumberFormatException, DateTimeParseException, Exception {
+		
+		// 首先校验 targetType。因为如果目标类型是 null，还转换什么
+		if(targetType==null) throw new IllegalArgumentException("the parameter targetType is null.");
+		
+		// 如果 target 不是字符串，则把 oriValue 的前后空白字符去掉再处理
+		String newVal = oriValue;
+		if(!targetType.equals(String.class) 
+				&& !targetType.equals(char.class) && !targetType.equals(Character.class) && oriValue!=null) newVal = newVal.trim();
+		
+		// 提取有效的值 和 获取类名
+		String methodName = "to" + makeHumpString(targetType.getTypeName(), "\\.", "", false);
+		
+		// 对于枚举值，方法名有点差异
+		if(targetType.isEnum()) methodName = "toEnumObject";
+		
+		// 获取反射的方法
+		Method method = null;
+		Object result = null; // 这里是反射处理，都是用 Object 作为一个中间媒介的
+		
+		try {
+			// 如果是时间处理，需要映射为另外一个方法（它带有一个格式转换字符串）
+			if(targetType.equals(LocalDate.class) || targetType.equals(LocalDateTime.class)) {
+				method = StrToDataConvertor.class.getMethod(methodName, String.class, String.class);
+				// 开始执行反射处理
+				result = method.invoke(null, newVal, defaultFmtStr);
+			}else if(targetType.isEnum()){
+				// 关于枚举类型
+				// 这里方法要映射2个参数，一个是字符值，一个是枚举类
+				method = StrToDataConvertor.class.getMethod(methodName, String.class, targetType.getClass());
+				// 开始执行反射处理
+				result = method.invoke(null, newVal, targetType);
+			} else {
+				method = StrToDataConvertor.class.getMethod(methodName, String.class);
+				// 开始执行反射处理
+				result = method.invoke(null, newVal);
+			}
+		}catch(InvocationTargetException itex) {
+			// 因为反射的调用时发生的异常，会被封装在 InvocationTargetException ，所以需要解包
+			// 解包 处理 (解包后，数字、时间等等的转换异常才可以抛出到外部，然后捕捉)
+			throw (Exception)itex.getTargetException();
+		}catch(Exception e) {
+			// 普通异常直接抛出
+			throw e;
+		}
+		
+		// 返回结果
+		return (T) result;
 	}
-	*/
 }

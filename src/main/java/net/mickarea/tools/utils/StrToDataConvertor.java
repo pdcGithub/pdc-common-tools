@@ -21,11 +21,10 @@ import java.util.regex.Pattern;
  * <strong>这是一个字符串转换器。它会将原始字符串转换为一个对应的数据。至于具体转换为什么数据，看调用的是哪个函数。</strong>
  * (注意：这个类一般不会直接调用。通过反射机制，动态调用更好一些。或者使用默认提供的 StrUtil.autoConvert 方法)
  * </p>
- * <p>Java 语言提供了8种基本类型。6种数字类型（四个整数型，两个浮点型），1种字符类型，还有1种布尔型。相对应的它们都有自己的8个引用类型。
+ * Java 语言提供了8种基本类型。6种数字类型（四个整数型，两个浮点型），1种字符类型，还有1种布尔型。相对应的它们都有自己的8个引用类型。
  * 它们分别为:
  * <pre>byte, short, int, long, float, double, boolean, char</pre>
  * <pre>Byte, Short, Integer, Long, Float, Double, Boolean, Character</pre>
- * </p>
  * <p>此外，这里还提供了一些常用的类型转换。比如：LocalDate, LocalDateTime, String, Object, 枚举对象</p>
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0

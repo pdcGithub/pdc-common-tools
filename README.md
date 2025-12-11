@@ -15,26 +15,39 @@
 _maven:_
 ```xml
 <dependency>
-	<groupId>io.github.pdcgithub</groupId>
-	<artifactId>pdc-common-tool</artifactId>
-	<version>1.0.1-jre8-RC</version>
+    <groupId>io.github.pdcgithub</groupId>
+    <artifactId>pdc-common-tool</artifactId>
+    <version>1.1.0-jre8-RC</version>
 </dependency>
 ```
 
 _gradle:_
 ```
-implementation group: 'io.github.pdcgithub', name: 'pdc-common-tool', version: '1.0.1-jre8-RC'
+implementation group: 'io.github.pdcgithub', name: 'pdc-common-tool', version: '1.1.0-jre8-RC'
 ```
 _gradle(short):_
 ```
-implementation 'io.github.pdcgithub:pdc-common-tool:1.0.1-jre8-RC'
+implementation 'io.github.pdcgithub:pdc-common-tool:1.1.0-jre8-RC'
 ```
 _gradle(kotlin):_
 ```
-implementation("io.github.pdcgithub:pdc-common-tool:1.0.1-jre8-RC")
+implementation("io.github.pdcgithub:pdc-common-tool:1.1.0-jre8-RC")
 ```
 
-### version notes
+### release notes
+<h4>v 1.1.0  2025-12-11</h4>
+<p>1. For code testing, the JUnit 5 framework was used.</p>
+<p>2. Added a static string convertor named StrToDataConvertor. It can convert strings to any data type. If the default implementation does not meet your needs, you can extend it yourself.</p>
+<p>3. For the StrUtil class, added functions getJavaBeanFieldsInfo and getModifierInfo.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Modified the implementation of the function makeHumpString and added a new function with the same name.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Added the function autoConvert. It is mainly responsible for dynamically calling methods in StrToDataConvertor to perform data conversion.</p>
+<p>4. For the TimeUtil class, added some time conversion handling, mainly converting strings to LocalDate and LocalDateTime. These are thread-safe.</p>
+<p>5. For database handling, added an new database type DBTYPE_MYSQL_ANSI. Unlike DBTYPE_MYSQL, it only handles single quotes.</p>
+<p>6. For the SummaryUtil class, solved the memory overflow issue when extracting data summaries from large files (e.g., 4GB or larger).</p>
+<p>7. For the database driver, upgraded Microsoft's MS SQLServer JDBC driver package to version 13.2.1.jre8 to resolve some security issues.</p>
+<p>8. All old test code from previous versions was moved to /src/test/java. This applies to both main function tests and unit tests of JUnit.</p>
+<p>9. For the RSAUtil class, added an new function genKeys with a configurable key length.</p>
+
 <h4>v 1.0.1  2024-12-17</h4>
 <p>1. about the class FileUtil, add 2 functions to get the byte information of a file from the file path.</p>
 <p>2. about the class SummaryUtil, add funtions to extract summary information from file.</p>

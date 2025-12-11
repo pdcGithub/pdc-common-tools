@@ -32,7 +32,7 @@ public class MySQLValueToString extends ADBValueToString {
 	}
 	/**
 	 * 构造函数，这个转换对象是 关于 MySQL 数据库的。但是，它的数据类型字符串是传递过来的
-	 * @param dbType
+	 * @param dbType 数据库类型信息
 	 */
 	public MySQLValueToString(String dbType) {
 		super(dbType);

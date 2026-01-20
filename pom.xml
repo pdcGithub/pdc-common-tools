@@ -6,7 +6,7 @@
     <groupId>net.mickarea</groupId>
     <artifactId>pdc-common-tool</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.13-SNAPSHOT</version>
+    <version>1.0.14-SNAPSHOT</version>
     <name>pdc-common-tool</name>
     <url>http://maven.apache.org</url>
 

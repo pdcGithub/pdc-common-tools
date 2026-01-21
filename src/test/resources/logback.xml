@@ -14,12 +14,13 @@
     <conversionRule conversionWord="ip" converterClass="net.mickarea.tools.logback.converters.IPConverterConfig" />
     <conversionRule conversionWord="hostname" converterClass="net.mickarea.tools.logback.converters.HostNameConverterConfig" />
     <conversionRule conversionWord="jvm" converterClass="net.mickarea.tools.logback.converters.JvmNameConverterConfig" />
+    <conversionRule conversionWord="codeloc" converterClass="net.mickarea.tools.logback.converters.CodeLocationConverterConfig" />
     
     <!-- 标准输出流的输出，面向控制台 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <!-- <pattern>%d [%ip] [%jvm] [%hostname] [%thread] %-5level %logger{36} [%file : %line] - %msg%n</pattern> -->
-            <pattern>test: %d [%ip] [%jvm] [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>test: %d [%thread] %-5level %logger{36} %codeloc - %msg%n</pattern>
         </encoder>
     </appender>
     

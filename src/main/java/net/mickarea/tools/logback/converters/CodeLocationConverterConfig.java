@@ -31,10 +31,26 @@ public class CodeLocationConverterConfig extends ClassicConverter {
 		// 获取当前线程的调用栈
 		try {
 			StackTraceElement[] stackElems = Thread.currentThread().getStackTrace();
-			
+			// 
 			if(stackElems==null || stackElems.length<=0) return re;
-			// 获取栈内，最后一个元素。因为，代码栈是先进后出的，所以具体的调用点肯定在最后一个元素
+			
+			// 原有的定位，通过获取最后一个元素，不太准确。因为，如果程序有其它调用者比如 JUnit 或者 Eclipse ，那么最终会显示 JUnit 或者 Eclipse。
+			// 所以，现在改为搜索 ch.qos.logback.classic.Logger 类的下一个非它的类。
 			int targetNum = stackElems.length-1;
+			for(int i=0;i<stackElems.length;i++) {
+				// 只搜索 ch.qos.logback.classic.Logger 类
+				if(!"ch.qos.logback.classic.Logger".equals(stackElems[i].getClassName())) continue;
+				// 如果 搜索到了，并且它的下一个不是 Logger 类，那么就是它了。
+				if((i+1)<=stackElems.length-1 && !"ch.qos.logback.classic.Logger".equals(stackElems[i+1].getClassName())) {
+					targetNum=i+1;
+					// 这里再处理下 net.mickarea.tools.utils.Stdout 类，它没有什么好显示的
+					if("net.mickarea.tools.utils.Stdout".equals(
+							stackElems[i+1].getClassName()) && (i+2)<=stackElems.length-1) targetNum=i+2;
+					// 跳出循环
+					break;
+				}
+			}
+			// 
 			re = Stdout.fplToAnyWhere("%s::%s::%s", 
 					stackElems[targetNum].getClassName(),    // 类名
 					stackElems[targetNum].getMethodName(),   // 方法名

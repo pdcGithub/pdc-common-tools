@@ -16,19 +16,21 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 /**
- * &gt;&gt;&nbsp;一个自定义的注解扫描器，用于扫描已经被注解的对象
+ * （这个类已经淘汰，功能已经整合到 AnnotationUtil）一个自定义的注解扫描器，用于扫描已经被注解的对象
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年6月5日-2023年6月6日
+ * @since 2023年6月5日-2026年1月28日
  */
+@Deprecated
 public class MyAnnotationScanner {
 
 	/**
-	 * &gt;&gt;&nbsp;根据所属的 包路径 和 注解名，搜索对应的类
+	 * （这个类已经淘汰，功能已经整合到 AnnotationUtil）根据所属的 包路径 和 注解名，搜索对应的类
 	 * @param pkg 包路径
 	 * @param annotation 注解名
 	 * @return 一个类的集合
 	 */
+	@Deprecated
 	public static Set<Class<?>> getClassesByPackageNameAndAnnotaionName(String pkg, Class<? extends Annotation> annotation) {
 		Set<Class<?>> result = null;
 		Reflections flect = new Reflections(pkg);

@@ -18,7 +18,7 @@ import net.mickarea.tools.annotation.MyColumn;
 import net.mickarea.tools.annotation.MyColumnIgnore;
 import net.mickarea.tools.annotation.MyTableOrView;
 import net.mickarea.tools.annotation.MyVirtualEntity;
-import net.mickarea.tools.annotation.scanner.MyAnnotationScanner;
+import net.mickarea.tools.utils.AnnotationUtil;
 import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
@@ -68,7 +68,7 @@ public final class DBStrUtil {
 		String result = "";
 		if(!StrUtil.isEmptyString(tabOrViewName) && !StrUtil.isEmptyString(pkgName)) {
 			//使用扫描器获取特定包下的映射类信息
-			Set<Class<?>> clsSet = MyAnnotationScanner.getClassesByPackageNameAndAnnotaionName(pkgName, MyTableOrView.class);
+			Set<Class<?>> clsSet = AnnotationUtil.getClassesByAnnotaion(pkgName, MyTableOrView.class);
 			//如果有内容就继续解析
 			if(clsSet!=null && clsSet.size()>0) {
 				for(Class<?> cls: clsSet) {

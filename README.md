@@ -34,6 +34,43 @@ _gradle(kotlin):_
 implementation("io.github.pdcgithub:pdc-common-tool:1.1.0-jre8-RC")
 ```
 
+### for local packing
+If you are interested in using this toolkit but the official version updates too slowly, you can try packaging it locally yourself. It is a snapshot version and has not been fully tested. (Note, you need to install Maven first which is used for packaging Java programs.)
+<h4>1. Clear the existing content, recompile, and perform unit testing.</h4>
+
+```bash
+mvn clean
+```
+```bash
+mvn compile
+```
+```bash
+mvn test
+```
+Of course, you also can set all the commands at once.
+```bash
+mvn clean compile test
+```
+If you want to run specific unit tests, you can handle them like this:
+```bash
+mvn -Dtest=net.mickarea.tools.utils.test.ConcurrencyTestUtilTester test
+```
+<h4>2. Package and place it into the local Maven repository</h4>
+
+```bash
+mvn install
+```
+If you just want to package it and don't want to install it into the local Maven repository, you can handle it this way.
+```bash
+mvn package
+```
+Usually, I’ll clear it first and then pack it.
+```bash
+mvn clean package
+```
+
+----------------------------------------------------
+
 ### release notes
 <h4>v 1.1.0  2025-12-11</h4>
 <p>1. For code testing, the JUnit 5 framework was used.</p>

@@ -124,13 +124,14 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- gpg 验证插件 -->
+            <!-- gpg 验证插件 (发布到中央仓库时，再使用。gpg 工具在 Git bash 里面有) -->
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
                 <configuration>
-                    <executable>C:\Program Files (x86)\GnuPG\bin\gpg.exe</executable>
+                    <executable>C:\Program Files\Git\usr\bin\gpg.exe</executable>
                     <keyname>pangdongcan</keyname>
                 </configuration>
                 <executions>
@@ -143,6 +144,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <!-- junit 5 测试插件。用于 mvn test 执行 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

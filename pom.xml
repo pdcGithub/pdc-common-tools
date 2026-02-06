@@ -6,7 +6,7 @@
     <groupId>io.github.pdcgithub</groupId>
     <artifactId>pdc-common-tool</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.2-jre8-SNAPSHOT</version>
+    <version>1.1.3-jre8-SNAPSHOT</version>
     <name>pdc-common-tool</name>
     <description>This is a common toolkit of myself</description>
     <url>https://github.com/pdcGithub/pdc-common-tools</url>

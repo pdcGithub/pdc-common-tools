@@ -72,6 +72,20 @@ mvn clean package
 ----------------------------------------------------
 
 ### release notes
+<h4>v 1.1.3  2026-09-24 (This version has not been published to the central repository)</h4>
+<p>1. Added a unit test utility class ConcurrencyTestUtil. It's mainly used to check if the functional code has any thread safety issues under high concurrency.</p>
+<p>2. Added a custom output parameter converter class CodeLocationConverterConfig. It is used to record code location information when logging.</p>
+<p>3. Added a utility class AnnotationUtil for annotation usage. It is mainly used to simplify the handling and recognition of annotations.</p>
+<p>4. Added a utility class PropertiesUtil. It is mainly used to read information from properties files.</p>
+<p>5. Deprecated the use of SimpleDateFormat in the TimeUtil class and fixed some spelling issues.</p>
+<p>6. Deprecated the MyAnnotationScanner class. Its original functionality is replaced by AnnotationUtil.</p>
+<p>7. Fixed hidden program defects in the unit test code of the ConcurrencyTestUtil class.</p>
+<p>8. Fixed the issue in the RandomUtil class where random sequence values were duplicated during multithreaded execution due to conflicting random seeds.</p>
+<p>9. Fixed the issue in the RandomUtil class where non-numeric characters occasionally appeared when generating random numeric strings.</p>
+<p>10. Merged version information and pom file contents from the snapshot, release, and main branches in the repository, and deprecated the 1.0.x naming convention.</p>
+<p>11. Disabled the gpg verification configuration in the pom file. This is mainly used when publishing jars to the central repository and is not needed for regular use.</p>
+<p>12. Deleted some unused test code files.</p>
+
 <h4>v 1.1.0  2025-12-11</h4>
 <p>1. For code testing, the JUnit 5 framework was used.</p>
 <p>2. Added a static string convertor named StrToDataConvertor. It can convert strings to any data type. If the default implementation does not meet your needs, you can extend it yourself.</p>

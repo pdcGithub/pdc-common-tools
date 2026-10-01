@@ -42,7 +42,7 @@ public class FileNameFilterTester {
 	/**
 	 * 定义一个测试文件存放的文件夹
 	 */
-	public static String TEST_DIR = SystemUtil.getUserHome();
+	public static String TEST_DIR = SystemUtil.getUserHome() + File.separator + "pdc_java_tests";
 	
 	/**
 	 * 这些是测试文件的前缀
@@ -57,7 +57,7 @@ public class FileNameFilterTester {
 	/**
 	 * 首先定义4个测试用的文件名
 	 */
-	public static List<String> NAMES = Arrays.asList("1abcdefgh", "2ABCDEFGH", "3abcdeFGH", "4ABCDefgh");
+	public static List<String> NAMES = Arrays.asList("1abcdefgh", "2ABCDEFGH", "3abcdeFGH", "4ABCDefgh", "5ABCDefgh");
 	
 	/**
 	 * 这里是单元测试的初始化处理。它负责在单元测试方法执行前，先初始化环境。
@@ -66,6 +66,20 @@ public class FileNameFilterTester {
 	@BeforeAll
 	public static void beforeAll() throws Exception {
 		
+		// 创建 TEST_DIR 。因为普通文件夹，有太多干扰，需要一个 专用文件夹
+		Path testDir = Paths.get(TEST_DIR);
+		if(Files.notExists(testDir)) {
+			Files.createDirectories(testDir);
+			Stdout.pl("创建文件夹 "+testDir.toAbsolutePath());
+		}
+		
+		// 创建 test2 文件夹
+		Path test2Dir = Paths.get(TEST_DIR + File.separator + "test2");
+		if(Files.notExists(test2Dir)) {
+			Files.createDirectories(test2Dir);
+			Stdout.pl("创建文件夹 "+test2Dir.toAbsolutePath());
+		}
+		
 		// 循环构建测试文件
 		for(String name : NAMES) {
 			// 定义完整路径
@@ -73,6 +87,9 @@ public class FileNameFilterTester {
 			// 如果是 3  和 4 则让 文件后缀变大写。用于测试 文件后缀 的大小写 是否有效处理
 			if(name.startsWith("3") || name.startsWith("4")) {
 				fileAbsPath = TEST_DIR + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX.toUpperCase());
+			}else if(name.startsWith("5")) {
+				// 再创建一个下级文件夹 test2 ，里面是 5ABCDefgh.TXT
+				fileAbsPath = TEST_DIR + File.separator + "test2" + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX.toUpperCase());
 			}
 			Path filePath = Paths.get(fileAbsPath); 
 			// 如果文件不存在则创建，否则不创建
@@ -100,12 +117,25 @@ public class FileNameFilterTester {
 			// 如果是 3  和 4 则让 文件后缀变大写。用于测试 文件后缀 的大小写 是否有效处理
 			if(name.startsWith("3") || name.startsWith("4")) {
 				fileAbsPath = TEST_DIR + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX.toUpperCase());
+			}else if (name.startsWith("5")) {
+				// 再创建一个下级文件夹 test2 ，里面是 5ABCDefgh.TXT
+				fileAbsPath = TEST_DIR + File.separator + "test2" + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX.toUpperCase());
 			}
 			Path filePath = Paths.get(fileAbsPath); 
 			// 如果存在，则删除
 			Files.deleteIfExists(filePath);
 			Stdout.pl("删除测试用的文件 "+fileAbsPath);
 		}
+		
+		// 删除多余的 test2 文件夹
+		Path test2Dir = Paths.get(TEST_DIR + File.separator + "test2");
+		if(Files.exists(test2Dir)) Stdout.pl("删除测试用的文件夹 "+test2Dir);
+		Files.deleteIfExists(test2Dir);
+		
+		// 删除 testDir 
+		Path testDir = Paths.get(TEST_DIR);
+		if(Files.exists(testDir)) Stdout.pl("删除测试用的文件夹 "+testDir);
+		Files.deleteIfExists(testDir);
 		
 		Stdout.pl("测试用的文件清理结束，结束测试 ...");
 		
@@ -123,26 +153,30 @@ public class FileNameFilterTester {
 		// 先确定要检索的文件夹
 		File testDir = new File(TEST_DIR);
 		
-		// ================ 先测试区分大小写
-		String[] pathArr = testDir.list(new FileNameFilter(regexpStr, false));
+		// 定义几个测试对象 主要是对 FileNameFilter 的参数进行一次遍历
+		FileNameFilter filter_Case_notInclude = new FileNameFilter(regexpStr, false, false);  //  区分大小写，不包含子目录
+		FileNameFilter filter_Case_Include = new FileNameFilter(regexpStr, false, true);      //  区分大小写，包含子目录
+		FileNameFilter filter_notCase_notInclude = new FileNameFilter(regexpStr, true, false);//不区分大小写，不包含子目录
+		FileNameFilter filter_notCase_Include = new FileNameFilter(regexpStr, true, true);    //不区分大小写，包含子目录
+		FileNameFilter filter_notCase_Include2 = new FileNameFilter(regexpStr); 			  //不区分大小写，包含子目录
+		// 正常来说，没有正常初始化的过滤对象，执行时会报错，然后返回 false。相当于 一个文件都匹配不到
+		FileNameFilter filter_null = new FileNameFilter();
 		
+		// ================ 测试 1 区分大小写，不包含子目录
+		String[] pathArr = testDir.list(filter_Case_notInclude);
 		// 正常来说，应该只能匹配到 1abcdefgh 这个文件
 		assertEquals(1, pathArr.length);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr[0]);
 		
-		// ================ 再测试不区分大小写
-		String[] pathArr2 = testDir.list(new FileNameFilter(regexpStr, true));
-		
-		// 正常来说，应该 能匹配到 4 个文件
-		assertEquals(4, pathArr2.length);
+		// ================ 测试 2 区分大小写，包含子目录
+		String[] pathArr2 = testDir.list(filter_Case_Include);
+		// 正常来说，匹配到 1abcdefgh 这个文件 以及 目录 test2
+		assertEquals(2, pathArr2.length);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr2[0]);
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(1)+"."+FILE_SUBFFIX, pathArr2[1]);
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase(), pathArr2[2]); // 3 和 4 是大写的后缀
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase(), pathArr2[3]);
+		assertEquals("test2", pathArr2[1]);
 		
-		// ================ 再测试默认参数，它相当于 不区分大小写
-		String[] pathArr3 = testDir.list(new FileNameFilter(regexpStr));
-		
+		// ================ 测试 3 不区分大小写，不包含子目录
+		String[] pathArr3 = testDir.list(filter_notCase_notInclude);
 		// 正常来说，应该 能匹配到 4 个文件
 		assertEquals(4, pathArr3.length);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr3[0]);
@@ -150,11 +184,32 @@ public class FileNameFilterTester {
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase(), pathArr3[2]); // 3 和 4 是大写的后缀
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase(), pathArr3[3]);
 		
-		// ================ 再测试 无参。正常来说，没有正常初始化的过滤对象，执行时会报错，然后返回 false。相当于 一个文件都匹配不到
-		String[] pathArr4 = testDir.list(new FileNameFilter());
-		// 正常来说，应该 一个文件都匹配不到
-		assertEquals(0, pathArr4.length);
+		// ================ 测试 4 不区分大小写，包含子目录
+		String[] pathArr4 = testDir.list(filter_notCase_Include);
+		// 正常来说，应该 能匹配到 4 个文件，以及 目录 test2
+		assertEquals(5, pathArr4.length);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr4[0]);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(1)+"."+FILE_SUBFFIX, pathArr4[1]);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase(), pathArr4[2]); // 3 和 4 是大写的后缀
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase(), pathArr4[3]);
+		assertEquals("test2", pathArr4[4]);
 		
+		// ================ 测试 5 不区分大小写，包含子目录
+		String[] pathArr5 = testDir.list(filter_notCase_Include2);
+		// 正常来说，应该 能匹配到 4 个文件，以及 目录 test2 
+		assertEquals(5, pathArr5.length);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr5[0]);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(1)+"."+FILE_SUBFFIX, pathArr5[1]);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase(), pathArr5[2]); // 3 和 4 是大写的后缀
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase(), pathArr5[3]);
+		assertEquals("test2", pathArr5[4]);
+		
+		// ================ 测试 6 区分大小写，没有正常初始化的过滤对象
+		String[] pathArr6 = testDir.list(filter_null);
+		// 正常来说，应该 一个文件都匹配不到。
+		// 但是，我们有一个文件夹 test2 是可以匹配到的。所以结果数量是 1 。
+		assertEquals(1, pathArr6.length);
+		assertEquals("test2", pathArr6[0]);
 	}
 	
 	/**
@@ -179,8 +234,8 @@ public class FileNameFilterTester {
 		List<Exception> excepList = Collections.synchronizedList(new ArrayList<Exception>());
 		
 		// 为了测试同一个过滤对象 在多线程下调用 会不会出问题。这里需要先定义2个过滤对象。
-		FilenameFilter caseFilter = new FileNameFilter(regexpStr, false);  // 区分字母大小写
-		FilenameFilter notCaseFilter = new FileNameFilter(regexpStr, true); // 忽略字母大小写
+		FilenameFilter caseFilter = new FileNameFilter(regexpStr, false, false);  // 区分字母大小写
+		FilenameFilter notCaseFilter = new FileNameFilter(regexpStr, true, false); // 忽略字母大小写
 		
 		// =============================================================== 测试 1
 		ConcurrencyTestUtil.test(threadNum, 10, TimeUnit.SECONDS, ()->{

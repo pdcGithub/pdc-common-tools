@@ -118,7 +118,7 @@ public class FileNameFilter implements FilenameFilter {
 		} catch (Exception e) {
 			// 记录错误日志，写入到 debug 中
 			Stdout.mylogger.debug(
-				Stdout.fplToAnyWhere("文件名过滤器发生异常。文件夹: %s, 文件名: %s, 正则: %s, ignoreCase: %s", 
+				Stdout.fplToAnyWhere("Filename filter encountered an exception. dir=%s, filename=%s, regexp=%s, ignoreCase=%s", 
 					dir, name, this.filenameRegexp, this.ignoreCase
 				)
 			);

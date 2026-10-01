@@ -13,6 +13,7 @@ package net.mickarea.tools.filter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,6 +70,10 @@ public class FileNameFilterTester {
 		for(String name : NAMES) {
 			// 定义完整路径
 			String fileAbsPath = TEST_DIR + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX);
+			// 如果是 3  和 4 则让 文件后缀变大写。用于测试 文件后缀 的大小写 是否有效处理
+			if(name.startsWith("3") || name.startsWith("4")) {
+				fileAbsPath = TEST_DIR + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX.toUpperCase());
+			}
 			Path filePath = Paths.get(fileAbsPath); 
 			// 如果文件不存在则创建，否则不创建
 			if(Files.notExists(filePath)) {
@@ -92,6 +97,10 @@ public class FileNameFilterTester {
 		for(String name : NAMES) {
 			// 定义完整路径
 			String fileAbsPath = TEST_DIR + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX);
+			// 如果是 3  和 4 则让 文件后缀变大写。用于测试 文件后缀 的大小写 是否有效处理
+			if(name.startsWith("3") || name.startsWith("4")) {
+				fileAbsPath = TEST_DIR + File.separator + (FILE_PREFFIX + "_" + name + "." + FILE_SUBFFIX.toUpperCase());
+			}
 			Path filePath = Paths.get(fileAbsPath); 
 			// 如果存在，则删除
 			Files.deleteIfExists(filePath);
@@ -128,8 +137,8 @@ public class FileNameFilterTester {
 		assertEquals(4, pathArr2.length);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr2[0]);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(1)+"."+FILE_SUBFFIX, pathArr2[1]);
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX, pathArr2[2]);
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX, pathArr2[3]);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase(), pathArr2[2]); // 3 和 4 是大写的后缀
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase(), pathArr2[3]);
 		
 		// ================ 再测试默认参数，它相当于 不区分大小写
 		String[] pathArr3 = testDir.list(new FileNameFilter(regexpStr));
@@ -138,8 +147,8 @@ public class FileNameFilterTester {
 		assertEquals(4, pathArr3.length);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX, pathArr3[0]);
 		assertEquals(FILE_PREFFIX+"_"+NAMES.get(1)+"."+FILE_SUBFFIX, pathArr3[1]);
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX, pathArr3[2]);
-		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX, pathArr3[3]);
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase(), pathArr3[2]); // 3 和 4 是大写的后缀
+		assertEquals(FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase(), pathArr3[3]);
 		
 		// ================ 再测试 无参。正常来说，没有正常初始化的过滤对象，执行时会报错，然后返回 false。相当于 一个文件都匹配不到
 		String[] pathArr4 = testDir.list(new FileNameFilter());
@@ -169,6 +178,10 @@ public class FileNameFilterTester {
 		// 这个记录 异常对象
 		List<Exception> excepList = Collections.synchronizedList(new ArrayList<Exception>());
 		
+		// 为了测试同一个过滤对象 在多线程下调用 会不会出问题。这里需要先定义2个过滤对象。
+		FilenameFilter caseFilter = new FileNameFilter(regexpStr, false);  // 区分字母大小写
+		FilenameFilter notCaseFilter = new FileNameFilter(regexpStr, true); // 忽略字母大小写
+		
 		// =============================================================== 测试 1
 		ConcurrencyTestUtil.test(threadNum, 10, TimeUnit.SECONDS, ()->{
 			try {
@@ -176,7 +189,7 @@ public class FileNameFilterTester {
 				Thread.sleep(6);
 				
 				// ================ 先测试区分大小写
-				reList.add(testDir.list(new FileNameFilter(regexpStr, false)));
+				reList.add(testDir.list(caseFilter));
 				
 				Thread.sleep(6);
 				
@@ -216,7 +229,7 @@ public class FileNameFilterTester {
 				Thread.sleep(6);
 				
 				// ================ 这里测试的是 不区分大小写 ignoreCase = true
-				reList.add(testDir.list(new FileNameFilter(regexpStr, true)));
+				reList.add(testDir.list(notCaseFilter));
 				
 				Thread.sleep(6);
 				
@@ -243,8 +256,8 @@ public class FileNameFilterTester {
 			return strArr.length==4 
 					&& (FILE_PREFFIX+"_"+NAMES.get(0)+"."+FILE_SUBFFIX).equals(strArr[0]) 
 					&& (FILE_PREFFIX+"_"+NAMES.get(1)+"."+FILE_SUBFFIX).equals(strArr[1]) 
-					&& (FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX).equals(strArr[2]) 
-					&& (FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX).equals(strArr[3]) ;
+					&& (FILE_PREFFIX+"_"+NAMES.get(2)+"."+FILE_SUBFFIX.toUpperCase()).equals(strArr[2]) 
+					&& (FILE_PREFFIX+"_"+NAMES.get(3)+"."+FILE_SUBFFIX.toUpperCase()).equals(strArr[3]) ; // 3 和 4 是大写的后缀
 		}).filter(boo->boo==true).count();
 		// 
 		assertEquals(threadNum, actCount);

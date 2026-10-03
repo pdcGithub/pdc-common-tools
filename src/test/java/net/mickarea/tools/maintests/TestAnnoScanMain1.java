@@ -20,10 +20,12 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import net.mickarea.tools.filter.FileNameFilter;
 import net.mickarea.tools.utils.ListUtil;
+import net.mickarea.tools.utils.PatternUtil;
 import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
@@ -98,37 +100,11 @@ public class TestAnnoScanMain1 {
 			// 先把 URL 转换为 JarFile 对象
 			JarFile file = ((JarURLConnection)resourceURL.openConnection()).getJarFile();
 			
-			// 把 jar 包内部的信息转为 List 对象。
-			// 对于 jar 它会 完整解包
-			// 所以，只处理 searchingPath 及其 下级目录，然后文件只处理 .class。并且 class 文件只处理 不带 $ 符号的。
-			// 因为，带 $ 符号的是 类内部的子类
-			List<JarEntry> jarEntryies = ListUtil.makeEnumerationObjectToListObject(file.entries());
+			// 这里的话因为会匹配到 非 searchingPath 的内容，所以增加 searchingPath 头部匹配
+			List<String> jarFiles = TestAnnoScanMain1.searchJarFiles(file, Pattern.quote(searchingPath)+".+\\.class", true);
 			
-			// 通过流处理，过滤出需要搜索的文件夹
-			// 前提，jarEntryies 不是空列表。如果 file.entries() 没有内容，则 List 是 null
-			if(!ListUtil.isEmptyList(jarEntryies)) {
-				// 先找出需要遍历的文件夹
-				// 以为 jar 是解包搜索，所以遍历一次就行了
-				List<String> jarTargetList = jarEntryies.parallelStream() // 这是并行流，加速处理
-													.filter(jarEntry->{
-														// 过滤出 以 searchingPath 开头的class 文件
-														// class 不能带 $ 符号
-														return jarEntry.getName().startsWith(searchingPath) 
-																&& jarEntry.getName().endsWith(".class")
-																&& !jarEntry.getName().contains("$")
-																&& !jarEntry.isDirectory();
-													})
-													.map(jarEntry->{
-														// 转换 jarEntry 对象 为 路径字符串
-														return jarEntry.getName();
-													})
-													.distinct() // 去重
-													.sorted() // 排序
-													.collect(Collectors.toList()); // 最后，收集为字符串列表
-													
-				// 打印一下文件夹信息
-				jarTargetList.forEach(Stdout::pl);
-			}
+			// 打印看看
+			jarFiles.stream().distinct().sorted().forEach(Stdout::pl);
 			
 		} else if("file".equalsIgnoreCase(resourceURL.getProtocol())) {
 			
@@ -141,9 +117,7 @@ public class TestAnnoScanMain1 {
 			List<String> absPaths = TestAnnoScanMain1.searchLocalFiles(file, true, searchFilter);
 			
 			// 打印看看
-			absPaths.stream().distinct().sorted().forEach(path->{
-				Stdout.pl(path);
-			});
+			absPaths.stream().distinct().sorted().forEach(Stdout::pl);
 			
 		} else {
 			Stdout.fpl("遇到无法处理的文件，url=%s, 协议=%s", resourceURL, resourceURL.getProtocol());
@@ -158,7 +132,7 @@ public class TestAnnoScanMain1 {
 	 * 根据本地路径，一层层递归搜索，全部的文件绝对路径信息
 	 * @param directory 文件夹目录对象
 	 * @param recursive 是否递归搜索子文件夹。true 则递归搜索，false 则只搜索当前传入的文件夹
-	 * @param fileSubffix 要搜索的文件后缀
+	 * @param filter 要搜索的文件名过滤器。建议使用 本框架自带的 FileNameFilter 类，作为实现。
 	 * @return 一个文件信息列表。如果传入的参数不是文件夹，或者文件夹没有文件，则返回空列表。空列表指的是：null 或者 长度为0
 	 */
 	public static final List<String> searchLocalFiles(File directory, boolean recursive, FilenameFilter filter) {
@@ -197,6 +171,51 @@ public class TestAnnoScanMain1 {
 			}
 			
 			// 其它不用处理
+		}
+		
+		// 返回
+		return result;
+	}
+	
+	/**
+	 * 根据正则规则，检索名字符合要求的文件。
+	 * @param file 这是 Jar 文件对象。它实际上是一个 zip 压缩文件。
+	 * @param regexp 检索文件名用的正则表达式
+	 * @param ignoreCase 正则匹配时，是否区分字母大小写
+	 * @return 一个文件信息列表。如果传入的参数异常，则返回空列表。空列表指的是：null 或者 长度为0
+	 */
+	public static final List<String> searchJarFiles(JarFile file, String regexp, boolean ignoreCase) {
+		
+		// 首先定义一个返回结果
+		List<String> result = null;
+		
+		// 如果参数不对，则直接返回 null
+		if(file==null || StrUtil.isEmptyString(regexp)) return result;
+		
+		// 把 jar 包内部的信息转为 List 对象。
+		// 对于 jar 它会 完整解包
+		List<JarEntry> jarEntryies = ListUtil.makeEnumerationObjectToListObject(file.entries());
+		
+		// 通过流处理，过滤出需要搜索的文件夹
+		// 前提，jarEntryies 不是空列表。如果 file.entries() 没有内容，则 List 是 null
+		if(!ListUtil.isEmptyList(jarEntryies)) {
+			// 先找出需要遍历的文件夹
+			// 以为 jar 是解包搜索，所以遍历一次就行了
+			result = jarEntryies.parallelStream() // 这是并行流，加速处理
+								.filter(jarEntry->{
+									// 首先做正则校验
+									boolean regexpResult = ignoreCase ? PatternUtil.matches(regexp, jarEntry.getName(), Pattern.CASE_INSENSITIVE) : PatternUtil.matches(regexp, jarEntry.getName());
+									// 返回筛选结果
+									// 由于 jar 是解包搜索，所以不需要递归，也就不需要文件夹内容
+									return regexpResult && !jarEntry.isDirectory();
+								})
+								.map(jarEntry->{
+									// 转换 jarEntry 对象 为 路径字符串
+									return jarEntry.getName();
+								})
+								.distinct() // 去重
+								.sorted() // 排序
+								.collect(Collectors.toList()); // 最后，收集为字符串列表
 		}
 		
 		// 返回

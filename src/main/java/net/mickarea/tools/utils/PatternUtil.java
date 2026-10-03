@@ -11,6 +11,7 @@ Copyright (c) 2023 Michael Pang.
 package net.mickarea.tools.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  * 一个正则工具类
  * @author Michael Pang (Dongcan Pang)
  * @version 1.0
- * @since 2023年4月24日-2024年12月2日
+ * @since 2023年4月24日
  */
 public final class PatternUtil {
 	
@@ -33,33 +34,48 @@ public final class PatternUtil {
 	/**
 	 * 报文分界线识别正则
 	 */
+	@Deprecated
 	public static final String DATAGRAM_BOUNDARY = "(\\-){2,}\\w+";
 	
 	/**
 	 * 报文最后的分界线识别正则
 	 */
+	@Deprecated
 	public static final String DATAGRAM_BOUNDARY_LAST = "(\\-){2,}\\w+(\\-){2}";
 	
 	/**
 	 * 上传的文件头部过滤正则
 	 */
+	@Deprecated
 	public static final String UPLOAD_FILE_HEADER = "(\\-){2,}.+\r\n.+(filename=.*)\r\n.+(\r\n){2}";
 	
 	/**
 	 * 上传的文件尾部过滤正则
 	 */
+	@Deprecated
 	public static final String UPLOAD_FILE_TAIL = "\r\n(\\-){4,}[a-zA-Z0-9]+(\\-){2}\r\n";
 	
 	/**
 	 * 上传的文件名称过滤正则
 	 */
+	@Deprecated
 	public static final String UPLOAD_FILE_NAME = "filename=\"(.*)\"";
+	
+	/** 
+	 * 正则表达式的标准可选配置。这些配置信息，用于 Pattern.compile 方法上的 flags 参数。
+	 */
+	public static final List<Integer> STANDARD_FLAGS = Arrays.asList(
+		Pattern.CASE_INSENSITIVE, Pattern.MULTILINE, Pattern.DOTALL,
+		Pattern.UNICODE_CASE, Pattern.CANON_EQ, Pattern.UNIX_LINES, 
+		Pattern.LITERAL, Pattern.UNICODE_CHARACTER_CLASS, Pattern.COMMENTS
+	);
 	
 	/**
 	 * 提取上传的文件头报文
 	 * @param str 源头字符串
 	 * @return 目标字符串
 	 */
+	@Deprecated
 	public static String getUploadFileHeader(String str) {
 		String result = "";
 		if(str!=null) {
@@ -76,6 +92,7 @@ public final class PatternUtil {
 	 * @param str 带有名称的报文头部
 	 * @return 文件的真实名称
 	 */
+	@Deprecated
 	public static String getUploadFileRealName(String str) {
 		String result = "";
 		if(str!=null) {
@@ -96,6 +113,7 @@ public final class PatternUtil {
 	 * @param str 一个文件名
 	 * @return 后缀字符串
 	 */
+	@Deprecated
 	public static String getFileSuffixName(String str) {
 		String result = "";
 		if(str!=null) {
@@ -112,6 +130,7 @@ public final class PatternUtil {
 	 * @param str 报文
 	 * @return 末尾字符串
 	 */
+	@Deprecated
 	public static String getUploadFileTail(String str) {
 		String result = "";
 		if(str!=null) {
@@ -207,21 +226,67 @@ public final class PatternUtil {
 		return re;
 	}
 	
-	//测试函数
-	/*
-	public static void main(String[] args) {
-		String formStr = "[\\s]*<([Ff][Oo][Rr][Mm]\\s+.*?|[Ff][Oo][Rr][Mm])>[\\s\\S]*?</([Ff][Oo][Rr][Mm])>[\\s]*";
-		String newStr = genRegStrForHtmlTagReplace("Form2");
-		Stdout.pl(formStr);
-		Stdout.pl(newStr);
-		Stdout.pl(formStr.equals(newStr));
-		String scriptStr = "[\\s]*<([Ss][Cc][Rr][Ii][Pp][Tt]\\s+.*?|[Ss][Cc][Rr][Ii][Pp][Tt])>[\\s\\S]*?</([Ss][Cc][Rr][Ii][Pp][Tt])>[\\s]*";
-		String newStr2 = genRegStrForHtmlTagReplace("scRipt");
-		Stdout.pl(scriptStr);
-		Stdout.pl(newStr2);
-		Stdout.pl(scriptStr.equals(newStr2));
-		Stdout.pl(genRegStrForHtmlTagReplace("H2"));
-		Stdout.pl(genRegStrForHtmlTagReplace("objectZip"));
+	/**
+	 * 这是一个 Pattern.matches 的替代方法。标准库中，这个方法对于正则校验本身，没有相关的配置处理。
+	 * 但是，Pattern.compile 方法是有配置参数的。所以，这里我们实现一个带配置的 matches 方法。
+	 * @param regexp 这是 Java 版本的正则表达式字符串。
+	 * @param input 这是要校验的字符信息
+	 * @param configs 可选配置。它是正则表达式的编译配置。这段内容将以掩码的方式处理。多个config进行 或运算。
+     * 具体的常量，可以参考 
+     * {@link Pattern#CASE_INSENSITIVE}, 
+     * {@link Pattern#MULTILINE}, 
+     * {@link Pattern#DOTALL},
+     * {@link Pattern#UNICODE_CASE}, 
+     * {@link Pattern#CANON_EQ}, 
+     * {@link Pattern#UNIX_LINES},
+     * {@link Pattern#LITERAL}, 
+     * {@link Pattern#UNICODE_CHARACTER_CLASS} 
+     * 和 {@link Pattern#COMMENTS}
+	 * @return 如果正则表达式 和 字符内容 匹配，则返回 true 。如果参数异常，或者 不匹配，则返回 false。
+	 */
+	public static boolean matches(String regexp, CharSequence input, int... optionalConfigs) {
+		
+		// 定义一个结果
+		boolean result = false;
+		
+		// 如果 正则表达式是 空，或者 待判断字符串为 空，直接返回 false
+		if(StrUtil.isEmptyString(regexp) || input==null || input.length()<=0 ) return result;
+		
+		// 如果 configs 有参入，但是不在 Pattern 配置中，则去除。
+		// 如果 configs 有重复，也移除
+		// 最后会得到一个 int 数组
+		List<Integer> flags = new ArrayList<Integer>();
+		if(optionalConfigs!=null) {
+			for(int i=0; i<optionalConfigs.length;i++) {
+				if(STANDARD_FLAGS.contains(optionalConfigs[i])) flags.add(optionalConfigs[i]);
+			}
+		}
+		// 将结果去重，并做一个掩码运算（或运算）得出一个 flag 信息。
+		int flag = -1;
+		if(flags.size()>0) flag = flags.stream()
+										.distinct()
+										.mapToInt(Integer::intValue)
+										.reduce(0, (a, b)-> a | b); // 因为是 或运算，初始值用 0
+		
+		// 这里开始进行正则匹配
+		try {
+			// 把字符串，编译为正则对象
+			Pattern p = flag==-1 ? Pattern.compile(regexp) : Pattern.compile(regexp, flag);
+			// 设置 要进行匹配的内容
+			Matcher m = p.matcher(input);
+			// 检测是否匹配
+			result = m.matches();
+			
+		} catch(Exception e) {
+			// 记录错误日志，写入到 debug 中
+			Stdout.mylogger.debug(
+				Stdout.fplToAnyWhere(
+					"An exception occurred while matching or compiling a regular expression exp=%s, input=%s, flags=%s", 
+					regexp, input, flags)
+			);
+		}
+		
+		return result ;
 	}
-	*/
+	
 }

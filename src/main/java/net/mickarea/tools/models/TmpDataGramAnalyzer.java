@@ -26,6 +26,7 @@ import net.mickarea.tools.utils.Stdout;
  * @version 1.0
  * @since 2023年4月26日-2023年4月27日
  */
+@Deprecated
 public class TmpDataGramAnalyzer {
 	
 	/**

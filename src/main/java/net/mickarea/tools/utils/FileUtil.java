@@ -21,18 +21,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
- * &gt;&gt;&nbsp;文件读写操作工具类（默认的文件读写字符集为 UTF-8）
+ * 文件读写操作工具类（默认的文件读写字符集为 UTF-8）
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
- * @since 2023年9月27日-2024年11月28日
+ * @since 2023年9月27日-2026年10月08日
  */
 public final class FileUtil {
 	
 	/**
-	 * &gt;&gt;&nbsp;默认的字符集，UTF-8
+	 * 默认的字符集，UTF-8
 	 */
 	public static final String DEFAULT_CHARSET = "UTF-8";
 	
@@ -44,7 +48,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将字符串内容写入到指定路径的文件
+	 * 将字符串内容写入到指定路径的文件
 	 * @param text 待写入内容
 	 * @param dir 指定的文件夹
 	 * @param fileName 指定的文件名
@@ -154,7 +158,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将字符串内容写入到指定路径的文件（可配置是否以追加形式写入）
+	 * 将字符串内容写入到指定路径的文件（可配置是否以追加形式写入）
 	 * @param text 待写入内容
 	 * @param dir 指定的文件夹
 	 * @param fileName 指定的文件名
@@ -166,7 +170,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将字符串内容写入到指定路径的文件
+	 * 将字符串内容写入到指定路径的文件
 	 * @param text 待写入内容
 	 * @param dir 指定的文件夹
 	 * @param fileName 指定的文件名
@@ -177,7 +181,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;将字符串内容写入到指定路径的文件
+	 * 将字符串内容写入到指定路径的文件
 	 * @param text 待写入内容
 	 * @param dir 指定的文件夹
 	 * @param fileName 指定的文件名
@@ -189,7 +193,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;从指定的文件路径中，读取对应的文件内容（以指定的字符集），并以string返回。
+	 * 从指定的文件路径中，读取对应的文件内容（以指定的字符集），并以string返回。
 	 * @param dir 文件所在的文件夹路径
 	 * @param filename 要读取的文件名
 	 * @param keepLineSeparator 是否保留换行符。true 保留，false 不保留。如果不保留，文字将以一行内容返回。
@@ -279,7 +283,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;从指定的文件路径中，读取对应的文件内容（以UTF-8字符集），并以string返回。
+	 * 从指定的文件路径中，读取对应的文件内容（以UTF-8字符集），并以string返回。
 	 * @param dir 文件所在的文件夹路径
 	 * @param filename 要读取的文件名
 	 * @param keepLineSeparator 是否保留换行符。true 保留，false 不保留。如果不保留，文字将以一行内容返回。
@@ -290,7 +294,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;从指定的文件路径中，读取对应的文件内容（以指定的字符集，不保留换行符），并以string返回。
+	 * 从指定的文件路径中，读取对应的文件内容（以指定的字符集，不保留换行符），并以string返回。
 	 * @param dir 文件所在的文件夹路径
 	 * @param filename 要读取的文件名
 	 * @param charset 文件的字符集。主要用于处理非英文字符文件。比如：文件内容的字符集为 GBK ，则该参数需要设置为 GBK，否则返回内容可能乱码。
@@ -301,7 +305,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;从指定的文件路径中，读取对应的文件内容（以UTF-8字符集，不保留换行符），并以string返回。
+	 * 从指定的文件路径中，读取对应的文件内容（以UTF-8字符集，不保留换行符），并以string返回。
 	 * @param dir 文件所在的文件夹路径
 	 * @param filename 要读取的文件名
 	 * @return <p>该函数不保留换行符，文件内容将以一行的形式返回</p>
@@ -312,7 +316,7 @@ public final class FileUtil {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;查找出当前操作系统用户的桌面目录地址(绝对路径)。如果没有桌面目录，则返回当前操作系统用户的主目录
+	 * 查找出当前操作系统用户的桌面目录地址(绝对路径)。如果没有桌面目录，则返回当前操作系统用户的主目录
 	 * @return 桌面目录地址(绝对路径)
 	 */
 	public static String findUserDesktopDir() {
@@ -427,37 +431,99 @@ public final class FileUtil {
 		return re;
 	}
 	
-	//测试函数
-	/*
-	public static void main(String[] args) throws Exception {
+	/**
+	 * 根据本地路径，一层层递归搜索，整个路径下的所有文件的绝对路径信息。（这里只筛选文件，不做排序处理）
+	 * <p>对于 windows 系统，它返回的文件路径可能是这样的：C:\Users\pdc\Downloads\test.txt</p>
+	 * <p>对于 linux 系统，它返回的文件路径可能是这样的：/home/pdc/Downloads/test.txt</p>
+	 * @param directory 文件夹目录对象
+	 * @param recursive 是否递归搜索子文件夹。true 则递归搜索，false 则只搜索当前传入的文件夹
+	 * @param filter 要搜索的文件名过滤器。建议使用 本框架自带的 FileNameFilter 类，作为实现。
+	 * @return 一个文件信息列表。如果传入的参数不是文件夹，或者文件夹没有文件，则返回空列表。空列表指的是：null 或者 长度为0
+	 */
+	public static final List<String> searchFilesFromLocalDir(File directory, boolean recursive, FilenameFilter filter) {
 		
-		String filePath1 = "D:\\软件\\exe\\Clash.Verge_x64-setup.exe";
-		String filePath2 = "xxxx";
-		String filePath3 = null;
-		String filePath4 = "";
+		// 定义一个返回结果
+		List<String> result = null;
 		
-		byte[] re4 = loadByteArrayFromFile(filePath4);
-		Stdout.pl("re4 字节数为："+(re4==null?"异常":re4.length));
+		// 如果 文件夹 对象信息为空，则不处理。
+		// 如果 不是文件夹也不处理
+		if(directory==null || !directory.isDirectory()) return result;
 		
-		byte[] re3 = loadByteArrayFromFile(filePath3);
-		Stdout.pl("re3 字节数为："+(re3==null?"异常":re3.length));
+		// 先初始化
+		result = new ArrayList<String>();
 		
-		byte[] re2 = loadByteArrayFromFile(filePath2);
-		Stdout.pl("re2 字节数为："+(re2==null?"异常":re2.length));
+		// 首先搜索 传入的目录（这里如果有设置过滤器，则过滤；没有则不过滤）
+		File[] currFiles = filter==null ? directory.listFiles() : directory.listFiles(filter);
+		for(int i=0;i<currFiles.length;i++) {
+			
+			// 如果是文件，插入列表，并跳过后续处理
+			if(currFiles[i].isFile()) {
+				// 放入结果列表
+				result.add(currFiles[i].getAbsolutePath());
+				// 结束本次循环
+				continue;
+			}
+			
+			// 如果是文件夹，并且配置了递归搜索，则递归搜索
+			// 否则，不递归搜索
+			if(recursive && currFiles[i].isDirectory()) {
+				// 递归得到一个文件路径列表
+				List<String> recursiveFiles = FileUtil.searchFilesFromLocalDir(currFiles[i], recursive, filter);
+				// 如果有内容，则放入结果列表，否则不放入
+				if(!ListUtil.isEmptyList(recursiveFiles)) result.addAll(recursiveFiles);
+				// 结束本次循环
+				continue;
+			}
+			
+			// 其它不用处理
+		}
 		
-		byte[] re1 = loadByteArrayFromFile(filePath1);
-		Stdout.pl("re1 字节数为："+(re1==null?"异常":re1.length));
-		
-		ByteBuffer b4=loadByteBufferFromFile(filePath4);
-		Stdout.pl("b4 字节数为"+(b4==null?"异常":b4.limit()-b4.position()));
-		ByteBuffer b3=loadByteBufferFromFile(filePath3);
-		Stdout.pl("b3 字节数为"+(b3==null?"异常":b3.limit()-b3.position()));
-		ByteBuffer b2=loadByteBufferFromFile(filePath2);
-		Stdout.pl("b2 字节数为"+(b2==null?"异常":b2.limit()-b2.position()));
-		ByteBuffer b1=loadByteBufferFromFile(filePath1);
-		Stdout.pl("b1 字节数为"+(b1==null?"异常":b1.limit()-b1.position()));
-		
+		// 返回
+		return result;
 	}
-	*/
+	
+	/**
+	 * 根据正则规则，检索Jar文件内部，名字符合要求的文件。（这里只筛选文件，不做排序处理）
+	 * Jar 文件实际上是一个压缩包。它的文件检索，会先解包全部内容，后搜索。所以，它不需要递归处理。
+	 * <p>对于 Jar 的搜索结果，假设搜索 class文件，结果可能是这样的字符串：com/microsoft/sqlserver/jdbc/SessionStateValue.class</p>
+	 * @param file 这是 Jar 文件对象。它实际上是一个 zip 压缩文件。
+	 * @param ignoreCase 文件名字符串匹配时，是否忽略字母大小写。
+	 * @param regexpStr 检索文件名用的正则表达式字符串
+	 * @return 一个文件信息列表。如果传入的参数异常，则返回空列表。空列表指的是：null 或者 长度为0
+	 */
+	public static final List<String> searchFilesFromJar(JarFile file, boolean ignoreCase, String regexpStr) {
+		
+		// 首先定义一个返回结果
+		List<String> result = null;
+		
+		// 如果参数不对，则直接返回 null
+		if(file==null || StrUtil.isEmptyString(regexpStr)) return result;
+		
+		// 把 jar 包内部的信息转为 List 对象。
+		// 对于 jar 它会 完整解包
+		List<JarEntry> jarEntryies = ListUtil.makeEnumerationObjectToListObject(file.entries());
+		
+		// 通过流处理，过滤出需要搜索的文件夹
+		// 前提，jarEntryies 不是空列表。如果 file.entries() 没有内容，则 List 是 null
+		if(!ListUtil.isEmptyList(jarEntryies)) {
+			// 因为 jar 是解包搜索，所以遍历一次就行了
+			result = jarEntryies.parallelStream() // 这是并行流，加速处理
+								.filter(jarEntry->{
+									// 首先做正则校验
+									boolean regexpResult = ignoreCase ? PatternUtil.matches(regexpStr, jarEntry.getName(), Pattern.CASE_INSENSITIVE) : PatternUtil.matches(regexpStr, jarEntry.getName());
+									// 返回筛选结果
+									// 由于 jar 是解包搜索，所以不需要递归，也就不需要文件夹内容
+									return regexpResult && !jarEntry.isDirectory();
+								})
+								.map(jarEntry->{
+									// 转换 jarEntry 对象 为 路径字符串
+									return jarEntry.getName();
+								}) // （因为排序、去重，可能影响性能，所以外部使用时，再自己处理）
+								.collect(Collectors.toList()); // 最后，收集为字符串列表
+		}
+		
+		// 返回
+		return result;
+	}
 	
 }

@@ -39,7 +39,7 @@ public final class ClassUtil {
 	 * 这里的入参数是不定参数，可以传入多个或者0个包名信息。另外，这里会执行去重处理，但不进行排序
 	 * 注意：这里返回的是全部类名，包括带$符号的内部类。
 	 * @param packageNames Java 包名。比如：com 或者 com.sun 等等。不能为空字符串 或者 "."
-	 * @return 具体包下的Java类名称字符串列表（去重+排序）。如果参数异常，或者搜索异常，返回空列表（null 或者 长度为 0）
+	 * @return 具体包下的Java类名称字符串列表（去重）。如果参数异常，或者搜索异常，返回空列表（null 或者 长度为 0）
 	 */
 	public static final List<String> searchClassNamesFromPackages(String... packageNames) {
 		

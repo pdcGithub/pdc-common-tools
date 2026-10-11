@@ -14,9 +14,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.reflections.Reflections;
 
 /**
  * 这是一个关于注解使用的工具类，它关注于注解的相关处理
@@ -113,15 +112,40 @@ public final class AnnotationUtil {
 		// 定义返回结果
 		Set<Class<?>> result = null;
 		
-		// 参数校验
-		if(StrUtil.isEmptyString(pkg) || annotation==null) {
-			Stdout.mylogger.debug("参数校验异常，请检查接收的参数。pkg={}, annotation={}", pkg, annotation);
+		// 先对 pkg 进行去空白字符处理
+		String pkgStr = StrUtil.removeAllBlankStrings(pkg);
+		
+		// 参数校验（这里的 pkg 字符串，使用正则判断）
+		if(!PatternUtil.matches("[a-z0-9\\_\\-]+(\\.[a-z0-9\\_\\-]+)*", pkgStr, Pattern.CASE_INSENSITIVE)
+				|| annotation==null) {
+			Stdout.mylogger.debug(
+				Stdout.fplToAnyWhere(
+					"Parameter validation exception, please check the received parameters. pkgStr=%s, annotation=%s", pkgStr, annotation
+			));
 			return result;
 		}
 		
-		// 开始执行
-		Reflections flect = new Reflections(pkg);
-		result = flect.getTypesAnnotatedWith(annotation);
+		// 检索这个包下面的所有 Java 类
+		List<String> clsNames = ClassUtil.searchClassNamesFromPackages(pkgStr);
+		
+		// 如果有结果，则开始过滤。找出有 annotation 注解的部分，然后返回
+		if(!ListUtil.isEmptyList(clsNames)) result = clsNames.parallelStream()
+													.map(clsName->{
+														// 这里把符合过滤的 类名，转为 Class 对象
+														Class<?> clsRe = null;
+														try {
+															clsRe = Class.forName(clsName);
+														}catch(Exception e) {
+															Stdout.mylogger.error(Stdout.fplToAnyWhere("Name=%s cannot be converted to a Java class", clsName));
+														}
+														return clsRe;
+													})
+													.filter(cls->{
+														// 这里过滤出 带 annotation 注解的 java 类
+														// 返回结果，用于筛选
+														return cls!=null && cls.isAnnotationPresent(annotation);
+													})
+													.collect(Collectors.toSet());
 		
 		// 返回结果
 		return result;

@@ -13,7 +13,7 @@ package net.mickarea.tools.annotation.scanner;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import org.reflections.Reflections;
+import net.mickarea.tools.utils.AnnotationUtil;
 
 /**
  * （这个类已经淘汰，功能已经整合到 AnnotationUtil）一个自定义的注解扫描器，用于扫描已经被注解的对象
@@ -32,24 +32,8 @@ public class MyAnnotationScanner {
 	 */
 	@Deprecated
 	public static Set<Class<?>> getClassesByPackageNameAndAnnotaionName(String pkg, Class<? extends Annotation> annotation) {
-		Set<Class<?>> result = null;
-		Reflections flect = new Reflections(pkg);
-		result = flect.getTypesAnnotatedWith(annotation);
-		return result;
+		// 改用 AnnotationUtil 工具类
+		return AnnotationUtil.getClassesByAnnotaion(pkg, annotation);
 	}
 	
-	/*
-	public static void main(String[] args) {
-		
-		Set<Class<?>> clses = MyAnnotationScanner.getClassesByPackageNameAndAnnotaionName("net.mickarea.tools.dbtest.beans", MyTableOrView.class);
-		if(clses!=null) {
-			for(Class<?> cls:clses) {
-				Stdout.fpl("%s, %s, %s, %s", cls.getName(),cls.getCanonicalName(),cls.getSimpleName(),cls.getTypeName());
-			}
-		}else {
-			Stdout.pl("获取不到内容");
-		}
-		
-	}
-	*/
 }

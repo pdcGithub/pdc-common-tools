@@ -231,7 +231,7 @@ public final class PatternUtil {
 	 * 但是，Pattern.compile 方法是有配置参数的。所以，这里我们实现一个带配置的 matches 方法。
 	 * @param regexp 这是 Java 版本的正则表达式字符串。
 	 * @param input 这是要校验的字符信息
-	 * @param configs 可选配置。它是正则表达式的编译配置。这段内容将以掩码的方式处理。多个config进行 或运算。
+	 * @param optionalConfigs 可选配置。它是正则表达式的编译配置。这段内容将以掩码的方式处理。多个config进行 或运算。
      * 具体的常量，可以参考 
      * {@link Pattern#CASE_INSENSITIVE}, 
      * {@link Pattern#MULTILINE}, 

@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 声明父项目是哪个 -->
+    <parent>
+        <groupId>io.github.pdcgithub</groupId>
+        <artifactId>pdc-common-tool</artifactId>
+        <version>1.2.0-jre8-SNAPSHOT</version>
+    </parent>
+
+    <!-- 声明子模块自己的名字。name 标签不会被子模块继承 -->
+    <name>database</name>
+    <!-- 声明子模块的信息 -->
+    <artifactId>database</artifactId>
+    <!-- 声明子模块的打包方式 -->
+    <packaging>jar</packaging>
+
+    <!-- 编译打包的处理（这里从父项目导入，不用写 version 信息） -->
+    <build>
+        <plugins>
+            
+            <!-- 这是 jar 包插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            
+        </plugins>
+    </build>
+    
+    <!-- 第三方依赖（这里从父项目导入，不用写 version 信息）-->
+    <dependencies>
+        
+        <!-- 数据库连接池 HikariCP java8 版用 4.0 版本 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+        
+        <!--添加mysql的jdbc工具包，8.0.31 和 老版本的路径不同 -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 -->
+        <!--添加 Oracle 的jdbc工具包 用于oracle11g -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+        <!-- 添加 MS SQL Server jdbc 包。 -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+        </dependency>
+        
+    </dependencies>
+
+</project>

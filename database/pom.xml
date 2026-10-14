@@ -60,6 +60,13 @@
             <artifactId>mssql-jdbc</artifactId>
         </dependency>
         
+        <!-- 子模块间的相互依赖。database 依赖 core -->
+        <dependency>
+            <groupId>io.github.pdcgithub</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
     </dependencies>
 
 </project>

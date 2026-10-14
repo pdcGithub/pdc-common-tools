@@ -34,6 +34,13 @@
     <!-- 第三方依赖（这里从父项目导入，不用写 version 信息）-->
     <dependencies>
         
+        <!-- 子模块间的相互依赖。web 依赖 core -->
+        <dependency>
+            <groupId>io.github.pdcgithub</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
     </dependencies>
 
 </project>

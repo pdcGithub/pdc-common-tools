@@ -10,8 +10,6 @@ Copyright (c) 2024 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.utils.database;
 
-import java.util.regex.Pattern;
-
 import net.mickarea.tools.utils.StrUtil;
 
 /**
@@ -54,20 +52,30 @@ public final class DBSQLInjectionUtil {
 	 * @return 已处理的SQL语句字符串。如果数据库类型不支持，返回 error: dbType not supported。如果参数为空，则返回空字符串
 	 */
 	public static String sqlParamEncode(String dbType, String sqlParam) {
+		
+		// 定义一个返回结果
 		String result = "";
-		if(!StrUtil.isEmptyString(dbType) && !StrUtil.isEmptyString(sqlParam)) {
-			switch(dbType.toLowerCase()) {
-			case DBTYPE_MYSQL:
-				result = mySqlParamEncode(sqlParam);
-				break;
-			case DBTYPE_DB2:
-				result = db2SqlParamEncode(sqlParam);
-				break;
-			default:
-				result = defaultSqlParamEncode(sqlParam);
-				break;
-			}
+		
+		// 处理下 type 和 value 
+		String type = StrUtil.removeAllBlankStrings(dbType);
+		String value = sqlParam==null ? "" : sqlParam;
+		
+		//先替换空白字符，将其变为一个单空格
+		value = value.replaceAll("\\s{2,}", " ");
+		
+		switch(type) {
+		case DBTYPE_MYSQL:
+			result = mySqlParamEncode(value);
+			break;
+		case DBTYPE_DB2:
+			result = db2SqlParamEncode(value);
+			break;
+		default:
+			result = defaultSqlParamEncode(value);
+			break;
 		}
+		
+		// 返回
 		return result;
 	}
 	
@@ -95,11 +103,9 @@ public final class DBSQLInjectionUtil {
 	 * @return 替换后的字符串
 	 */
 	private static String mySqlParamEncode(String sqlParam) {
+		
 		String result = sqlParam;
-		//先替换空白字符，将其变为一个单空格
-		if(Pattern.matches(".*\\s+.*", result)) {
-			result = result.replaceAll("\\s+", " ");
-		}
+		
 		//如果有反斜杠（因为后面可能替换后有反斜杠，无法判断是拼接的还是原始的。所以要提前判断）
 		if(result.indexOf("\\")>=0) {
 			result = result.replaceAll("\\\\", "\\\\\\\\");
@@ -128,28 +134,8 @@ public final class DBSQLInjectionUtil {
 		if(result.indexOf(";")>=0) {
 			result = result.replaceAll("\\;", "\\\\;");
 		}
+		
 		return result;
 	}
 	
-	/**
-	 * 测试函数
-	 * @param args 参数
-	 */
-	/*
-	public static void main(String[] args) {
-		
-		String param = " % _ ' \" \\ ' or 1=1 ; drop table test_a ; select 1 from dual where 1=1 or 1=' ";
-		String sql1 = "select * from test_a where id='"+param+"'";
-		
-		String param2 = ESAPI.encoder().encodeForSQL(new MySQLCodec(MySQLCodec.Mode.STANDARD), param);
-		String sql3 = "select * from test_a where id='"+param2+"'";
-		
-		Stdout.pl(sql3);
-		Stdout.pl(sql1);
-		
-		Stdout.pl("select * from test_a where id='"+sqlParmEncode("mysql",param)+"'");
-		Stdout.pl("select * from test_a where id='"+sqlParmEncode("oracle",param)+"'");
-		Stdout.pl("select * from test_a where id='"+sqlParmEncode("db2",param)+"'");
-	}
-	*/
 }

@@ -87,4 +87,56 @@ public class StrUtilTester1 {
 			assertEquals("TestsMynameIamold", StrUtil.makeHumpString("/tests/myName/IAMold", "/"));
 		});
 	}
+	
+	/**
+	 * 这是 StrUtil.injectionTranslateForSQL(String sqlParam) 的单元测试
+	 */
+	@SuppressWarnings("deprecation")
+	@Test
+	void injectionTranslateForSQL_1() {
+		
+		// ========= 这里对比 injectionTranslateForSQL_2 ，它固定了 dbType 为 mysql 
+		
+		// ======== 首先是错误参数的测试
+		assertEquals("", StrUtil.injectionTranslateForSQL(null));
+		assertEquals("", StrUtil.injectionTranslateForSQL(""));
+		assertEquals(" ", StrUtil.injectionTranslateForSQL(" "));
+		assertEquals(" ", StrUtil.injectionTranslateForSQL("        "));
+		
+		// 待转换的字符串
+		String oriStr = "\\ \" % ' _ = ; abcdef ` ...";
+		
+		// ========= 然后是正常的参数处理
+		assertEquals("\\\\ \\\" \\% \\' \\_ \\= \\; abcdef ` ...", StrUtil.injectionTranslateForSQL(oriStr)); // mysql 全部加斜杠
+	}
+	
+	/**
+	 * 这是 StrUtil.injectionTranslateForSQL(String dbType, String sqlParam) 的单元测试
+	 */
+	@SuppressWarnings("deprecation")
+	@Test
+	void injectionTranslateForSQL_2() {
+		
+		// ======== 首先是错误参数的测试（不管 dbType 如何，默认都是 只处理 单引号）
+		assertEquals("'';", StrUtil.injectionTranslateForSQL(null, "';"));
+		assertEquals("'';", StrUtil.injectionTranslateForSQL("", "';"));
+		assertEquals("'';", StrUtil.injectionTranslateForSQL(" ", "';"));
+		assertEquals("'';", StrUtil.injectionTranslateForSQL("aaaaa", "';"));
+		// 然后是 sqlParam 
+		assertEquals("", StrUtil.injectionTranslateForSQL("mysql_ansi", null));
+		assertEquals("", StrUtil.injectionTranslateForSQL("mysql_ansi", ""));
+		assertEquals(" ", StrUtil.injectionTranslateForSQL("mysql_ansi", " "));        // 转换只是替换，不会修改
+		assertEquals(" ", StrUtil.injectionTranslateForSQL("mysql_ansi", "        ")); // 多个空格会处理为一个。转换只是替换，不会修改
+		
+		// 待转换的字符串
+		String oriStr = "\\ \" % ' _ = ; abcdef ` ...";
+		
+		// ========= 然后是正常的参数处理
+		assertEquals("\\\\ \\\" \\% \\' \\_ \\= \\; abcdef ` ...", StrUtil.injectionTranslateForSQL("mysql", oriStr)); // mysql 全部加斜杠
+		assertEquals("\\ \" % '' _ = . abcdef ` ...", StrUtil.injectionTranslateForSQL("db2", oriStr)); // db2 单引号转2个单引号，分号转 点号。
+		assertEquals("\\ \" % '' _ = ; abcdef ` ...", StrUtil.injectionTranslateForSQL("mysql_ansi", oriStr)); // 默认处理 单引号 单引号转2个单引号
+		assertEquals("\\ \" % '' _ = ; abcdef ` ...", StrUtil.injectionTranslateForSQL("oracle", oriStr));     // 默认处理 单引号 单引号转2个单引号
+		assertEquals("\\ \" % '' _ = ; abcdef ` ...", StrUtil.injectionTranslateForSQL("default", oriStr));    // 默认处理 单引号 单引号转2个单引号
+	}
+	
 }

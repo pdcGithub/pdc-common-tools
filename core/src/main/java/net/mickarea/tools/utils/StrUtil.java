@@ -24,8 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
-
 /**
  * 个人的一个字符工具类
  * @author Michael Pang (Dongcan Pang)
@@ -141,22 +139,86 @@ public final class StrUtil {
 	}
 	
 	/**
-	 * Sql语句参数注入转换，用于防范sql注入。（默认为：MYSQL）
-	 * @param sqlParam sql语句的参数
+	 * Sql语句参数注入转换，用于防范sql注入。（默认为：mysql）。
+	 * <p>建议：使用 database 模块的 DBSQLInjectionUtil.sqlParamEncode 方法来替代这个方法。</p>
+	 * <p>注意：因为项目拆解子模块的事情，导致有些工具类不在 core 包中。所以转为使用其它替代方法比较好。</p>
+	 * @param sqlParam 待转换的字符串。
 	 * @return 转换完毕的字符
 	 */
+	@Deprecated
 	public static String injectionTranslateForSQL(String sqlParam) {
-		return DBSQLInjectionUtil.sqlParamEncode(DBSQLInjectionUtil.DBTYPE_MYSQL, sqlParam);
+		return injectionTranslateForSQL("mysql", sqlParam);
 	}
 	
 	/**
 	 * Sql语句参数注入转换，用于防范sql注入。
+	 * <p>建议：使用 database 模块的 DBSQLInjectionUtil.sqlParamEncode 方法来替代这个方法。</p>
+	 * <p>注意：因为项目拆解子模块的事情，导致有些工具类不在 core 包中。所以转为使用其它替代方法比较好。</p>
 	 * @param dbType 要转义的数据库类型。参考：DBSQLInjectionUtil 类中的 <strong>DBTYPE</strong>常量
-	 * @param sqlParam sql语句的参数
+	 * @param sqlParam 待转换的字符串。
 	 * @return 转换完毕的字符
 	 */
+	@Deprecated
 	public static String injectionTranslateForSQL(String dbType, String sqlParam) {
-		return DBSQLInjectionUtil.sqlParamEncode(dbType, sqlParam);
+		
+		// === 因为 DBSQLInjectionUtil 不在 core 模块，在 database 模块。为了避免循环依赖，还是自己简单写写吧。
+		
+		// 定义一个返回结果
+		String result = null;
+		
+		// 因为这里没有抛异常的处理。所以需要先处理 入参，防止 null 出现
+		String type = removeAllBlankStrings(dbType);
+		String value = sqlParam==null ? "" : sqlParam; // 因为 sqlParam 要保留原始字符串，所以只处理 null 对象。
+		
+		// 对于 value 去掉多余的空白字符。多个空白字符，只保留一个
+		value = value.replaceAll("\\s{2,}", " ");
+		
+		// 开始按数据库类型，分开处理。
+		switch (type) {
+		case "mysql":
+			// mysql 的处理一般是用于 MySQL5 及其以下版本的。对于 MySQL8 及以上，只需要处理 单引号 就行了。
+			
+			//如果有反斜杠（因为后面可能替换后有反斜杠，无法判断是拼接的还是原始的。所以要提前判断）
+			if(value.indexOf("\\")>=0) value = value.replaceAll("\\\\", "\\\\\\\\");
+			
+			//如果有双引号，则替换
+			if(value.indexOf("\"")>=0) value = value.replaceAll("\\\"", "\\\\\"");
+			
+			//如果有百分号
+			if(value.indexOf("%")>=0) value = value.replaceAll("\\%", "\\\\%");
+			
+			//如果有单引号
+			if(value.indexOf("'")>=0) value = value.replaceAll("\\'", "\\\\'");
+			
+			//如果有下划线
+			if(value.indexOf("_")>=0) value = value.replaceAll("\\_", "\\\\_");
+			
+			//如果有等号
+			if(value.indexOf("=")>=0) value = value.replaceAll("\\=", "\\\\=");
+			
+			//如果有分号
+			if(value.indexOf(";")>=0) value = value.replaceAll("\\;", "\\\\;");
+			
+			// 最终赋值
+			result = value;
+			
+			break;
+			
+		case "db2":
+			// DB2是IBM公司开发的一种大型关系型数据库
+			result = value.replaceAll("\'", "\'\'").replaceAll(";", ".");
+			break;
+			
+		default:
+			// 默认都是处理 单引号
+			result = value.replaceAll("\'", "\'\'");
+			break;
+			
+		}
+		
+		// 返回结果
+		return result;
+		
 	}
 	
 	/**

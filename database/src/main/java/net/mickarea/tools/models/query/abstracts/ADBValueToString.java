@@ -10,7 +10,7 @@ Copyright (c) 2024 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.models.query.abstracts;
 
-import net.mickarea.tools.utils.StrUtil;
+import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
 
 /**
  * 定义一个，关于对象转字符串的处理 抽象类（在java对象转换为 sql 语句内容时用）
@@ -66,7 +66,7 @@ public abstract class ADBValueToString implements IValueToString {
 	public String valueToString(Object oriValue) {
 		String result = "null";
 		if(oriValue!=null) {
-			result = oriValue.toString().length()>0?("'"+StrUtil.injectionTranslateForSQL(this.targetDbType, oriValue.toString())+"'"):"";
+			result = oriValue.toString().length()>0?("'"+DBSQLInjectionUtil.sqlParamEncode(this.targetDbType, oriValue.toString())+"'"):"";
 		}
 		return result ;
 	}

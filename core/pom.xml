@@ -14,7 +14,7 @@
     <!-- 声明子模块自己的名字。name 标签不会被子模块继承 -->
     <name>core</name>
     <!-- 声明子模块的信息 -->
-    <artifactId>core</artifactId>
+    <artifactId>pdc-common-core</artifactId>
     <!-- 声明子模块的打包方式 -->
     <packaging>jar</packaging>
 

@@ -14,7 +14,7 @@
     <!-- 声明子模块自己的名字。name 标签不会被子模块继承 -->
     <name>database</name>
     <!-- 声明子模块的信息 -->
-    <artifactId>database</artifactId>
+    <artifactId>pdc-common-database</artifactId>
     <!-- 声明子模块的打包方式 -->
     <packaging>jar</packaging>
 
@@ -63,7 +63,7 @@
         <!-- 子模块间的相互依赖。database 依赖 core -->
         <dependency>
             <groupId>io.github.pdcgithub</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>pdc-common-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         

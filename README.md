@@ -16,7 +16,7 @@ _maven:_
 <dependency>
     <groupId>io.github.pdcgithub</groupId>
     <artifactId>pdc-common-tool</artifactId>
-    <version>1.1.3-jre8-RC</version>
+    <version>1.1.4-jre8-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -27,21 +27,21 @@ _maven:_
 <dependency>
     <groupId>io.github.pdcgithub</groupId>
     <artifactId>pdc-common-core</artifactId>
-    <version>1.2.0-jre8-SNAPSHOT</version>
+    <version>1.2.0-jre8</version>
 </dependency>
 <!-- This is a toolkit related to databases -->
 <!-- It has already defined the core dependency internally, so there is no need to repeatedly write the core dependency information in the pom. -->
 <dependency>
     <groupId>io.github.pdcgithub</groupId>
     <artifactId>pdc-common-database</artifactId>
-    <version>1.2.0-jre8-SNAPSHOT</version>
+    <version>1.2.0-jre8</version>
 </dependency>
 <!-- This is a toolkit related to web functionality -->
 <!-- It has already defined the core dependency internally, so there is no need to repeatedly write the core dependency information in the pom. -->
 <dependency>
     <groupId>io.github.pdcgithub</groupId>
     <artifactId>pdc-common-web</artifactId>
-    <version>1.2.0-jre8-SNAPSHOT</version>
+    <version>1.2.0-jre8</version>
 </dependency>
 ```
 
@@ -84,8 +84,9 @@ mvn clean package
 ----------------------------------------------------
 
 ### release notes
-<h4>v 1.2.0  2026-10-15 (This version has not been published to the central repository)</h4>
+<h4>v 1.2.0 2026-10-15</h4>
 <p>1. Refactor the project from a single jar package into multiple optional submodules. For example: core, database, web, etc.</p>
+<p>2. Publish the package to the central repository on October 16, 2026.</p>
 
 <h4>v 1.1.4  2026-10-11 (This version has not been published to the central repository)</h4>
 <p>1. Fixed the issue with CodeLocationConverterConfig being inaccurate in locating code execution positions.</p>

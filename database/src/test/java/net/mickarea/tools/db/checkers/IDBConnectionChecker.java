@@ -1,6 +1,6 @@
 /******************************************************************************************************
 
-This file "DBConnectionChecker.java" is part of project "database" , which is belong to Michael Pang (It's Me).
+This file "IDBConnectionChecker.java" is part of project "database" , which is belong to Michael Pang (It's Me).
 In my license, all codes can be shared free of charge. 
 However, if it is used for commercial purposes, I need to be notified.
 Here is my email "pangdongcan@live.com"
@@ -15,10 +15,10 @@ package net.mickarea.tools.db.checkers;
  * @author Michael Pang (Dongcan Pang)
  * @since 2026年10月19日
  */
-public interface DBConnectionChecker {
+public interface IDBConnectionChecker {
 
 	/**
-	 * 这是检查方法，用于执行数据库连接检查。整体的配置都在 src/test/resources/dbunittest-conf/database-status.properties 
+	 * 这是检查方法，用于执行数据库连接检查。
 	 * @return 如果数据库连接成功，则返回一个 true；否则，返回 false。
 	 */
 	public boolean check();

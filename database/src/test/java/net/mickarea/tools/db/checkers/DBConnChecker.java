@@ -127,8 +127,6 @@ public abstract class DBConnChecker implements IDBConnectionChecker {
 		try {
 			// 加载驱动类
 			Class.forName(jdbcClassName);
-			// 创建连接(限制登录超时时间为10秒)
-			DriverManager.setLoginTimeout(10);
 			jdbcConnection = DriverManager.getConnection(jdbcUrl, this.username, this.password);
 			// 创建语句对象
 			jdbcStatement = jdbcConnection.createStatement();

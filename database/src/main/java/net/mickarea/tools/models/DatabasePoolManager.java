@@ -26,14 +26,14 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.mickarea.tools.filter.FileNameFilter;
+import net.mickarea.tools.utils.PatternUtil;
 import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
 /**
- * &gt;&gt;&nbsp;一个数据库连接池管理类，通常用于管理多个数据连接池的创建、销毁等工作。
+ * 一个数据库连接池管理类，通常用于管理多个数据连接池的创建、销毁等工作。
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
- * @since 2023年5月15日-2024年4月3日
+ * @since 2023年5月15日
  */
 public class DatabasePoolManager {
 
@@ -50,19 +50,37 @@ public class DatabasePoolManager {
 	 */
 	public static final String DBCONFIG_FOLDER = "/conf/database-config/";
 	
-	private final ConcurrentHashMap<String, HikariDataSource> dataPools;
+	/**
+	 * 这是用于存储“连接池”对象的一个并发哈希对象。
+	 */
+	private ConcurrentHashMap<String, HikariDataSource> dataPools;
 	
-	//这里用于确保管理类只有一个实例，否则会出现用 new 创建多个管理类的混乱局面
+	/**
+	 * 把 管理对象 定义为私有，只能通过 getInstance 方法获取。
+	 */
 	private static DatabasePoolManager mana;
+	/**
+	 * 这里用于确保管理类只有一个实例，否则会出现用 new 创建多个管理类的混乱局面。
+	 * 注意：这里增加了一个处理。当执行 destroyDataPools 销毁后，通过 getInstance 可以重新初始化 
+	 * @return 管理类的唯一实例
+	 */
 	public static synchronized DatabasePoolManager getInstance() {
 		if(mana==null) {
+			mana = new DatabasePoolManager();
+		}
+		// 增加一个处理，当执行 destroyDataPools 销毁后，通过 getInstance 可以重新初始化 
+		if(mana.dataPools==null) {
+			Stdout.mylogger.debug("The database connection pool manager is starting to reinitialize.");
+			// 把旧的引用置空
+			mana = null;
+			// 重新初始化
 			mana = new DatabasePoolManager();
 		}
 		return mana;
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;获取当前的数据库连接池配置文件（以文件夹遍历的方式）
+	 * 获取当前的数据库连接池配置文件（以文件夹遍历的方式）
 	 * @return 装载有数据库配置的文件名列表
 	 */
 	private List<String> getDatabaseConfigFileNames(String folderName) {
@@ -119,7 +137,7 @@ public class DatabasePoolManager {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;构造函数（主要负责 dataPools 数据库连接池创建）
+	 * 构造函数（主要负责 dataPools 数据库连接池创建）
 	 */
 	private DatabasePoolManager() {
 		
@@ -162,25 +180,66 @@ public class DatabasePoolManager {
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;根据配置中定义的数据库连接池信息，返回一个数据库连接池对象。
+	 * 根据配置中定义的数据库连接池信息，返回一个数据库连接池对象。这里容器用的并发Map，不用加同步了。
 	 * @param poolName 连接池名称，在配置文件中的 poolName 属性。
-	 * @return 返回一个数据库连接池对象。
+	 * @return 返回一个数据库连接池对象。如果匹配不到 poolName 则返回 null。
 	 */
 	public DataSource getDataPoolByName(String poolName){
-		return (DataSource)this.dataPools.get(poolName);
+		
+		// 定义一个 返回结果
+		DataSource source = null;
+		
+		// 如果 dataPools 是空的 或者 是 null，则之际返回 null
+		if(this.dataPools==null || this.dataPools.isEmpty()) return source;
+		
+		// 如果配置名字为空，则不需要处理
+		if(poolName==null || PatternUtil.matches("\\s+", poolName)) return source;
+		
+		// 搜索并赋值
+		source = (DataSource)this.dataPools.get(poolName);
+		
+		// 返回结果
+		return source;
 	}
 	
 	/**
-	 * &gt;&gt;&nbsp;<p>释放资源，关闭所管理的连接池。</p>
+	 * <p>释放资源，关闭所管理的连接池。内部因为 dataPools 处理多，所以增加了 同步锁</p>
+	 * <p>注意：它应该在，所有程序停止时才调用。比如：程序完全退出前，调用它释放资源。</p>
 	 * <p>由于连接池有异常捕捉，这里就不需要异常捕捉处理了。它的关闭操作，由新建的线程完成</p>
 	 */
-	public void destroyDataPools() {
-		this.dataPools.forEach((name, source)->{
-			if(source!=null) {
-				source.close();
-				Stdout.fpl("执行数据库连接池（%s）关闭成功", name);
+	public synchronized void destroyDataPools() {
+		
+		// 如果资源池本来就是 null 则不需要处理。
+		if(this.dataPools==null || this.dataPools.isEmpty()) {
+			Stdout.fpl("The database connection pool Map has already been cleared, no further action is needed.");
+			// 直接结束
+			return ;
+		}
+		
+		// 开始处理
+		Stdout.fpl("The operation to clear the database connection pool begins now.");
+		
+		// 首先释放连接池（使用并行流 同时释放多个数据库链接）
+		this.dataPools.entrySet().parallelStream().forEach(entry->{
+			// 释放连接池
+			entry.getValue().close();
+		});
+		
+		// 确认状态
+		this.dataPools.entrySet().stream().forEach(entry->{
+			// 打印资源处理情况
+			if(entry.getValue().isClosed()) {
+				Stdout.fpl("Database connection pool %s closed successfully", entry.getKey());
+			}else {
+				Stdout.fpl("Failed to close database connection pool %s. ", entry.getKey());
 			}
 		});
+		
+		// 清空连接池存放的容器 Map
+		this.dataPools.clear();
+		this.dataPools = null;
+		
+		// mana 对象是 static 的属于类，保留引用可以防止 get 方法出现空指针异常。
 	}
 	
 }

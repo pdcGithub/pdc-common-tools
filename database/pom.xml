@@ -67,6 +67,15 @@
             <version>${project.version}</version>
         </dependency>
         
+        <!-- 子模块间的相互依赖。database 依赖 jartest -->
+        <!-- 这依赖是进行单元测试用的，确保 scope 是 test -->
+        <dependency>
+            <groupId>io.github.pdcgithub</groupId>
+            <artifactId>pdc-common-jartest</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
 </project>

@@ -41,6 +41,11 @@
     
     <!-- 这里定义的是 项目的子模块 -->
     <modules>
+        <!-- 这是 jartest 模块。它负责 Jar 协议的文件测试 -->
+        <!-- 在进行单元测试前，需要先打包这个模块，再测试。 -->
+        <!-- 如果是在 IDE 中进行 JUnit 单元测试，需要先 close project，确保依赖是 jar 包，再测试 -->
+        <!-- 最后要说明的是 引用它的项目，需要设置 scope 为 test 。避免打包到正式依赖环境-->
+        <module>jartest</module>
         <!-- 这是 core 核心包 -->
         <module>core</module>
         <!-- 这是 database 数据库包。依赖 core 包 -->

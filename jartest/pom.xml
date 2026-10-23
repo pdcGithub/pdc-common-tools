@@ -3,108 +3,32 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
-    <!-- 这个项目主要是用于测试 Jar 中的文件，是否可以正确搜索到 -->
-    <!-- 使用前，需要 mvn clean install 到本地仓库 -->
-    <!-- 然后，单独配置这个 jar 包的依赖信息，scope 必须是 test。避免打包到正式代码中。 -->
-    
+
+    <!-- 声明父项目是哪个 -->
+    <parent>
+        <groupId>io.github.pdcgithub</groupId>
+        <artifactId>pdc-common-tool</artifactId>
+        <version>1.2.0-jre8-SNAPSHOT</version>
+    </parent>
+
+    <!-- 声明子模块自己的名字。name 标签不会被子模块继承 -->
     <name>jartest</name>
     <!-- 声明子模块的信息 -->
-    <groupId>io.github.pdcgithub</groupId>
     <artifactId>pdc-common-jartest</artifactId>
-    <version>0.0.1</version>
     <!-- 声明子模块的打包方式 -->
     <packaging>jar</packaging>
-    
-    <!-- 设置软件版本等参数 -->
-    <properties>
-        <!-- 定义开发和编译用的 JDK 版本信息 -->
-        <jdk.version>1.8</jdk.version>
-        <!-- 定义项目编码信息 -->
-        <encoding>utf-8</encoding>
-        <!-- 指定项目编码，防止 eclipse 出现 has no explicit encoding set -->
-        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-    </properties>
 
     <!-- 编译打包的处理（这里从父项目导入，不用写 version 信息） -->
     <build>
         <plugins>
             
-            <!-- 设置jdk编译插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <encoding>${encoding}</encoding>
-                    <excludes>
-                        <!-- 编译时，排除测试文件 -->
-                    </excludes>
-                </configuration>
-            </plugin>
-            
-            <!-- 这里是 source 源码包的插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <!-- 这是 java doc 插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <!-- 这是 jar 包插件 （因为不是每一个子模块都需要 jar 打包。所以算是可选的） -->
+            <!-- 这是 jar 包插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <excludes>
-                        <!-- 打包时，排除测试文件 -->
-                    </excludes>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
             
         </plugins>
-        
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <!--包含文件夹以及子文件夹下所有资源 -->
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>
-        
     </build>
     
     <!-- 第三方依赖（这里从父项目导入，不用写 version 信息）-->

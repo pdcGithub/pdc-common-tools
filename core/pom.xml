@@ -47,6 +47,15 @@
             <artifactId>ansj_seg</artifactId>
         </dependency>
         
+        <!-- 添加单元测试用的依赖 -->
+        <!-- scope 务必写 test，避免打包时，把测试包写入了主程序 -->
+        <dependency>
+            <groupId>io.github.pdcgithub</groupId>
+            <artifactId>pdc-common-jartest</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
 </project>

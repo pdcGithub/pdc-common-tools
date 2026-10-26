@@ -11,8 +11,11 @@ Copyright (c) 2022 - 2026 Michael Pang.
 package net.mickarea.tools.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,20 +29,20 @@ import org.junit.jupiter.api.Test;
 public class PropertiesUtilTester {
 
 	@BeforeEach
-	void setTheEnv() {
+	void setTheEnv() throws Exception {
 		// 每次测试前，都设置一下地区。这样可以保证默认是 英文
 		Locale.setDefault(Locale.ENGLISH);
 	}
 	
 	@Test
-	void getMessageOKTest() {
+	void getMessageOKTest() throws Exception {
 		// getMessage 的正常返回测试
 		assertEquals(PropertiesUtil.getMessage("tests.mytest", "myname"), "Tom");
 		assertEquals(PropertiesUtil.getMessage("i18n.messages", "test.greeting"), "Hello");
 	}
 	
 	@Test
-	void getMessageERRORTest() {
+	void getMessageERRORTest() throws Exception {
 		// getMessage 的异常返回测试
 		assertEquals(PropertiesUtil.getMessage(null, null), "");
 		assertEquals(PropertiesUtil.getMessage("", null), "");
@@ -54,7 +57,7 @@ public class PropertiesUtilTester {
 	}
 	
 	@Test
-	void getMessageWithLocaleOKTest() {
+	void getMessageWithLocaleOKTest() throws Exception {
 		// getMessage 的正常返回测试（附带区域选择）
 		assertEquals(PropertiesUtil.getMessage("i18n.messages", "test.greeting", new Locale("en")), "Hello");
 		// 这个没有对应配置，读取了 en 的配置
@@ -68,7 +71,7 @@ public class PropertiesUtilTester {
 	}
 	
 	@Test
-	void getMessageWithLocaleERRORTest() {
+	void getMessageWithLocaleERRORTest() throws Exception {
 		// getMessage 的异常返回测试（附带区域选择）
 		assertEquals(PropertiesUtil.getMessage(null, null, null),"");
 		assertEquals(PropertiesUtil.getMessage("", null, null),"");
@@ -77,6 +80,83 @@ public class PropertiesUtilTester {
 		//
 		assertEquals(PropertiesUtil.getMessage("tests.mytest", null, null), "");
 		assertEquals(PropertiesUtil.getMessage(null, "myname", null), "");
+	}
+	
+	/**
+	 * 这里负责测试 searchPropertiesFiles 方法是否正常搜索到预想的结果
+	 * @throws Exception 可能的异常
+	 */
+	@Test
+	void searchPropertiesFiles() throws Exception {
+		
+		// =============================== 先测试异常的参数
+		
+		// 对于文件夹（文件夹最少要有一个英文字母或者数字，否则会从 classpath 根路径搜索。 ）
+		List<String> errRe1 = PropertiesUtil.searchPropertiesFiles(null, ".+");
+		List<String> errRe2 = PropertiesUtil.searchPropertiesFiles("", ".+");
+		List<String> errRe3 = PropertiesUtil.searchPropertiesFiles(" ", ".+");
+		List<String> errRe4 = PropertiesUtil.searchPropertiesFiles("   ", ".+");
+		List<String> errRe5 = PropertiesUtil.searchPropertiesFiles(".", ".+");
+		List<String> errRe6 = PropertiesUtil.searchPropertiesFiles("..", ".+");
+		List<String> errRe7 = PropertiesUtil.searchPropertiesFiles("/", ".+");
+		List<String> errRe8 = PropertiesUtil.searchPropertiesFiles("./", ".+");
+		List<String> errRe9 = PropertiesUtil.searchPropertiesFiles("../", ".+");
+		List<String> errRe10 = PropertiesUtil.searchPropertiesFiles("../", ".+");
+		List<String> errRe11 = PropertiesUtil.searchPropertiesFiles("?.", ".+");
+		List<String> errRe12 = PropertiesUtil.searchPropertiesFiles("+.", ".+");
+		// 
+		List<String> errRe13 = PropertiesUtil.searchPropertiesFiles("", null); // 这里测试 异常的正则。为 null 的话就是 全部 properties
+		List<String> errRe14 = PropertiesUtil.searchPropertiesFiles("", "");   // 这里文件名为空，再程序中有后缀，这样就匹配不到结果了
+		List<String> errRe15 = PropertiesUtil.searchPropertiesFiles("", " ");  // 后面这几个，一样的，匹配不到结果的
+		List<String> errRe16 = PropertiesUtil.searchPropertiesFiles("", "   ");
+		List<String> errRe17 = PropertiesUtil.searchPropertiesFiles("", "aaaa");
+		// 
+		assertTrue(8 <= errRe1.size()); // 根据目前配置，搜索根路径，最少有8个。resources 5 + jartest 3 
+		assertEquals(errRe1.size(), errRe2.size());   // 其余的，应该都是一样的
+		assertEquals(errRe1.size(), errRe3.size());
+		assertEquals(errRe1.size(), errRe4.size());
+		assertEquals(errRe1.size(), errRe5.size());
+		assertEquals(errRe1.size(), errRe6.size());
+		assertEquals(errRe1.size(), errRe7.size());
+		assertEquals(errRe1.size(), errRe8.size());
+		assertEquals(errRe1.size(), errRe9.size());
+		assertEquals(errRe1.size(), errRe10.size());
+		assertEquals(errRe1.size(), errRe11.size());
+		assertEquals(errRe1.size(), errRe12.size());
+		// 
+		assertEquals(errRe1.size(), errRe13.size());
+		assertEquals(0, errRe14.size());
+		assertEquals(0, errRe15.size());
+		assertEquals(0, errRe16.size());
+		assertEquals(0, errRe17.size());
+		
+		// =============================== 测试正常的参数，看看能不能获得预想结果
+		
+		List<String> okRe1 = PropertiesUtil.searchPropertiesFiles("conf",  "demo\\..+");
+		List<String> okRe2 = PropertiesUtil.searchPropertiesFiles("conf/", "demo\\..+");
+		assertEquals(1, okRe1.size());
+		assertEquals(okRe1.size(), okRe2.size());
+		assertEquals("conf/email-config/demo.emailserver.properties", okRe1.get(0));
+		assertEquals(okRe1.get(0), okRe2.get(0));
+		
+		// 搜索 db 配置文件。包含测试和正式 ，包含 jartest 的包里面的
+		List<String> okRe3 = PropertiesUtil.searchPropertiesFiles("conf",  "db.+");
+		assertEquals(2, okRe3.size());
+		List<String> okRe4 = PropertiesUtil.searchPropertiesFiles("conf",  "unittest.+");
+		assertEquals(1, okRe4.size());
+		List<String> okRe31 = PropertiesUtil.searchPropertiesFiles("conf/",  "db.+");
+		assertEquals(2, okRe31.size());
+		List<String> okRe41 = PropertiesUtil.searchPropertiesFiles("conf/",  "unittest.+");
+		assertEquals(1, okRe41.size());
+		List<String> okRe311 = PropertiesUtil.searchPropertiesFiles("conf////",  "db.+");
+		assertEquals(2, okRe311.size());
+		List<String> okRe411 = PropertiesUtil.searchPropertiesFiles("conf////",  "unittest.+");
+		assertEquals(1, okRe411.size());
+		
+		// 再测试一下
+		List<String> okRe5 = PropertiesUtil.searchPropertiesFiles("i18n/", "message.+");
+		assertEquals(2, okRe5.size());
+		assertEquals("i18n/messages_en.properties", okRe5.stream().sorted().collect(Collectors.toList()).get(0));
 	}
 	
 }

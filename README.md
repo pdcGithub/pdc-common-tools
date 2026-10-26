@@ -81,6 +81,18 @@ Usually, I’ll clear it first and then pack it.
 mvn clean package
 ```
 
+<h4>3. Starting from version 1.2.0, I split the project into multiple submodules. Now it is possible to package only some submodules. In the example below, we only package the submodule jartest:</h4>
+
+```bash
+mvn clean package -pl jartest
+```
+
+If you need to install it to the local repository, you can write it like this:
+
+```bash
+mvn clean install -pl jartest
+```
+
 ----------------------------------------------------
 
 ### release notes

@@ -78,8 +78,8 @@ public final class PropertiesUtil {
 	/**
 	 * 这里可以根据传入的资源文件夹路径，搜索资源池中的 properties 文件，并且返回文件的资源路径。
 	 * 这里的资源定位主要依赖 classpath 的指定。
-	 * @param folder 要搜索的资源文件夹路径。资源路径以 classpath 为准。文件夹最少要有一个英文字母或者数字，否则会从 classpath 根路径搜索。
-	 * 如果程序有 resources 配置，则 resources 下的 conf 文件夹为 conf/ 
+	 * @param folder 要搜索的资源文件夹路径。资源路径以 classpath 为准。文件夹最少要有一个英文字母或者数字，否则会从 classes 根路径搜索。
+	 * 如果程序有 resources 配置，则 resources 下的 conf 文件夹为 conf/ 。
 	 * @param nameRegexp 这是用于匹配 properties 文件名的正则表达式。如果要匹配 demo1.properties 可以这么写："demo\\d+"。文件后缀，不需要写到正则。
 	 * 如果要匹配所有的 properties 文件，传入null 。
 	 * @return properties 文件的资源路径列表，比如：[conf/database-config/unittest7_jar2.properties]。注意，这里返回的结果已经 做了去重 和 非空处理

@@ -92,6 +92,9 @@ public class PropertiesUtilTester {
 		// =============================== 先测试异常的参数
 		
 		// 对于文件夹（文件夹最少要有一个英文字母或者数字，否则会从 classpath 根路径搜索。 ）
+		// 
+		// 要注意：folder 不含数字或者字母时，进行 classes 根路径搜索 。这不会包含 jar 包中的配置，除非你指定了 文件夹路径。比如：conf/
+		//
 		List<String> errRe1 = PropertiesUtil.searchPropertiesFiles(null, ".+");
 		List<String> errRe2 = PropertiesUtil.searchPropertiesFiles("", ".+");
 		List<String> errRe3 = PropertiesUtil.searchPropertiesFiles(" ", ".+");
@@ -111,7 +114,7 @@ public class PropertiesUtilTester {
 		List<String> errRe16 = PropertiesUtil.searchPropertiesFiles("", "   ");
 		List<String> errRe17 = PropertiesUtil.searchPropertiesFiles("", "aaaa");
 		// 
-		assertTrue(8 <= errRe1.size()); // 根据目前配置，搜索根路径，最少有8个。resources 5 + jartest 3 
+		assertTrue(5 <= errRe1.size()); // 根据目前配置，搜索根路径，最少有5个。resources 5 （test jar 里面，需要指定文件夹才能搜索）
 		assertEquals(errRe1.size(), errRe2.size());   // 其余的，应该都是一样的
 		assertEquals(errRe1.size(), errRe3.size());
 		assertEquals(errRe1.size(), errRe4.size());
@@ -157,6 +160,13 @@ public class PropertiesUtilTester {
 		List<String> okRe5 = PropertiesUtil.searchPropertiesFiles("i18n/", "message.+");
 		assertEquals(2, okRe5.size());
 		assertEquals("i18n/messages_en.properties", okRe5.stream().sorted().collect(Collectors.toList()).get(0));
+		
+		// 这里验证 jar 路径资源搜索
+		List<String> okRe6 = PropertiesUtil.searchPropertiesFiles("conf/", null); //resouces 1 个 + jar 3
+		assertEquals(4, okRe6.size());
+		List<String> okRe7 = PropertiesUtil.searchPropertiesFiles("conf/", ".+jar3"); // 只搜索 jar 中的一个。
+		assertEquals(1, okRe7.size());
+		assertEquals("conf/database-config/testfolder1/db_unittest_jar3.properties", okRe7.get(0));
 	}
 	
 }

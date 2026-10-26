@@ -81,17 +81,21 @@ Usually, I’ll clear it first and then pack it.
 mvn clean package
 ```
 
-<h4>3. Starting from version 1.2.0, I split the project into multiple submodules. Now it is possible to package only some submodules. In the example below, we only package the submodule jartest:</h4>
+<h4>3. Starting from version 1.2.0, I split the project into multiple submodules. Now it is possible to package only some submodules. In the example below, we only package the submodule core:</h4>
 
 ```bash
-mvn clean package -pl jartest
+mvn clean package -pl core -am
 ```
 
 If you need to install it to the local repository, you can write it like this:
 
 ```bash
-mvn clean install -pl jartest
+mvn clean install -pl core -am
 ```
+
+> `-pl` is used to specify the submodules to build
+
+> `-am` is used to build all modules that this module depends on at the same time
 
 ----------------------------------------------------
 

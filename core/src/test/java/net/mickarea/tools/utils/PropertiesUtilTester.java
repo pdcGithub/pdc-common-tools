@@ -13,12 +13,19 @@ package net.mickarea.tools.utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import net.mickarea.tools.utils.test.ConcurrencyTestUtil;
 
 /**
  * 这里是 PropertiesUtil 工具类的测试类
@@ -167,6 +174,81 @@ public class PropertiesUtilTester {
 		List<String> okRe7 = PropertiesUtil.searchPropertiesFiles("conf/", ".+jar3"); // 只搜索 jar 中的一个。
 		assertEquals(1, okRe7.size());
 		assertEquals("conf/database-config/testfolder1/db_unittest_jar3.properties", okRe7.get(0));
+	}
+	
+	/**
+	 * 这里测试 searchPropertiesFiles 方法在多线程并发下，能否保证数据的一致性。
+	 */
+	@Test
+	void searchPropertiesFiles_concurr() throws Exception {
+		
+		// 定义线程 和 测试信息
+		int threadNum = 100;
+		int timeout = 10;
+		TimeUnit timeoutUnit = TimeUnit.SECONDS;
+		
+		// 定义装载结果的 同步 map。在多线程下，普通的容器会产生线程问题，必须用 同步容器。
+		Map<Integer, String> reMap = Collections.synchronizedMap(new HashMap<Integer, String>());
+		
+		// 定义一个装载 异常信息的 list
+		List<Exception> excepList = Collections.synchronizedList(new ArrayList<Exception>());
+		
+		// 开始测试
+		ConcurrencyTestUtil.test(threadNum, timeout, timeoutUnit, ()->{
+			try {
+				// 在测试时，我们根据线程号，进行随机 搜索。单数搜索 resources下的 i18n/, 双数搜索 jar 下的 conf/database-config/testfolder1/
+				
+				// 线程号 
+				String threadName = Thread.currentThread().getName();
+				String num = threadName.substring(threadName.lastIndexOf("-")+1);
+				// 对应的数据序号
+				int tNum = Integer.parseInt(num);
+				int targetNum = tNum % 2; // 在 0 和 1 之间随机
+				// 
+				String re = "";
+				if(targetNum==0) {
+					List<String> lRe = PropertiesUtil.searchPropertiesFiles("conf/database-config/testfolder1/", ".+jar3");
+					if(lRe.size()>=1) re = lRe.get(0);
+				}
+				if(targetNum==1) {
+					List<String> lRe2 = PropertiesUtil.searchPropertiesFiles("i18n/", "messages\\_en");
+					if(lRe2.size()>=1) re = lRe2.get(0);
+				}
+				
+				reMap.put(tNum, re); // 记录每个线程的结果
+				
+			}catch(Exception e) {
+				if(e instanceof InterruptedException) {
+					// 线程中断处理
+					Thread.currentThread().interrupt();
+				}else {
+					// 记录异常
+					excepList.add(e);
+				}
+			}
+		});
+		
+		// 打印看看
+		// reMap.entrySet().stream().forEach(Stdout::pl);
+		
+		// ======= 结果比对
+		assertEquals(0, excepList.size()); // 异常为0
+		assertEquals(threadNum, reMap.size());
+		assertEquals(threadNum, reMap.entrySet().stream().map(entry->entry.getKey()).distinct().count());
+		assertEquals(2, reMap.entrySet().stream().map(entry->entry.getValue()).distinct().count());
+		// 最后比对每个线程的结果
+		assertEquals(threadNum, reMap.entrySet().stream()
+									.map(entry->{
+										int key = entry.getKey().intValue();
+										String value = entry.getValue();
+										boolean re = false;
+										if(key%2==0) re = "conf/database-config/testfolder1/db_unittest_jar3.properties".equals(value);
+										if(key%2==1) re = "i18n/messages_en.properties".equals(value);
+										return re;
+									})
+									// 正常来说，每个线程的结果都是符合预期，然后 有 threadnum 个 true 。
+									.filter(t->t==true)
+									.count());
 	}
 	
 }

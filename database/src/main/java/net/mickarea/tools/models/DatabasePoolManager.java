@@ -10,14 +10,8 @@ Copyright (c) 2023 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.models;
 
-import java.io.File;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.jar.JarEntry;
 import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
@@ -25,8 +19,9 @@ import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import net.mickarea.tools.filter.FileNameFilter;
+import net.mickarea.tools.utils.ListUtil;
 import net.mickarea.tools.utils.PatternUtil;
+import net.mickarea.tools.utils.PropertiesUtil;
 import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.StrUtil;
 
@@ -80,103 +75,67 @@ public class DatabasePoolManager {
 	}
 	
 	/**
-	 * 获取当前的数据库连接池配置文件（以文件夹遍历的方式）
-	 * @return 装载有数据库配置的文件名列表
-	 */
-	private List<String> getDatabaseConfigFileNames(String folderName) {
-		
-		List<String> result = new ArrayList<String>();
-		
-		if(!StrUtil.isEmptyString(folderName)) {
-			
-			//目标包内文件夹
-			URL url = Thread.currentThread().getContextClassLoader().getResource(folderName.substring(1));
-			Stdout.fpl("将要解析的URL：%s", url);
-			
-			if(url==null) {
-				Stdout.fpl("你传入的文件夹名称有误(%s)，无法生成URL", folderName);
-				return result;
-			}
-			
-			//由于打jar包后，和不打包协议不一样，需要分开处理
-			if("file".equalsIgnoreCase(url.getProtocol().toLowerCase())) {
-				Stdout.fpl("使用普通方式解析:file，文件夹：%s", folderName);
-				File configDir = new File(url.getFile());
-				File[] fs = configDir.listFiles(new FileNameFilter(DBCONFIG_REGEXP));
-				Stdout.plArray(fs);
-				if(fs!=null && fs.length>0) {
-					for(File f: fs) {
-						result.add(f.getName());
-					}
-				}
-			} else if("jar".equalsIgnoreCase(url.getProtocol().toLowerCase())) {
-				Stdout.fpl("使用jar方式解析:jar，文件夹：%s", folderName);
-				try {
-					JarURLConnection jarConn = (JarURLConnection)url.openConnection();
-					Enumeration<JarEntry> entrys = jarConn.getJarFile().entries();
-					for(;entrys.hasMoreElements();) {
-						String name = entrys.nextElement().getName();
-						if(Pattern.matches(folderName.substring(1)+DBCONFIG_REGEXP, name)) {
-							result.add(name.replaceFirst(folderName.substring(1), ""));
-						}
-					}
-				} catch(Exception e) {
-					//如果发生异常，把已经装载的信息清空，保持信息一致。
-					result.clear();
-					Stdout.fpl("解析jar包时发生错误，路径：%s, 异常：%s", url, e.getMessage());
-					Stdout.pl(e);
-				}
-			} else {
-				Stdout.fpl("当前文件协议为：%s，不受支持，请使用 file 或者 jar 协议。", url.getProtocol());
-			}
-		}else {
-			Stdout.pl("传入的文件夹名称为空，不对文件进行解析。");
-		}
-		
-		return result;
-	}
-	
-	/**
 	 * 构造函数（主要负责 dataPools 数据库连接池创建）
 	 */
 	private DatabasePoolManager() {
 		
-		//数据库连接池的配置文件所在位置
-		String folder = DBCONFIG_FOLDER;
+		//数据库连接池的配置文件所在位置。properties 搜索使用了资源路径，不能 / 开头。
+		String propertiesFolder = DBCONFIG_FOLDER.substring(1);
+		
+		// 数据库配置文件的匹配规则，仅名字，不含文件后缀
+		String propertiesNameRegexp = DBCONFIG_REGEXP.replaceFirst(Pattern.quote("\\.properties"), "");
 		
 		//数据库连接池载体，可装载多个连接池，以实现多数据库访问。键值对为==》 连接池名称：连接池对象
 		this.dataPools = new ConcurrentHashMap<String, HikariDataSource>();
 		
 		//获取配置文件的名称
-		List<String> fileNames = this.getDatabaseConfigFileNames(folder);
+		List<String> fileNames = PropertiesUtil.searchPropertiesFiles(propertiesFolder, propertiesNameRegexp);
 		
-		Stdout.pl("获取到的配置文件名为："+fileNames);
+		// 如果搜索不到配置文件，则停止；否则，继续。
+		if(ListUtil.isEmptyList(fileNames)) return ;
 		
-		fileNames.forEach(name->{
-			//如果筛选后，有合适的配置文件，则构建数据库连接池
-			HikariConfig dbConf = new HikariConfig(folder+name);
-			Stdout.pl("获取到的 HikariConfig 为："+(folder+name));
-			//如果连接池的名称开头为test，则不创建
-			//如果连接池的名称为空，则不创建
-			if(!dbConf.getPoolName().toLowerCase().startsWith(DBCONFIG_IGNORE_PREFIX) && !StrUtil.isEmptyString(dbConf.getPoolName())) {
-				try {
-					if(this.dataPools.containsKey(dbConf.getPoolName())) {
-						//如果管理池中已经有这个名字的连接池对象了，则说明可能配文件中的poolName 可能重名了。要提示，并跳过
-						Stdout.fpl("请注意::连接池名称(%s) <<已经存在>>，可能配置出现重复值，请检查...", dbConf.getPoolName());
-					}else {
-						this.dataPools.put(dbConf.getPoolName(), new HikariDataSource(dbConf));
+		// 当前识别到有以下配置信息（这里日志需要INFO级别。因为这是使用者必须知道的信息）
+		Stdout.fpl("The following database configuration files were detected. There are a total of %s", fileNames.size());
+		fileNames.forEach(Stdout::pl);
+		
+		// 这里的配置路径规则，有点不一样。HikariConfig 它会先判断是否为 File 
+		// 如果是 File 则转 FileInputStream。
+		// 如果不是，则执行 this.getClass().getResourceAsStream 加载 资源。这里需要以 / 开头。
+		
+		// 将配置文件信息过滤，然后生成 配置对象，并初始化连接池
+		fileNames.stream()
+				// 转 HikariConfig 对象（内部有 try 所以外部应该不会抛异常）
+				.map(name->new HikariConfig(name.startsWith("/") ? name : "/"+name))
+				// 这里需要过滤 异常配置 和 不需要的配置
+				.filter(hConfig->{
+					// 定义一个结果
+					boolean result = false;
+					// 首先 连接池名不能以 test 开头。然后，不能缺少配置信息。最后，不能和已经配置的连接池重名。
+					if(StrUtil.isEmptyString(hConfig.getPoolName()) || hConfig.getPoolName().startsWith(DBCONFIG_IGNORE_PREFIX)) return result;
+					if(StrUtil.isEmptyString(hConfig.getJdbcUrl()) 
+						|| StrUtil.isEmptyString(hConfig.getUsername())
+						|| StrUtil.isEmptyString(hConfig.getPassword())
+						|| StrUtil.isEmptyString(hConfig.getDriverClassName())) return result;
+					if(this.dataPools.containsKey(hConfig.getPoolName())) return result;
+					// 全部检测通过，赋值 true
+					result = true;
+					// 返回
+					return result;
+				})
+				// 遍历正常的配置，进行连接池初始化。不一定成功，所以需要捕捉异常。
+				.forEach(hConfig->{
+					try {
+						this.dataPools.put(hConfig.getPoolName(), new HikariDataSource(hConfig));
+					} catch(Exception e) {
+						Stdout.mylogger.debug(Stdout.fplToAnyWhere("An exception occurred while creating the database connection pool. poolName=%s", hConfig.getPoolName()));
+						Stdout.pl(e);
 					}
-				}catch(Exception e) {
-					Stdout.fpl("创建连接池(%s)出错，%s", dbConf.getPoolName(), e.getMessage());
-					Stdout.fpl("< 如果要屏蔽该数据库连接池的配置文件(%s)，请在poolName属性加上前缀test，如：poolName=test_second >", dbConf.getPoolName());
-					Stdout.fpl("< 也可以通过将poolName信息清空来屏蔽该数据库的配置文件，如：poolName= >");
-					Stdout.pl(e);
-				}
-			}
-		});
+				});
 		
-		//最后查看有多少个连接池被创建了。
-		Stdout.fpl("连接池已全部创建，创建成功数量为：%s；创建的连接池为：%s", this.dataPools.size(), this.dataPools);
+		// 清点成功初始化的连接池信息
+		Stdout.fpl("The current connection pool situation is as follows. num=%s", this.dataPools.size());
+		this.dataPools.entrySet().stream().forEach(Stdout::pl);
+		
 	}
 	
 	/**

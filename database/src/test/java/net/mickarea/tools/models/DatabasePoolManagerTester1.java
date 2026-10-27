@@ -368,6 +368,7 @@ public class DatabasePoolManagerTester1 {
 	 * 这里是测试外部会否改变 管理类内部的信息
 	 */
 	@Test
+	@Order(value = 6)
 	void lastInstanceTest() {
 		
 		// 定义一个 DatabasePoolManager 变量
@@ -391,6 +392,34 @@ public class DatabasePoolManagerTester1 {
 		
 		// 销毁
 		DatabasePoolManager.getInstance().destroyDataPools();
+	}
+	
+	@Test
+	@Order(value = 7)
+	void lastInstanceCount() {
+		
+		// 当前测试环境 应该有 6 个 可用的 db 开头的 数据配置文件 
+		// 然后 unittest_name5 是空文件
+		// 再然后 db_unittest_jar3.properties 的连接池，增加了 test 前缀，会忽略掉。
+		
+		/*
+		 * 注意：对于数据库连接池的初始化，INFO 日志中会描述 扫描到多少个 配置文件，然后 生成了多少个连接池。
+		 */
+		
+		// 剩下应该只有 4 个合理的连接池
+		DatabasePoolManager mana = DatabasePoolManager.getInstance();
+		
+		// 正常的配置，生成的连接池实例
+		assertNotNull(mana.getDataPoolByName("unittest_mysql8"));
+		assertNotNull(mana.getDataPoolByName("unittest_oracle11"));
+		assertNotNull(mana.getDataPoolByName("unittest_sqlserver2016"));
+		assertNotNull(mana.getDataPoolByName("unittest_jar1_mysql8"));
+		
+		// 空配置 忽略
+		assertNull(mana.getDataPoolByName("unittest_name5"));
+		
+		// test 前缀的配置 忽略
+		assertNull(mana.getDataPoolByName("test_unittest_jar3_mysql8"));
 	}
 	
 }

@@ -21,4 +21,18 @@ grant create materialized view to unittest;
 grant debug any procedure, debug connect session to unittest;
 
 /* ======================== 2、使用 unittest 用户 登录数据库。然后创建测试用的表、视图、函数、触发器 */
+drop table I_AM_ORACLE;
+create table I_AM_ORACLE(
+test_id int not null primary key,
+test_name varchar2(100) null
+);
+comment on table I_AM_ORACLE is '这是测试用的表，看看连接的数据对不对';
+comment on column I_AM_ORACLE.test_id is '这是测试用的主键';
+comment on column I_AM_ORACLE.test_name is '这是测试用的名称';
 
+-- 查询数据
+select * from i_am_oracle ;
+
+-- 插入一条测试数据
+insert into i_am_oracle(test_id, test_name) values (1, 'first');
+commit;

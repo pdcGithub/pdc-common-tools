@@ -25,4 +25,13 @@ show grants for 'unittest'@'%';
 
 # ======================== 2、使用 unittest 用户 登录数据库。然后创建测试用的表、视图、函数、触发器
 
+drop table if exists I_AM_MYSQL;
+create table I_AM_MYSQL(
+test_id int not null primary key comment '这是ID，测试用的',
+test_name varchar(100) null comment '这是测试用的字符串'
+) comment '这是测试用的表，用来验证数据库连接对不对';
 
+select * from i_am_mysql;
+
+# 插入一条测试数据
+insert into i_am_mysql(test_id, test_name) values (1, 'first');

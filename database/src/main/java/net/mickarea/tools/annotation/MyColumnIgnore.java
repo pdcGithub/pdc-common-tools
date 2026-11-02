@@ -21,9 +21,8 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 /**
- * &gt;&gt;&nbsp;这个注解用于忽略某些类的属性，因为有些类的属性可能不属于数据库，数据库语句并没有这内容
+ * 这个注解用于忽略某些类的属性，因为有些类的属性可能不属于数据库，数据库语句并没有这内容
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2023年5月23日
  */
 public @interface MyColumnIgnore {

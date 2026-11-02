@@ -21,27 +21,26 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 /**
- * &gt;&gt;&nbsp;一个注解，用于标记java类中，属性映射到哪个数据库表或者视图的哪个字段
+ * 一个注解，用于标记java类中，属性映射到哪个数据库表或者视图的哪个字段
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
- * @since 2023年5月23日-2023年8月5日
+ * @since 2023年5月23日
  */
 public @interface MyColumn {
 
 	/**
-	 * &gt;&gt;&nbsp;这个方法用于标记此属性属于哪个数据库字段
+	 * 这个方法用于标记此属性属于哪个数据库字段
 	 * @return 数据库字段
 	 */
 	String name() default "";
 	
 	/**
-	 * &gt;&gt;&nbsp;这个方法用于标记此属性的UI展示名称
+	 * 这个方法用于标记此属性的UI展示名称。这里一般都是数据库字段的说明信息。
 	 * @return UI展示名称
 	 */
 	String displayName() default "";
 	
 	/**
-	 * &gt;&gt;&nbsp;这个方法用于标记此属性的扩展内容。比如：数值的翻译处理关键字
+	 * 这个方法用于标记此属性的扩展内容。比如：数值的翻译处理关键字
 	 * @return 一些关于字段的扩展信息，比如 字段的注释
 	 */
 	String extProperty() default "";

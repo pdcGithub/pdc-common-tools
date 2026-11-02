@@ -21,10 +21,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 /**
- * &gt;&gt;&nbsp;这个注解用于标记表或者视图的唯一字段组（可以是一个字段，也可以是多个字段）
+ * 这个注解用于标记表或者视图的唯一字段组（可以是一个字段，也可以是多个字段）
  * <p>比如：id 是 test_a 表的唯一索引字段，则标记；另外，可以标记多个字段，因为唯一索引不一定是只有一个字段</p>
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2023年7月1日
  */
 public @interface MyIdGroup {

@@ -21,9 +21,8 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 /**
- * &gt;&gt;&nbsp;一个注解，用于标记java类中，哪个属性对应的字段是自增长的。自增长的字段，在构造insert sql语句时，会忽略掉。
+ * 一个注解，用于标记java类中，哪个属性对应的字段是自增长的。自增长的字段，在构造insert sql语句时，会忽略掉。
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2023年7月2日
  */
 public @interface MyAutoIncrement {

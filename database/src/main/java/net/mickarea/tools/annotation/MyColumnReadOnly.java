@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
  * <p>比如：sql server 的 timestamp类型的列，直接设置值会报错，只能由数据库自己处理。</p>
  * <p>这个注解要区别于：MyAutoIncrement 和 MyColumnIgnore</p>
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2024年10月28日
  */
 public @interface MyColumnReadOnly {

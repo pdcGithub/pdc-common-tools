@@ -21,10 +21,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 /**
- * &gt;&gt;&nbsp;<p>一个注解，用于标记一种虚拟的数据库到java类的映射。</p>
+ * <p>一个注解，用于标记一种虚拟的数据库到java类的映射。</p>
  * <p>比如：当需要把一些临时性的sql语句查询结果，映射到一个对象时，就可以用这个注解</p>
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2023年6月15日
  */
 public @interface MyVirtualEntity {

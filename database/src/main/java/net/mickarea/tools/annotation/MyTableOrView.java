@@ -21,13 +21,16 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 /**
- * &gt;&gt;&nbsp;一个注解，用于标记java类映射到哪个数据库表或者视图
+ * 一个注解，用于标记java类映射到哪个数据库表或者视图
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2023年5月23日
  */
 public @interface MyTableOrView {
 
+	/**
+	 * 需要标注的表名 或者 视图名
+	 * @return 表名 或者 视图名
+	 */
 	String name() default "";
 	
 }

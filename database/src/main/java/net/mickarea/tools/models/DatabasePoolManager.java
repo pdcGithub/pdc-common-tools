@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.HikariPoolMXBean;
 
 import net.mickarea.tools.utils.ListUtil;
 import net.mickarea.tools.utils.PatternUtil;
@@ -44,6 +45,18 @@ public class DatabasePoolManager {
 	 * 配置文件存放位置，一般位于程序包内的路径
 	 */
 	public static final String DBCONFIG_FOLDER = "/conf/database-config/";
+	
+	/**
+	 * 在连接池创建时，等待初始化的最大时长。单位是： 毫秒。
+	 * 一般的数据库，像 Oracle 和 SQL Server 初始化是很快的。但是，像 MySQL8 之类的，一个连接创建，要等 3-5 秒。
+	 * 如果不阻塞等待，在 HikariCP 4 可能连接池还没初始化完，就返回结束了。
+	 */
+	public static final long MAX_WAITING_TIME = 1000 * 60 * 5 ;
+	
+	/**
+	 * 在连接池创建时，阻塞线程的休眠频率。单位是：毫秒
+	 */
+	public static final long WAITING_DURATION = 100 ;
 	
 	/**
 	 * 这是用于存储“连接池”对象的一个并发哈希对象。
@@ -125,7 +138,42 @@ public class DatabasePoolManager {
 				// 遍历正常的配置，进行连接池初始化。不一定成功，所以需要捕捉异常。
 				.forEach(hConfig->{
 					try {
-						this.dataPools.put(hConfig.getPoolName(), new HikariDataSource(hConfig));
+						// 记录下连接池创建的开始 
+						Stdout.mylogger.debug(Stdout.fplToAnyWhere("Database connection pool %s init, start ...", hConfig.getPoolName()));
+						
+						// 连接池对象初始化（这里会尝试一次数据库连接，如果数据库不存在，会抛出异常。）
+						HikariDataSource source = new HikariDataSource(hConfig);
+						
+						// 这里有个东西要注意，HikariDataSource 是异步创建连接池的连接对象的。连接池的连接对象初始化由另外一个线程处理。
+						// 为了避免初始化没有完成，就提前结束了主线程。需要增加一个等待判断。
+						
+						// 等待的累计时间 
+						long sleepTime = 0;
+						
+						// 检查连接池是否初始化结束(如果初始大小有设置才处理)
+						if(hConfig.getMinimumIdle()>0) {
+							// 一直等待，直到填满初始大小，或者超过最大时长，才结束。
+							while(sleepTime<MAX_WAITING_TIME && hConfig.getMinimumIdle()>source.getHikariPoolMXBean().getTotalConnections()) {
+								Thread.sleep(WAITING_DURATION);
+								sleepTime += WAITING_DURATION;
+							}
+						}
+						
+						// 连接池初始化结束，记录下，看看要多长时间
+						Stdout.mylogger.debug(Stdout.fplToAnyWhere("Database connection pool %s init, end ...", hConfig.getPoolName()));
+						
+						// 在放入管理 Map 前，需要明确2个事情：创建是否超时，以及连接数是否满足 初始化要求。
+						if(source.getHikariPoolMXBean().getTotalConnections() >= hConfig.getMinimumIdle()) {
+							// 赋值，放入管理容器
+							this.dataPools.put(hConfig.getPoolName(), source);
+						} else {
+							// 打印提示信息。这里需要是 INFO 级别
+							Stdout.fpl("Database connection pool %s initialize failed. Connections => mini:%s, total:%s", 
+								hConfig.getPoolName(), hConfig.getMinimumIdle(), source.getHikariPoolMXBean().getTotalConnections());
+							// 如果不满足要求，则需要抛弃这个连接池。
+							if(source!=null) source.close();
+						}
+						
 					} catch(Exception e) {
 						Stdout.mylogger.debug(Stdout.fplToAnyWhere("An exception occurred while creating the database connection pool. poolName=%s", hConfig.getPoolName()));
 						Stdout.pl(e);
@@ -134,7 +182,14 @@ public class DatabasePoolManager {
 		
 		// 清点成功初始化的连接池信息
 		Stdout.fpl("The current connection pool situation is as follows. num=%s", this.dataPools.size());
-		this.dataPools.entrySet().stream().forEach(Stdout::pl);
+		this.dataPools.entrySet().stream().forEach(entry->{
+			// 获取连接池对象
+			HikariDataSource source = entry.getValue();
+			HikariPoolMXBean bean = source.getHikariPoolMXBean();
+			Stdout.fpl("pool=>%s, connections=> total:%s, act:%s, idle:%s, await:%s", 
+				source.getPoolName(), 
+				bean.getTotalConnections(), bean.getActiveConnections(), bean.getIdleConnections(), bean.getThreadsAwaitingConnection());
+		});
 		
 	}
 	

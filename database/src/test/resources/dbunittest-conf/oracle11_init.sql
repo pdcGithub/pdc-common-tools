@@ -36,3 +36,68 @@ select * from i_am_oracle ;
 -- 插入一条测试数据
 insert into i_am_oracle(test_id, test_name) values (1, 'first');
 commit;
+
+/* ======================== 创建一个表 student，用于查询测试 */
+
+drop table student;
+create table student(
+stu_no varchar2(100) not null primary key ,
+stu_name varchar2(200) ,
+birth_date date ,
+enroll_date date ,
+gender varchar2(1) ,
+address varchar2(800) ,
+tel varchar(200) ,
+create_user varchar(100) not null ,
+create_time timestamp(6) not null
+);
+comment on table student is '这个表用于进行 框架的查询测试。这里的一些数据类型，应该和其它数据库通用，或者可以平替。';
+comment on column student.stu_no is '学生编码';
+comment on column student.stu_name is '学生名称';
+comment on column student.birth_date is '出生日期';
+comment on column student.enroll_date is '入学日期';
+comment on column student.gender is '性别 M 男, F 女';
+comment on column student.address is '家庭住址';
+comment on column student.tel is '联系电话';
+comment on column student.create_user is '创建人';
+comment on column student.create_time is '创建时间';
+
+-- 清空数据，重新插入
+-- delete from student ;
+-- commit;
+
+-- 插入测试数据
+insert into student(stu_no, stu_name, birth_date, enroll_date, gender, address, tel, create_user, create_time) 
+values('S0000001', '张三', date '1976-10-1', date '1983-7-1', 'M', '英国白金汉宫', '001-002-003-004', 'ADMIN00001', systimestamp);
+insert into student(stu_no, stu_name, birth_date, enroll_date, gender, address, tel, create_user, create_time) 
+values('S0000002', '李四', date '1978-5-2', date '1985-7-1', 'F', '美国三藩市', '35353535353', 'ADMIN00001', systimestamp);
+insert into student(stu_no, stu_name, birth_date, enroll_date, gender, address, tel, create_user, create_time) 
+values('S0000003', '王五', date '1976-8-3', date '1983-7-1', 'M', '法国巴黎', '54554545544', 'ADMIN00001', systimestamp);
+insert into student(stu_no, stu_name, birth_date, enroll_date, gender, address, tel, create_user, create_time) 
+values('S0000004', '赵六', date '1977-3-4', date '1984-7-1', 'F', '德国柏林', '45544554', 'ADMIN00001', systimestamp);
+insert into student(stu_no, stu_name, birth_date, enroll_date, gender, address, tel, create_user, create_time) 
+values('S0000005', 'Harry Poter', date '1979-6-2', date '1987-7-1', 'M', '英国伦敦', '534353534543', 'ADMIN00001', systimestamp);
+commit;
+
+-- 查询结果
+select * from student;
+
+-- 创建一个视图 用于测试。视图上有一些统计处理
+create or replace view v_student
+as
+select stu_no, stu_name, 
+       birth_date, trunc(months_between(sysdate, birth_date)/12) as age,
+       enroll_date, trunc(months_between(sysdate, enroll_date)/12) as grade,
+       case when gender='M' then '男' else '女' end as gender,
+       address, tel, create_user, create_time
+  from student ;
+
+-- 查询
+select * from v_student;
+
+-- 这里再构建一个 sql 语句，用于生成虚拟实体
+select stu_no, stu_name, 
+       trunc(months_between(sysdate, birth_date)/12) as age, 
+       trunc(months_between(sysdate, enroll_date)/12) as grade, 
+       substr(address, 1, 2) country
+  from student;

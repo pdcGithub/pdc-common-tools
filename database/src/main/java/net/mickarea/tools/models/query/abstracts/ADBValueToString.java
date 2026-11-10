@@ -10,12 +10,12 @@ Copyright (c) 2024 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.models.query.abstracts;
 
+import net.mickarea.tools.utils.Stdout;
 import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
 
 /**
  * 定义一个，关于对象转字符串的处理 抽象类（在java对象转换为 sql 语句内容时用）
  * @author Michael Pang (Dongcan Pang)
- * @version 1.0
  * @since 2024年6月30日
  */
 public abstract class ADBValueToString implements IValueToString {
@@ -60,14 +60,12 @@ public abstract class ADBValueToString implements IValueToString {
 	/**
 	 * 把接收到的对象 转换为 字符串内容（由于是数据库可以直接读取的字符串。所以，这里添加了防注入处理）
 	 * @param oriValue 原始对象
-	 * @return 字符串结果
+	 * @return 字符串结果。如果 oriValue 为 null，则返回 'null' 。其它，则按照内容拼接 单引号。
 	 */
 	@Override
 	public String valueToString(Object oriValue) {
-		String result = "null";
-		if(oriValue!=null) {
-			result = oriValue.toString().length()>0?("'"+DBSQLInjectionUtil.sqlParamEncode(this.targetDbType, oriValue.toString())+"'"):"";
-		}
-		return result ;
+		// 返回结果
+		return Stdout.fplToAnyWhere("'%s'", oriValue==null ? "null" : DBSQLInjectionUtil.sqlParamEncode(this.targetDbType, oriValue.toString()));
 	}
+	
 }

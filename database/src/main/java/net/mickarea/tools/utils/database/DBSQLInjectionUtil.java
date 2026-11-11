@@ -10,6 +10,9 @@ Copyright (c) 2024 Michael Pang.
 *******************************************************************************************************/
 package net.mickarea.tools.utils.database;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.mickarea.tools.utils.StrUtil;
 
 /**
@@ -44,6 +47,13 @@ public final class DBSQLInjectionUtil {
 	 * 数据库类型：默认
 	 */
 	public static final String DBTYPE_DEFAULT = "default";
+	
+	/**
+	 * 这是关于 数据库类型的 一个列表。用于判断 数据库类型 填写是否正确。
+	 */
+	public static final List<String> DB_TYPE_LIST = 
+			Arrays.asList(DBTYPE_DB2, DBTYPE_MYSQL, DBTYPE_MYSQL_ANSI, 
+						  DBTYPE_ORACLE, DBTYPE_MS_SQLSERVER, DBTYPE_DEFAULT);
 
 	/**
 	 * SQL 语句中的条件参数转换，将带特殊符号的SQL语句参数字符串，转换为合规的SQL语句参数字符串

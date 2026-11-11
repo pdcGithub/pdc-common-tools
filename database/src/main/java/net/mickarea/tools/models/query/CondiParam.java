@@ -493,15 +493,10 @@ public class CondiParam {
 		// 定义一个默认的返回值
 		String result = "dbType("+dbType+") error";
 		
-		// 定义数据库类型
-		List<String> dbTypes = Arrays.asList(DBSQLInjectionUtil.DBTYPE_MYSQL, DBSQLInjectionUtil.DBTYPE_MYSQL_ANSI, 
-											DBSQLInjectionUtil.DBTYPE_ORACLE, DBSQLInjectionUtil.DBTYPE_MS_SQLSERVER,
-											DBSQLInjectionUtil.DBTYPE_DB2, DBSQLInjectionUtil.DBTYPE_DEFAULT);
-		
 		// 校验入参 valueList
 		if(ListUtil.isEmptyList(valueList)) return "null";
 		// 校验入参 dbType 
-		if(dbType==null || !dbTypes.contains(dbType)) return result;
+		if(!DBSQLInjectionUtil.DB_TYPE_LIST.contains(dbType)) return result;
 		
 		// 开始处理（通过 list 的 流遍历）
 		result = valueList.stream()

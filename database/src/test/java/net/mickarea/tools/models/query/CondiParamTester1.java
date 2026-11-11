@@ -11,6 +11,7 @@ Copyright (c) 2022 - 2026 Michael Pang.
 package net.mickarea.tools.models.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -39,6 +40,35 @@ import net.mickarea.tools.utils.database.DBSQLInjectionUtil;
  */
 public class CondiParamTester1 {
 
+	/**
+	 * 因为 OPT_LIST 改为 public 了，所以要测试
+	 * @throws Exception 一些可能的异常
+	 */
+	@Test
+	void testOptList() throws Exception {
+		
+		assertFalse(CondiParam.OPT_LIST.contains(null));
+		assertFalse(CondiParam.OPT_LIST.contains(""));
+		assertFalse(CondiParam.OPT_LIST.contains(" "));
+		assertFalse(CondiParam.OPT_LIST.contains("      "));
+		assertFalse(CondiParam.OPT_LIST.contains(" = "));
+		
+		assertTrue(CondiParam.OPT_LIST.contains("="));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_EQ));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_GT));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_GTE));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_LT));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_LTE));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_NOT_EQ));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_LIKE));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_LIKE_PRE));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_LIKE_SUF));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_IS_NULL));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_IS_NOT_NULL));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_REGEXP));
+		assertTrue(CondiParam.OPT_LIST.contains(CondiParam.OPT_IN));
+	}
+	
 	/**
 	 * 这是无参的构造函数 CondiParam 
 	 */

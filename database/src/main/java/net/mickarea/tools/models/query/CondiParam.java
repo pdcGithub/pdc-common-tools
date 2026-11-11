@@ -105,7 +105,7 @@ public class CondiParam {
 	/**
 	 * 这是条件操作符的列表。主要用于判断 操作符 是否为这个列表中的一个。
 	 */
-	private static final List<String> OPT_LIST = Arrays.asList(OPT_EQ, OPT_GT, OPT_GTE, OPT_LT, OPT_LTE, OPT_NOT_EQ,
+	public static final List<String> OPT_LIST = Arrays.asList(OPT_EQ, OPT_GT, OPT_GTE, OPT_LT, OPT_LTE, OPT_NOT_EQ,
 																OPT_LIKE, OPT_LIKE_PRE, OPT_LIKE_SUF, OPT_IS_NULL, OPT_IS_NOT_NULL,
 																OPT_REGEXP, OPT_IN);
 	
@@ -441,10 +441,8 @@ public class CondiParam {
 		String fieldsInfo = StrUtil.getJavaBeanFieldsInfo(this);
 		
 		// 因为内部还有静态属性，所以先过滤掉。
-		return fieldsInfo
-				.replaceAll("\\(public static final\\)[a-zA-Z0-9\\_]+\\=.*?\\,", "")
-				.replaceFirst("\\(private static final\\).+?\\]\\,", "")
-				.replaceFirst("[\\s]+", "");
+		return Stdout.fplToAnyWhere("%s{%s", 
+			this.getClass().getSimpleName(), fieldsInfo.substring(fieldsInfo.indexOf("(private)")));
 		
 	}
 	

@@ -677,6 +677,15 @@ public class CondiParamListTester1 {
 		assertEquals(" (stuNo = 'S00001' or (gender = 'F' or address like '%中国%') or birthDate >= '2012-12-21') ", 
 			list3.toSqlString());
 		
+		// 配置了模板，并且模板中有些内容是不匹配的。看看不匹配的内容是否会漏掉，或者错误替换。
+		CondiParamList list4 = new CondiParamList("(:address or :stuNo1) and :address2 and :stuNo12");
+		list4.addParam(c1.setSqlTemplateParamName("stuNo1"));
+		list4.addParam(c3.setSqlTemplateParamName("address"));
+		list4.addParam(new CondiParam("address", "wrongAddress")); // 这个参数模板替换符她也是 address 。但是根据搜索规则，只会按顺序取第一个。
+		list4.addParam(c4.setSqlTemplateParamName("birthDate"));   // 这个参数没有模板替换符对应，所以不会替换内容。
+		assertEquals("(address like '%中国%' or stuNo = 'S00001') and :address2 and :stuNo12", 
+			list4.toSqlString());
+		
 		// ==================== 然后是实体类翻译 测试。这里主要是测试 当条件对象 设置了实体信息， 和 没有设置实体信息 2个情况的差异。
 		
 		CondiParam c11 = new CondiParam("stuNo", "S00001", CondiParam.OPT_EQ, null, Student.class); // 只有整个设置实体类信息

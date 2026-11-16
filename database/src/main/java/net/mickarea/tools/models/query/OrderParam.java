@@ -160,7 +160,8 @@ public class OrderParam {
 	 * 无参构造函数，创建一个空的排序条件对象。它所有值需要通过 setter 方法手动设定
 	 */
 	public OrderParam() {
-		// 这里没有容器处理，直接空着就行了。
+		// 
+		this(null, null, null, null);
 	}
 	
 	/**

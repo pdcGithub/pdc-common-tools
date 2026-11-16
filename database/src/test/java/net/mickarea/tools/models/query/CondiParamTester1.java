@@ -77,13 +77,13 @@ public class CondiParamTester1 {
 		
 		CondiParam c1 = new CondiParam();
 		
-		// 检查初始状态的值
-		assertEquals(null, c1.getAlias());
-		assertEquals(null, c1.getParamName());
+		// 检查初始状态的值（由于构造函数改为 setter 处理，所以整体字符串对象，有了空字符串兜底）
+		assertEquals("", c1.getAlias());
+		assertEquals("", c1.getParamName());
 		assertEquals(CondiParam.OPT_EQ, c1.getOptString()); // 操作符默认是有值的
 		assertEquals(null, c1.getValue());
 		assertEquals(null, c1.getClassName());
-		assertEquals(null, c1.getSqlTemplateParamName());
+		assertEquals("", c1.getSqlTemplateParamName());
 		
 		// 对这私有属性设置值，然后再比对 alias
 		c1.setAlias("aaa");
@@ -96,6 +96,8 @@ public class CondiParamTester1 {
 		assertEquals("", c1.getAlias());
 		c1.setAlias(null);
 		assertEquals("", c1.getAlias());
+		c1.setAlias("null"); // 对于 sql 语句，null 是一个关键字。不能随意填写。
+		assertEquals("", c1.getAlias()); 
 		
 		// 对私有属性设置值，然后再比对 paramName
 		c1.setParamName("nnn");
@@ -107,6 +109,8 @@ public class CondiParamTester1 {
 		c1.setParamName("    ");
 		assertEquals("", c1.getParamName());
 		c1.setParamName(null);
+		assertEquals("", c1.getParamName());
+		c1.setParamName("null"); // 对于 sql 语句，null 是一个关键字。不能随意填写。
 		assertEquals("", c1.getParamName());
 		
 		// 对私有属性设置值，然后再比对 optString 
@@ -184,34 +188,42 @@ public class CondiParamTester1 {
 		CondiParam cErr1 = new CondiParam("", 1);
 		CondiParam cErr2 = new CondiParam("    ", 1);
 		CondiParam cErr3 = new CondiParam(null, 1);
+		CondiParam cErr3A = new CondiParam("null", 1); // 对于 sql 语句，null 是一个关键字。不能随意填写。
 		// paramName 正常，value 异常
 		CondiParam cErr4 = new CondiParam("aaa", null);
 		// 校验结果
 		assertEquals("", cErr1.getParamName()); 
 		assertEquals(1, cErr1.getValue());
 		assertEquals(CondiParam.OPT_EQ, cErr1.getOptString());
-		assertEquals(null, cErr1.getAlias());
+		assertEquals("", cErr1.getAlias());
 		assertEquals(null, cErr1.getClassName());
 		assertEquals("", cErr1.getSqlTemplateParamName());
 		// 
 		assertEquals("", cErr2.getParamName()); 
 		assertEquals(1, cErr2.getValue());
 		assertEquals(CondiParam.OPT_EQ, cErr2.getOptString());
-		assertEquals(null, cErr2.getAlias());
+		assertEquals("", cErr2.getAlias());
 		assertEquals(null, cErr2.getClassName());
 		assertEquals("", cErr2.getSqlTemplateParamName());
 		// 
 		assertEquals("", cErr3.getParamName()); 
 		assertEquals(1, cErr3.getValue());
 		assertEquals(CondiParam.OPT_EQ, cErr3.getOptString());
-		assertEquals(null, cErr3.getAlias());
+		assertEquals("", cErr3.getAlias());
 		assertEquals(null, cErr3.getClassName());
 		assertEquals("", cErr3.getSqlTemplateParamName());
+		//
+		assertEquals("", cErr3A.getParamName()); 
+		assertEquals(1, cErr3A.getValue());
+		assertEquals(CondiParam.OPT_EQ, cErr3A.getOptString());
+		assertEquals("", cErr3A.getAlias());
+		assertEquals(null, cErr3A.getClassName());
+		assertEquals("", cErr3A.getSqlTemplateParamName());
 		// 
 		assertEquals("aaa", cErr4.getParamName()); 
 		assertEquals(null, cErr4.getValue());
 		assertEquals(CondiParam.OPT_EQ, cErr4.getOptString());
-		assertEquals(null, cErr4.getAlias());
+		assertEquals("", cErr4.getAlias());
 		assertEquals(null, cErr4.getClassName());
 		assertEquals("aaa", cErr4.getSqlTemplateParamName());
 		
@@ -219,14 +231,14 @@ public class CondiParamTester1 {
 		CondiParam cOk1 = new CondiParam("  stu_no  ", "S00001");
 		CondiParam cOk2 = new CondiParam("  birth_date  ", LocalDate.now());
 		// 校验结果
-		assertEquals(null, cOk1.getAlias());
+		assertEquals("", cOk1.getAlias());
 		assertEquals("stu_no", cOk1.getParamName());
 		assertEquals(CondiParam.OPT_EQ, cOk1.getOptString()); // 操作符默认是有值的
 		assertEquals("S00001", cOk1.getValue());
 		assertEquals(null, cOk1.getClassName());
 		assertEquals("stu_no", cOk1.getSqlTemplateParamName()); // 如果 构造函数设置了 paraName，则默认的 tempName 是跟它一致
 		// 
-		assertEquals(null, cOk2.getAlias());
+		assertEquals("", cOk2.getAlias());
 		assertEquals("birth_date", cOk2.getParamName());
 		assertEquals(CondiParam.OPT_EQ, cOk2.getOptString()); // 操作符默认是有值的
 		assertEquals(LocalDate.now(), cOk2.getValue());
@@ -247,6 +259,7 @@ public class CondiParamTester1 {
 		CondiParam cErr1 = new CondiParam("",   1, CondiParam.OPT_GTE);
 		CondiParam cErr2 = new CondiParam("  ", 1, CondiParam.OPT_GTE);
 		CondiParam cErr3 = new CondiParam(null, 1, CondiParam.OPT_GTE);
+		CondiParam cErr3A = new CondiParam("null", 1, CondiParam.OPT_GTE); // 对于 sql 语句，null 是一个关键字。不能随意填写。
 		// paramName 正常，value 异常，optString 正常
 		CondiParam cErr4 = new CondiParam("  aaa  ", null, CondiParam.OPT_GTE);
 		// paramName 正常，value 正常，optString 异常
@@ -254,49 +267,56 @@ public class CondiParamTester1 {
 		CondiParam cErr6 = new CondiParam("  aaa  ", 1, "  ");
 		CondiParam cErr7 = new CondiParam("  aaa  ", 1, null);
 		// 校验结果
-		assertEquals(null, cErr1.getAlias());
+		assertEquals("", cErr1.getAlias());
 		assertEquals("", cErr1.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cErr1.getOptString());
 		assertEquals(1, cErr1.getValue());
 		assertEquals(null, cErr1.getClassName());
 		assertEquals("", cErr1.getSqlTemplateParamName());
 		//
-		assertEquals(null, cErr2.getAlias());
+		assertEquals("", cErr2.getAlias());
 		assertEquals("", cErr2.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cErr2.getOptString());
 		assertEquals(1, cErr2.getValue());
 		assertEquals(null, cErr2.getClassName());
 		assertEquals("", cErr2.getSqlTemplateParamName());
 		//
-		assertEquals(null, cErr3.getAlias());
+		assertEquals("", cErr3.getAlias());
 		assertEquals("", cErr3.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cErr3.getOptString());
 		assertEquals(1, cErr3.getValue());
 		assertEquals(null, cErr3.getClassName());
 		assertEquals("", cErr3.getSqlTemplateParamName());
+		//
+		assertEquals("", cErr3A.getAlias());
+		assertEquals("", cErr3A.getParamName());
+		assertEquals(CondiParam.OPT_GTE, cErr3A.getOptString());
+		assertEquals(1, cErr3A.getValue());
+		assertEquals(null, cErr3A.getClassName());
+		assertEquals("", cErr3A.getSqlTemplateParamName());
 		// 
-		assertEquals(null, cErr4.getAlias());
+		assertEquals("", cErr4.getAlias());
 		assertEquals("aaa", cErr4.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cErr4.getOptString());
 		assertEquals(null, cErr4.getValue());
 		assertEquals(null, cErr4.getClassName());
 		assertEquals("aaa", cErr4.getSqlTemplateParamName());
 		// 
-		assertEquals(null, cErr5.getAlias());
+		assertEquals("", cErr5.getAlias());
 		assertEquals("aaa", cErr5.getParamName());
 		assertEquals("", cErr5.getOptString());
 		assertEquals(1, cErr5.getValue());
 		assertEquals(null, cErr5.getClassName());
 		assertEquals("aaa", cErr5.getSqlTemplateParamName());
 		// 
-		assertEquals(null, cErr6.getAlias());
+		assertEquals("", cErr6.getAlias());
 		assertEquals("aaa", cErr6.getParamName());
 		assertEquals("", cErr6.getOptString());
 		assertEquals(1, cErr6.getValue());
 		assertEquals(null, cErr6.getClassName());
 		assertEquals("aaa", cErr6.getSqlTemplateParamName());
 		// 
-		assertEquals(null, cErr7.getAlias());
+		assertEquals("", cErr7.getAlias());
 		assertEquals("aaa", cErr7.getParamName());
 		assertEquals("", cErr7.getOptString());
 		assertEquals(1, cErr7.getValue());
@@ -308,14 +328,14 @@ public class CondiParamTester1 {
 		CondiParam cOk1 = new CondiParam("  a  b  c  ",   1, CondiParam.OPT_GTE);
 		CondiParam cOk2 = new CondiParam("  a  b  c  ",   LocalDate.now(), CondiParam.OPT_LIKE);
 		// 校验结果
-		assertEquals(null, cOk1.getAlias());
+		assertEquals("", cOk1.getAlias());
 		assertEquals("abc", cOk1.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cOk1.getOptString()); // 操作符默认是有值的
 		assertEquals(1, cOk1.getValue());
 		assertEquals(null, cOk1.getClassName());
 		assertEquals("abc", cOk1.getSqlTemplateParamName()); // 如果 构造函数设置了 paraName，则默认的 tempName 是跟它一致
 		// 
-		assertEquals(null, cOk2.getAlias());
+		assertEquals("", cOk2.getAlias());
 		assertEquals("abc", cOk2.getParamName());
 		assertEquals(CondiParam.OPT_LIKE, cOk2.getOptString()); // 操作符默认是有值的
 		assertEquals(LocalDate.now(), cOk2.getValue());
@@ -336,6 +356,7 @@ public class CondiParamTester1 {
 		CondiParam cErr1 = new CondiParam("",   1, CondiParam.OPT_GTE, "2k");
 		CondiParam cErr2 = new CondiParam("  ",   1, CondiParam.OPT_GTE, "2k");
 		CondiParam cErr3 = new CondiParam(null,   1, CondiParam.OPT_GTE, "2k");
+		CondiParam cErr3A = new CondiParam("null",   1, CondiParam.OPT_GTE, "2k");
 		// paramName 正常，value 异常，optString 正常，alias 正常
 		CondiParam cErr4 = new CondiParam(" a b c",   null, CondiParam.OPT_GTE, "2k");
 		// paramName 正常，value 正常，optString 异常，alias 正常
@@ -347,6 +368,7 @@ public class CondiParamTester1 {
 		CondiParam cErr9 = new CondiParam(" a b c",   "fff", CondiParam.OPT_GTE, "");
 		CondiParam cErr10 = new CondiParam(" a b c",   "fff", CondiParam.OPT_GTE, "  ");
 		CondiParam cErr11 = new CondiParam(" a b c",   "fff", CondiParam.OPT_GTE, null);
+		CondiParam cErr12 = new CondiParam(" a b c",   "fff", CondiParam.OPT_GTE, "null"); // 对于 sql 语句，null 是一个关键字。不能随意填写。
 		// 校验结果
 		assertEquals("2k", cErr1.getAlias());
 		assertEquals("", cErr1.getParamName());
@@ -368,7 +390,14 @@ public class CondiParamTester1 {
 		assertEquals(1, cErr3.getValue());
 		assertEquals(null, cErr3.getClassName());
 		assertEquals("", cErr3.getSqlTemplateParamName());
-		// 
+		//
+		assertEquals("2k", cErr3A.getAlias());
+		assertEquals("", cErr3A.getParamName());
+		assertEquals(CondiParam.OPT_GTE, cErr3A.getOptString());
+		assertEquals(1, cErr3A.getValue());
+		assertEquals(null, cErr3A.getClassName());
+		assertEquals("", cErr3A.getSqlTemplateParamName());
+		//
 		assertEquals("2k", cErr4.getAlias());
 		assertEquals("abc", cErr4.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cErr4.getOptString());
@@ -424,6 +453,13 @@ public class CondiParamTester1 {
 		assertEquals("fff", cErr11.getValue());
 		assertEquals(null, cErr11.getClassName());
 		assertEquals("abc", cErr11.getSqlTemplateParamName());
+		//
+		assertEquals("", cErr12.getAlias());
+		assertEquals("abc", cErr12.getParamName());
+		assertEquals(CondiParam.OPT_GTE, cErr12.getOptString());
+		assertEquals("fff", cErr12.getValue());
+		assertEquals(null, cErr12.getClassName());
+		assertEquals("abc", cErr12.getSqlTemplateParamName());
 		
 		// ========= 然后是正常的参数（字段名，是允许有空白字符的，内部赋值会处理）
 		
@@ -458,6 +494,7 @@ public class CondiParamTester1 {
 		CondiParam cErr1 = new CondiParam("",   1, CondiParam.OPT_GTE, "2k", Student.class);
 		CondiParam cErr2 = new CondiParam("  ",   1, CondiParam.OPT_GTE, "2k", Student.class);
 		CondiParam cErr3 = new CondiParam(null,   1, CondiParam.OPT_GTE, "2k", Student.class);
+		CondiParam cErr3A = new CondiParam("null",   1, CondiParam.OPT_GTE, "2k", Student.class);
 		// paramName 正常，value 异常，optString 正常，alias 正常，className 正常
 		CondiParam cErr4 = new CondiParam(" a b c ", null, CondiParam.OPT_GTE, "2k", Student.class);
 		// paramName 正常，value 正常，optString 异常，alias 正常，className 正常
@@ -492,7 +529,14 @@ public class CondiParamTester1 {
 		assertEquals(1, cErr3.getValue());
 		assertEquals(Student.class, cErr3.getClassName());
 		assertEquals("", cErr3.getSqlTemplateParamName());
-		// 
+		//
+		assertEquals("2k", cErr3A.getAlias());
+		assertEquals("", cErr3A.getParamName());
+		assertEquals(CondiParam.OPT_GTE, cErr3A.getOptString());
+		assertEquals(1, cErr3A.getValue());
+		assertEquals(Student.class, cErr3A.getClassName());
+		assertEquals("", cErr3A.getSqlTemplateParamName());
+		//
 		assertEquals("2k", cErr4.getAlias());
 		assertEquals("abc", cErr4.getParamName());
 		assertEquals(CondiParam.OPT_GTE, cErr4.getOptString());

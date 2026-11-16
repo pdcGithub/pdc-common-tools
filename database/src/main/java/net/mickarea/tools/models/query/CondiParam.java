@@ -146,6 +146,7 @@ public class CondiParam {
 	 * 查询条件对象，用于构建一个查询条件对应的 SQL 语句。这是 无参构造函数，所有值需要通过 setter 方法手动设定
 	 */
 	public CondiParam() {
+		this(null, null, OPT_EQ, null, null);
 	}
 	
 	/**
@@ -155,10 +156,8 @@ public class CondiParam {
 	 * @param value 查询条件的字段值
 	 */
 	public CondiParam(String paramName, Object value) {
-		this.setParamName(paramName);
-		this.setValue(value);
-		// 默认的话，模板参数替换符，设置为与条件参数一致。
-		this.setSqlTemplateParamName(paramName);
+		// 调用其它构造函数
+		this(paramName, value, OPT_EQ, null, null);
 	}
 	
 	/**
@@ -168,11 +167,8 @@ public class CondiParam {
 	 * @param optString 查询条件的操作符：可写 CondiParam 中的 OPT_EQ， OPT_GT 等等常量。
 	 */
 	public CondiParam(String paramName, Object value, String optString) {
-		this.setParamName(paramName);
-		this.setValue(value);
-		this.setOptString(optString);
-		// 默认的话，模板参数替换符，设置为与条件参数一致。
-		this.setSqlTemplateParamName(paramName);
+		// 调用其它构造函数
+		this(paramName, value, optString, null, null);
 	}
 	
 	/**
@@ -185,12 +181,8 @@ public class CondiParam {
 	 * 比如：<p>select a.id, a.name from user a where a.id=1;</p> 中，a 就是 id 字段的表别名
 	 */
 	public CondiParam(String paramName, Object value, String optString, String alias) {
-		this.setAlias(alias);
-		this.setParamName(paramName);
-		this.setValue(value);
-		this.setOptString(optString);
-		// 默认的话，模板参数替换符，设置为与条件参数一致。
-		this.setSqlTemplateParamName(paramName);
+		// 调用其它构造函数
+		this(paramName, value, optString, alias, null);
 	}
 	
 	/**
@@ -204,13 +196,16 @@ public class CondiParam {
 	 * @param className 查询条件的字段所属实体类的类名。当 paramName 值为实体类的属性名，则需要设置类名，让框架自动转化属性名为字段名。
 	 */
 	public CondiParam(String paramName, Object value, String optString, String alias, Class<?> className) {
-		this.setAlias(alias);
-		this.setParamName(paramName);
+		
+		this.setParamName(paramName); // 这里如果是 "null" 字符串，则不能设置。因为 SQL 中，null 是关键字
 		this.setValue(value);
 		this.setOptString(optString);
-		// 默认的话，模板参数替换符，设置为与条件参数一致。
-		this.setSqlTemplateParamName(paramName);
+		this.setAlias(alias);         // 这里如果是 "null" 字符串，则不能设置。因为 SQL 中，null 是关键字
 		this.setClassName(className);
+		
+		// 默认的话，模板参数替换符，设置为与条件参数一致。
+		// 因为 setter 有特殊处理，所以这里要通过 getter 来获取值，再设置到 sqlTemplate 中
+		this.setSqlTemplateParamName(this.getParamName());
 	}
 	
 	// ================ getter and setter
@@ -229,7 +224,11 @@ public class CondiParam {
 	 * @return 返回本对象的引用。主要用于链式写法。
 	 */
 	public CondiParam setParamName(String paramName) {
-		this.paramName = StrUtil.removeAllBlankStrings(paramName);
+		// 首先去掉空白字符
+		String tmp = StrUtil.removeAllBlankStrings(paramName);
+		// 如果不是空字符串，也不是 null 字符串，则赋值。否则是 空字符。
+		this.paramName = StrUtil.isEmptyString(tmp) ? "" : tmp;
+		// 返回 本对象的引用
 		return this;
 	}
 	
@@ -289,7 +288,11 @@ public class CondiParam {
 	 * @return 返回本对象的引用。主要用于链式写法。
 	 */
 	public CondiParam setAlias(String alias) {
-		this.alias = StrUtil.removeAllBlankStrings(alias);
+		// 首先去掉空白字符
+		String tmp = StrUtil.removeAllBlankStrings(alias);
+		// 如果不是空字符串，也不是 null 字符串，则赋值。否则是 空字符。
+		this.alias = StrUtil.isEmptyString(tmp) ? "" : tmp;
+		// 返回 本对象的引用
 		return this;
 	}
 	
@@ -298,7 +301,7 @@ public class CondiParam {
 	 * @return 查询条件的 模板占位符 名称
 	 */
 	public String getSqlTemplateParamName() {
-		return sqlTemplateParamName;
+		return this.sqlTemplateParamName;
 	}
 	
 	/**
